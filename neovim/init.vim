@@ -78,6 +78,7 @@ Plug 'fsharp/vim-fsharp', {
       \}
 let g:fsharp_map_keys = 0
 let g:fsharp_completion_helptext = 1
+let g:fsharp_only_check_errors_on_write = 1
 
 "*****************************************************************************
 "" Custom bundle
