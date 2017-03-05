@@ -77,6 +77,7 @@ Plug 'fsharp/vim-fsharp', {
       \ 'do':  'make fsautocomplete',
       \}
 let g:fsharp_map_keys = 0
+let g:fsharp_completion_helptext = 1
 
 "*****************************************************************************
 "" Custom bundle
