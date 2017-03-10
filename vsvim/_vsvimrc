@@ -1,0 +1,53 @@
+set backspace=indent,eol,start
+set clipboard=unnamed
+
+" Map leader to space
+let mapleader=' '
+
+" Search settings
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+" Search mappings: These will make it so that going to the next one in a
+" search will center on the line it's found in.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Some useful remappings
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
+
+" Splits
+noremap <Leader>h :<C-u>split<CR>
+noremap <Leader>v :<C-u>vsplit<CR>
+
+" Easier search
+nmap < /
+
+" Easier escape
+map! hh <ESC>
+vmap hh <ESC>
+omap hh <ESC>
+cmap hh <C-c>
+
+" Buffer nav
+noremap <leader>z :bp<CR>
+noremap <leader>q :bp<CR>
+noremap <leader>x :bn<CR>
+noremap <leader>w :bn<CR>
+
+" Close buffer
+noremap <leader>c :bd<CR>
+
+" Clean search (highlight)
+nnoremap <leader><space> :noh<cr>
