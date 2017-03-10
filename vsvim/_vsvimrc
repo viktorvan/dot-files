@@ -40,14 +40,45 @@ vmap hh <ESC>
 omap hh <ESC>
 cmap hh <C-c>
 
-" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
-
-" Close buffer
-noremap <leader>c :bd<CR>
-
 " Clean search (highlight)
 nnoremap <leader><space> :noh<cr>
+
+" Tab navigation
+nnoremap <Leader>w gt
+nnoremap <Leader>q gT
+
+" Visual studio
+nnoremap gd :vsc ReSharper.ReSharper_GotoDeclaration<CR>
+nnoremap gi :vsc Resharper.ReSharper_GotoImplementations<CR>
+nnoremap <Leader>r :vsc Debug.Start<CR>
+nnoremap <Leader>b :vsc Build.BuildSolution<CR>
+vmap v :vsc ReSharper.ReSharper_ExtendSelection<CR>
+vmap <C-V> :vsc ReSharper.ReSharper_ShrinkSelection<CR>
+nmap <C-o> :vsc View.NavigateBackward<CR>
+nmap <C-i> :vsc View.NavigateForward<CR>
+nnoremap <Leader>l :so \\stos01nas02r01.sr.se\Hemma01\Users\vikand02\_vsvimrc<CR>
+
+" copied from Vim 7.3's mswin.vim:
+
+" CTRL-X and SHIFT-Del are Cut
+vnoremap <C-X> "+x
+vnoremap <S-Del> "+x
+
+" CTRL-C and CTRL-Insert are Copy
+vnoremap <C-C> "+y
+vnoremap <C-Insert> "+y
+
+" CTRL-V and SHIFT-Insert are Paste
+map <C-V>       "+gP
+map <S-Insert>      "+gP
+imap <C-V>      <Esc>"+gpa
+
+cmap <C-V>      <C-R>+
+cmap <S-Insert>     <C-R>+
+
+
+imap <S-Insert>     <C-V>
+vmap <S-Insert>     <C-V>
+
+" Use CTRL-Q to do what CTRL-V used to do
+noremap <C-Q>       <C-V>
