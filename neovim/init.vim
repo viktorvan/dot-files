@@ -79,6 +79,7 @@ Plug 'fsharp/vim-fsharp', {
 let g:fsharp_map_keys = 0
 let g:fsharp_completion_helptext = 1
 let g:fsharp_only_check_errors_on_write = 1
+"let g:fsharpbinding_debug = 1
 
 "*****************************************************************************
 "" Custom bundle
@@ -397,6 +398,7 @@ let g:syntastic_auto_loc_list=1
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+"let g:syntastic_fsharp_checkers = ['syntax']
 
 " Disable visualbell
 set noerrorbells visualbell t_vb=
