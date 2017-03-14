@@ -32,7 +32,7 @@ noremap <Leader>h :<C-u>split<CR>
 noremap <Leader>v :<C-u>vsplit<CR>
 
 " Easier search
-nmap < /
+nmap <leader>f /
 
 " Easier escape
 map! hh <ESC>
@@ -56,7 +56,11 @@ vmap v :vsc ReSharper.ReSharper_ExtendSelection<CR>
 vmap <C-V> :vsc ReSharper.ReSharper_ShrinkSelection<CR>
 nmap <C-o> :vsc View.NavigateBackward<CR>
 nmap <C-i> :vsc View.NavigateForward<CR>
-nnoremap <Leader>l :so \\stos01nas02r01.sr.se\Hemma01\Users\vikand02\_vsvimrc<CR>
+nnoremap <Leader>l :so c:\Users\vikand02\_vsvimrc<CR>
+map <Leader>t :vsc ReSharper.ReSharper_GotoType<CR>
+inoremap <Leader>t :vsc ReSharper.ReSharper_GotoType<CR>
+map gcc :vsc Edit.CommentSelection<CR>
+map gcgc :vsc Edit.UnCommentSelection<CR>
 
 " copied from Vim 7.3's mswin.vim:
 

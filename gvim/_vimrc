@@ -1,0 +1,102 @@
+set backspace=indent,eol,start
+set clipboard=unnamed
+
+call plug#begin('~/vimfiles/plugged')
+Plug 'vim-expand-region'
+Plug 'morhetz/gruvbox'
+Plug 'posva/vim-vue'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-commentary'
+call plug#end()
+
+" CtrlP settings
+nmap <leader>t :CtrlP<CR>
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+set wildignore+=*\\node_modules,*\\packages,*\\bin,*\\obj
+
+" Airline settings
+let g:airline#extensions#tabline#enabled = 1
+
+" Visual settings
+colorscheme gruvbox
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set number
+set hidden
+set guifont=consolas:h11
+
+" Map leader to space
+let mapleader=' '
+
+" encodings
+set enc=utf-8
+set fileencoding=utf-8
+
+" Search settings
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+" Search mappings: These will make it so that going to the next one in a
+" search will center on the line it's found in.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Some useful remappings
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
+
+" newlines
+nmap <S-Enter> O<Esc>
+nmap <CR> o<Esc>
+
+" Splits
+noremap <Leader>h :<C-u>split<CR>
+noremap <Leader>v :<C-u>vsplit<CR>
+
+" Easier search
+nmap <leader>f /
+
+" Easier escape
+map! hh <ESC>
+vmap hh <ESC>
+omap hh <ESC>
+cmap hh <C-c>
+" tnoremap hh <ESC>
+
+" Expand region
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
+
+" Disable visualbell
+set noerrorbells visualbell t_vb=
+if has('autocmd')
+  autocmd GUIEnter * set visualbell t_vb=
+endif
+
+" Buffer nav
+noremap <leader>z :bp<CR>
+noremap <leader>q :bp<CR>
+noremap <leader>x :bn<CR>
+noremap <leader>w :bn<CR>
+
+" Close buffer
+noremap <leader>c :bd<CR>
+
+" Clean search (highlight)
+nnoremap <silent> <leader><space> :noh<cr>
+
+" Reload vimrc
+nnoremap <leader>l :so \\stos01nas02r01.sr.se\Hemma01\Users\vikand02\_vimrc<CR>
