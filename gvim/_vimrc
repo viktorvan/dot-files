@@ -59,7 +59,7 @@ cnoreabbrev Q q
 cnoreabbrev Qall qall
 
 " newlines
-nmap <S-Enter> O<Esc>
+nmap <leader><CR> O<Esc>
 nmap <CR> o<Esc>
 
 " Splits

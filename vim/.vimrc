@@ -8,31 +8,26 @@ endif
 
 " Required:
 call plug#begin(expand('~/.vim/plugged'))
-
-"*****************************************************************************
-"" Plug install packages
-"*****************************************************************************
-
-" Color
+Plug 'vim-expand-region'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox'
-
-"FZF file-search
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
-" F#
+Plug 'tpope/vim-commentary'
 " Plug 'fsharp/vim-fsharp', {
 "      \ 'for': 'fsharp',
 "      \ 'do':  'make fsautocomplete',
 "      \}
-"let g:fsharp_map_keys = 0
-
-"*****************************************************************************
-"" Custom bundle
-"*****************************************************************************
 
 call plug#end()
 
+" Plugin settings
+ "" Airline settings
+let g:airline#extensions#tabline#enabled = 1
+
+"let g:fsharp_map_keys = 0
 " Required:
+ 
 filetype plugin indent on
 
 
@@ -52,7 +47,7 @@ set backspace=indent,eol,start
 
 "" Tabs. May be overriten by autocmd rules
 set tabstop=4
-set softtabstop=0
+set softtabstop=4
 set shiftwidth=4
 set expandtab
 
@@ -69,7 +64,8 @@ set fileformats=unix,dos,mac
 set showcmd
 
 "" Visual Settings
-"*****************************************************************************
+set number
+set hidden
 syntax on
 set ruler
 set number
@@ -84,14 +80,13 @@ if has("gui_running")
   endif
 endif
 
-
+" newlines
+nmap <Leader><CR> O<Esc>
+nmap <CR> o<Esc>
 
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
 set scrolloff=3
-
-"" Status bar
-set laststatus=1
 
 "" Use modeline overrides
 set modeline
@@ -199,32 +194,23 @@ noremap <leader>w :bn<CR>
 noremap <leader>c :bd<CR>
 
 " Easier search
-nmap < /
+nmap <leader>f /
 
 " Easier escape
 map! hh <ESC>
 vmap hh <ESC>
 omap hh <ESC>
 cmap hh <C-c>
+ 
+" Expand region
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
 
-"" Clean search (highlight)
+" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
-
-"" Vmap for maintain Visual Mode after shifting > and <
-vmap < <gv
 
 "" Open current line on GitHub
 nnoremap <Leader>o :.Gbrowse<CR>
-
-"*****************************************************************************
-"" Custom configs
-"*****************************************************************************
-
-
-"*****************************************************************************
-"*****************************************************************************
-
-"" Include user's local vim config
-if filereadable(expand("~/.config/nvim/local_init.vim"))
-  source ~/.config/nvim/local_init.vim
-endif
+ 
+" Reload vimrc
+nnoremap <leader>l :so \\stos01nas02r01.sr.se\Hemma01\Users\vikand02\_vimrc<CR>
