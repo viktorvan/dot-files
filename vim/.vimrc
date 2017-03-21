@@ -14,19 +14,19 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'tpope/vim-commentary'
-" Plug 'fsharp/vim-fsharp', {
-"      \ 'for': 'fsharp',
-"      \ 'do':  'make fsautocomplete',
-"      \}
+Plug 'fsharp/vim-fsharp', {
+     \ 'for': 'fsharp',
+     \ 'do':  'make fsautocomplete',
+     \}
 
 call plug#end()
 
 " Plugin settings
- "" Airline settings
+" Airline settings
 let g:airline#extensions#tabline#enabled = 1
 
-"let g:fsharp_map_keys = 0
-" Required:
+" vim-fsharp settings
+let g:fsharp_map_keys = 0
  
 filetype plugin indent on
 
@@ -64,12 +64,11 @@ set fileformats=unix,dos,mac
 set showcmd
 
 "" Visual Settings
-set number
 set hidden
 syntax on
 set ruler
 set number
-
+set relativenumber
 colorscheme gruvbox
 set background=dark
 
@@ -152,18 +151,10 @@ noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
 
-"" Tabs
-"nnoremap <Tab> gt
-"nnoremap <S-Tab> gT
-"nnoremap <silent> <S-t> :tabnew<CR>
-
-"" Opens an edit command with the path of the currently edited file filled in
+" Opens an edit command with the path of the currently edited file filled in
 noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-"" Opens a tab edit command with the path of the currently edited file filled
-noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
-
-"" FZF Fuzzy file search
+" FZF Fuzzy file search
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 nnoremap <Leader>t :FZF<CR>
 
@@ -213,4 +204,4 @@ nnoremap <silent> <leader><space> :noh<cr>
 nnoremap <Leader>o :.Gbrowse<CR>
  
 " Reload vimrc
-nnoremap <leader>l :so \\stos01nas02r01.sr.se\Hemma01\Users\vikand02\_vimrc<CR>
+nnoremap <leader>l :so ~/.vimrc<CR>
