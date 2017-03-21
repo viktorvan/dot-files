@@ -38,7 +38,7 @@ nmap <leader>f /
 map! hh <ESC>
 vmap hh <ESC>
 omap hh <ESC>
-cmap hh <C-c>
+cmap hh <ESC>
 
 " Clean search (highlight)
 nnoremap <leader><space> :noh<cr>
@@ -47,20 +47,26 @@ nnoremap <leader><space> :noh<cr>
 nnoremap <Leader>w gt
 nnoremap <Leader>q gT
 
+" newlines
+nmap <leader><CR> O<Esc>
+nmap <CR> o<Esc>
+
 " Visual studio
 nnoremap gd :vsc ReSharper.ReSharper_GotoDeclaration<CR>
 nnoremap gi :vsc Resharper.ReSharper_GotoImplementations<CR>
 nnoremap <Leader>r :vsc Debug.Start<CR>
 nnoremap <Leader>b :vsc Build.BuildSolution<CR>
 vmap v :vsc ReSharper.ReSharper_ExtendSelection<CR>
-vmap <C-V> :vsc ReSharper.ReSharper_ShrinkSelection<CR>
+"vmap <C-V> :vsc ReSharper.ReSharper_ShrinkSelection<CR> "Funkar inte eftersom :vsc avmarkerar texten
 nmap <C-o> :vsc View.NavigateBackward<CR>
 nmap <C-i> :vsc View.NavigateForward<CR>
 nnoremap <Leader>l :so c:\Users\vikand02\_vsvimrc<CR>
 map <Leader>t :vsc ReSharper.ReSharper_GotoType<CR>
-inoremap <Leader>t :vsc ReSharper.ReSharper_GotoType<CR>
 map gcc :vsc Edit.CommentSelection<CR>
 map gcgc :vsc Edit.UnCommentSelection<CR>
+map <leader>im :vsc Edit.CollapsetoDefinitions<CR>
+map <leader>mi :vsc Edit.ExpandAllOutlining<CR>
+map <leader>me :vsc Edit.ExpandSelection<CR>
 
 " copied from Vim 7.3's mswin.vim:
 

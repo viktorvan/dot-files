@@ -25,6 +25,7 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set number
+set relativenumber
 set hidden
 set guifont=consolas:h11
 
@@ -97,6 +98,9 @@ noremap <leader>c :bd<CR>
 
 " Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
+
+" skapa en ny fil i working directory 
+noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Reload vimrc
 nnoremap <leader>l :so \\stos01nas02r01.sr.se\Hemma01\Users\vikand02\_vimrc<CR>
