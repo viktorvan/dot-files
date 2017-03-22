@@ -9,6 +9,9 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
+Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-surround'
+Plug 'Valloric/YouCompleteMe'
 call plug#end()
 
 " CtrlP settings
