@@ -11,7 +11,8 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-surround'
-Plug 'Valloric/YouCompleteMe'
+Plug 'mhinz/vim-grepper'
+" Plug 'Valloric/YouCompleteMe'
 call plug#end()
 
 " CtrlP settings
@@ -21,6 +22,13 @@ set wildignore+=*\\node_modules,*\\packages,*\\bin,*\\obj
 
 " Airline settings
 let g:airline#extensions#tabline#enabled = 1
+
+" Grepper settings
+let g:grepper_dir = 'repo, cwd, file'
+
+" In the quickfix window, <CR> is used to jump to the error under the
+" cursor, so undefine the mapping there.
+autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 
 " Visual settings
 colorscheme gruvbox
