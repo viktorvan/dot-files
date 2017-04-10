@@ -73,6 +73,7 @@ cnoreabbrev Qall qall
 " newlines
 nmap <leader><CR> O<Esc>
 nmap <CR> o<Esc>
+nnoremap <NL> i<CR><ESC>
 
 " Splits
 noremap <Leader>h :<C-u>split<CR>
