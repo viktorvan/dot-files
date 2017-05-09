@@ -83,10 +83,10 @@ noremap <Leader>v :<C-u>vsplit<CR>
 nmap <leader>f /
 
 " Easier escape
-map! hh <ESC>
-vmap hh <ESC>
-omap hh <ESC>
-cmap hh <C-c>
+" map! hh <ESC>
+" vmap hh <ESC>
+" omap hh <ESC>
+" cmap hh <C-c>
 " tnoremap hh <ESC>
 
 " Expand region
@@ -109,7 +109,7 @@ noremap <leader>w :bn<CR>
 noremap <leader>c :bd<CR>
 
 " Clean search (highlight)
-nnoremap <silent> <leader><space> :noh<cr>
+nnoremap <silent> <leader>F :noh<cr>
 
 " skapa en ny fil i working directory 
 noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>

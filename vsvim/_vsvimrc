@@ -35,13 +35,13 @@ noremap <Leader>v :<C-u>vsplit<CR>
 nmap <leader>f /
 
 " Easier escape
-map! hh <ESC>
-vmap hh <ESC>
-omap hh <ESC>
-cmap hh <ESC>
+" map! hh <ESC>
+" vmap hh <ESC>
+" omap hh <ESC>
+" cmap hh <ESC>
 
 " Clean search (highlight)
-nnoremap <leader><space> :noh<cr>
+nnoremap <leader>F :noh<cr>
 
 " Tab navigation
 nnoremap <Leader>w gt
@@ -50,6 +50,7 @@ nnoremap <Leader>q gT
 " newlines
 nmap <leader><CR> O<Esc>
 nmap <CR> o<Esc>
+nnoremap <NL> i<CR><ESC>
 
 " Visual studio
 nnoremap gd :vsc ReSharper.ReSharper_GotoDeclaration<CR>
