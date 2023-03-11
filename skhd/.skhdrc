@@ -82,7 +82,8 @@ hyper - r : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
 
 # Start applications
 meh - return : open -a /Applications/Warp.app
-hyper - return : open -a /Applications/Rider.app
+hyper - return : open -a /Applications/Safari.app
+meh - o : open -a /Applications/Rider.app
 hyper - 0x2A : open -a /Applications/Visual\ Studio\ Code.app
 hyper - o : open -a /Applications/Visual\ Studio\ Code.app
 
@@ -175,6 +176,9 @@ hyper - t : yabai -m window --toggle float --grid 1:1:1:1:1:1
 hyper - m : [[ $(yabai -m config focus_follows_mouse) = "disabled" ]] && \
     yabai -m config focus_follows_mouse autoraise || \
     yabai -m config focus_follows_mouse off
+
+# Minize window using yabai
+cmd - m : yabai -m window --minimize
 
 # testing
 meh - l : yabai -m window --toggle topmost; yabai -m window --toggle topmost

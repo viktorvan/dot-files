@@ -66,7 +66,11 @@ yabai -m rule --add app="^(Code|JetBrains Rider|Warp)$" space=^3
 yabai -m rule --add app="^(Spotify|Music)$" space=^4
 
 # focus window after active space changes
-yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
+yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id')"
 
 # focus window after active display changes
-yabai -m signal --add event=display_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
+yabai -m signal --add event=display_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id')"
+
+# focus window after minimizing other window
+#yabai -m signal --add event=window_minimized active=yes action="if \$(yabai -m query --windows --window \$YABAI_WINDOW_ID | jq -r '.\"is-floating\"'); then yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse &> /dev/null || yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id') &> /dev/null; fi"
+yabai -m signal --add event=window_minimized active=yes action="yabai -m window --focus mouse &> /dev/null || yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id') &> /dev/null;"
