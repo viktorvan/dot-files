@@ -34,13 +34,13 @@ yabai -m config window_gap                  4
 yabai -m config window_border               off
 yabai -m config window_opacity on
 yabai -m config active_window_opacity 		1.0
-yabai -m config normal_window_opacity 		0.85
+yabai -m config normal_window_opacity 		0.90
 
 # set focus follows mouse mode (default: off, options: off, autoraise, autofocus)
 yabai -m config focus_follows_mouse autofocus
 
 # set mouse follows focus mode (default: off)
-yabai -m config mouse_follows_focus on
+yabai -m config mouse_follows_focus off
 
 # Disable yabai for these windows
 yabai -m rule --add app="^Docker Desktop$" manage=off
@@ -56,7 +56,7 @@ yabai -m rule --add app="^Calendar$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Music$" manage=off
 yabai -m rule --add app="^Spotify$" manage=off
-yabai -m rule --add app='Settings$' manage=off
+yabai -m rule --add app='Settings$' manage=off space=1
 yabai -m rule --add app="^System Information$" manage=off
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app='^Sublime Merge$' manage=off

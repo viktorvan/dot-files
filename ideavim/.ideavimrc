@@ -1,0 +1,27 @@
+:set clipboard+=unnamed
+:map <CR> o<ESC>
+:set surround
+:map gc :action CommentByLineComment<CR>
+:map gi : action GotoImplementation<CR>
+let mapleader=","
+:map <leader><CR> O<ESC>
+:map <leader>r :action FindUsages<CR>
+set ideajoin
+:nmap - /
+:set scrolloff=3
+:set ignorecase
+:set smartcase
+:set sidescrolloff=4
+:nmap ' `
+:nmap <C-j> i<CR><ESC>w
+:set multiple-cursors
+:vnoremap > >gv
+:vnoremap < <gv
+:nnoremap > >>
+:nnoremap < <<
+:set relativenumber
+:set number
+set visualbell
+set noerrorbells
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+set quickscope

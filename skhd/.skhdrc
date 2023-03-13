@@ -88,19 +88,19 @@ hyper - 0x2A : open -a /Applications/Visual\ Studio\ Code.app
 hyper - o : open -a /Applications/Visual\ Studio\ Code.app
 
 # Restart hammerspoon
-hyper - h : osascript -e 'quit app "HammerSpoon"'; open -a /Applications/HammerSpoon.app
+hyper - s : osascript -e 'quit app "HammerSpoon"'; open -a /Applications/HammerSpoon.app
 
 # focus window
-meh - n : yabai -m window --focus west
+meh - h : yabai -m window --focus west
 meh - i : yabai -m window --focus east
-meh - u : yabai -m window --focus north
-meh - e : yabai -m window --focus south
+meh - e : yabai -m window --focus north
+meh - n : yabai -m window --focus south
 
 # move managed window
-hyper - n : yabai -m window --warp west
+hyper - h : yabai -m window --warp west
 hyper - i : yabai -m window --warp east
-hyper - u : yabai -m window --warp north
-hyper - e : yabai -m window --warp south
+hyper - e : yabai -m window --warp north
+hyper - n : yabai -m window --warp south
 
 # move managed window
 # shift + cmd - h : yabai -m window --warp east
@@ -124,17 +124,19 @@ meh - 0 : yabai -m space --balance
 # meh - space : yabai -m space --focus recent
 meh - space : yabai -m space --focus next
 hyper - space : yabai -m space --focus prev
-meh - 1 : yabai -m space --focus 1
-meh - 2 : yabai -m space --focus 2
-meh - 3 : yabai -m space --focus 3
-meh - 4 : yabai -m space --focus 4
+meh - j : yabai -m space --focus 1
+meh - l : yabai -m space --focus 2
+meh - u : yabai -m space --focus 3
+meh - y : yabai -m space --focus 4
+meh - 0x29 : yabai -m space --focus 5
 
 # send window to desktop and follow focus
-hyper - z : yabai -m window --space next; yabai -m space --focus next
-hyper - 1 : yabai -m window --space 1; yabai -m space --focus 1
-hyper - 2 : yabai -m window --space 2; yabai -m space --focus 2
-hyper - 3 : yabai -m window --space  3; yabai -m space --focus 3
-hyper - 4 : yabai -m window --space  4; yabai -m space --focus 4
+#hyper - z : yabai -m window --space next; yabai -m space --focus next
+hyper - j : yabai -m window --space 1; yabai -m space --focus 1
+hyper - l : yabai -m window --space 2; yabai -m space --focus 2
+hyper - u : yabai -m window --space  3; yabai -m space --focus 3
+hyper - y : yabai -m window --space  4; yabai -m space --focus 4
+hyper - 0x29 : yabai -m window --space  4; yabai -m space --focus 5
 
 # move floating window
 # shift + ctrl - a : yabai -m window --move rel:-20:0
@@ -164,4 +166,4 @@ hyper - m : [[ $(yabai -m config focus_follows_mouse) = "disabled" ]] && \
 cmd - m : yabai -m window --minimize
 
 # testing
-meh - l : yabai -m window --toggle topmost; yabai -m window --toggle topmost
+hyper - m : yabai -m window --toggle topmost; yabai -m window --toggle topmost
