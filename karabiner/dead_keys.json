@@ -1,0 +1,80 @@
+{
+    "title": "Resurrect dead keys for backtick and tilde",
+    "rules": [
+        {
+            "description": "Make backtick behave as normal key",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "equal_sign",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+							"key_code": "equal_sign",
+							"modifiers": [ "left_shift" ]
+                        },
+                        {
+							"key_code": "spacebar"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Make tilde behave as normal key",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "close_bracket",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_option"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+							"key_code": "close_bracket",
+							"modifiers": [ "left_option" ]
+                        },
+                        {
+							"key_code": "spacebar"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Make caret behave as normal key",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "close_bracket",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+							"key_code": "close_bracket",
+							"modifiers": [ "left_shift" ]
+                        },
+                        {
+							"key_code": "spacebar"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

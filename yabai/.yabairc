@@ -6,28 +6,41 @@ sudo yabai --load-sa
 
 # bsp or float (default: float)
 yabai -m config layout bsp
+yabai -m config auto_balance on
+
+# Floating point value between 0 and 1 (default: 0.5)
+yabai -m config split_ratio 0.5
 
 # floating windows are always on top (default: off)
-yabai -m config window_topmost 				off
+yabai -m config window_topmost 				on
 
 # modify window shadows (default: on, options: on, off, float)
-yabai -m config window_shadow 				on
+yabai -m config window_shadow 				off
 
-yabai -m config top_padding                 0
+# Add top_padding if external display
+# internalDisplayId='37D8832A-2D66-02CA-B9F7-8F30A301B230'
+if [ -z $(yabai -m query --displays | jq -r '.[] | select(.uuid == "37D8832A-2D66-02CA-B9F7-8F30A301B230")') ] 
+then
+    yabai -m config top_padding                 32
+else
+    yabai -m config top_padding                 0
+fi
+
 yabai -m config bottom_padding              0
 yabai -m config left_padding                0
 yabai -m config right_padding               0
 yabai -m config window_gap                  4
 
 yabai -m config window_border               off
-yabai -m config window_border_blur          off
-#yabai -m config window_border_width         1
-#yabai -m config active_window_border_color  0xff00ff00
-#yabai -m config normal_window_border_color 0xff555555
-#yabai -m config insert_feedback_color      0xffd75f5f
 yabai -m config window_opacity on
 yabai -m config active_window_opacity 		1.0
 yabai -m config normal_window_opacity 		0.85
+
+# set focus follows mouse mode (default: off, options: off, autoraise, autofocus)
+yabai -m config focus_follows_mouse autofocus
+
+# set mouse follows focus mode (default: off)
+yabai -m config mouse_follows_focus on
 
 # Disable yabai for these windows
 yabai -m rule --add app="^Docker Desktop$" manage=off
@@ -56,14 +69,45 @@ yabai -m rule --add app='^JetBrains Rider$' title='Duplicate' manage=off
 # add a signal that floats a window created by these apps when it's the only window
 yabai -m signal --add event=window_created app="JetBrains Rider" action='yabai/JetBrainsApps.sh'
 
-# Social
-yabai -m rule --add app="^(Slack|Discord|Microsoft Teams|Messages)$" space=^1
-# Browsers
-yabai -m rule --add app="^(Safari|Chrome|Linear)$" space=^2
-# Code 
-yabai -m rule --add app="^(Code|JetBrains Rider|Warp)$" space=^3
-# Music
-yabai -m rule --add app="^(Spotify|Music)$" space=^4
+function setup_space {
+    local idx="$1"
+    local name="$2"
+    local space=
+    echo "setup space $idx : $name"
+
+    space=$(yabai -m query --spaces --space "$idx")
+    if [ -z "$space" ]; then
+    yabai -m space --create
+    fi
+
+    yabai -m space "$idx" --label "$name"
+}
+
+setup_space 1 communication
+setup_space 2 productivity
+setup_space 3 web
+setup_space 4 development
+setup_space 5 media
+
+yabai -m rule --add app="Music" space=^"media"
+yabai -m rule --add app="Spotify" space=^"media"
+
+yabai -m rule --add app="^JetBrains Rider$" space=^"development"
+yabai -m rule --add app="^Code$" space=^"development"
+yabai -m rule --add app="Warp" space=^"development"
+
+yabai -m rule --add app="^Safari*" space=^"web"
+yabai -m rule --add app="^Chrome*" space=^"web"
+
+yabai -m rule --add app="^Linear*" space=^"productivity"
+yabai -m rule --add app="^Postman*" space=^"productivity"
+yabai -m rule --add app="^Karabiner*" space=^"productivity"
+
+yabai -m rule --add app="FaceTime" space=^"communication"
+yabai -m rule --add app="Messages" space=^"communication"
+yabai -m rule --add app="Slack" space=^"communication"
+yabai -m rule --add app="Microsoft\ Teams" space=^"communication"
+yabai -m rule --add app="Discord" space=^"communication"
 
 # focus window after active space changes
 yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id')"
