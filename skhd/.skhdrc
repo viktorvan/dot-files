@@ -166,4 +166,4 @@ hyper - m : [[ $(yabai -m config focus_follows_mouse) = "disabled" ]] && \
 cmd - m : yabai -m window --minimize
 
 # testing
-hyper - m : yabai -m window --toggle topmost; yabai -m window --toggle topmost
+meh - m : yabai -m window --toggle topmost; yabai -m window --toggle topmost
