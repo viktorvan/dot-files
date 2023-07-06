@@ -83,7 +83,7 @@ hyper - r : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
 # Start applications
 meh - return : open -a /Applications/Warp.app
 hyper - return : open -a /Applications/Safari.app
-meh - o : open -a /Users/viktor/Library/Application\ Support/JetBrains/Toolbox/apps/Rider/ch-0/231.9011.39/Rider.app
+meh - o : open -a /Users/viktor/Library/Application\ Support/JetBrains/Toolbox/apps/Rider/ch-0/231.9161.46/Rider.app
 hyper - 0x2A : open -a /Applications/Visual\ Studio\ Code.app
 hyper - o : open -a /Applications/Visual\ Studio\ Code.app
 
