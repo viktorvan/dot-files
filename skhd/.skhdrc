@@ -78,7 +78,7 @@
 
 
 # Reload yabai
-hyper - r : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
+hyper - r : yabai --restart-service
 
 # Start applications
 meh - return : open -a /Applications/Warp.app
