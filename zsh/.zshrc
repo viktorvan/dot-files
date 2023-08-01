@@ -12,6 +12,17 @@ fi
 
 # Customize to your needs...
 
+# Just Completions BEGIN
+# Init Homebrew, which adds environment variables
+eval "$(brew shellenv)"
+
+fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
+
+autoload -U compinit
+compinit
+# Just Completions END
+
+
 # ls-deluxe alias
 alias ls='lsd'
 alias l='ls -l'
