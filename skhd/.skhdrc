@@ -83,7 +83,7 @@ hyper - r : yabai --restart-service
 # Start applications
 meh - return : open -a /Applications/Warp.app
 hyper - return : open -a /Applications/Safari.app
-meh - o : open -a /Users/viktor/Library/Application\ Support/JetBrains/Toolbox/apps/Rider/ch-0/231.9161.46/Rider.app
+meh - o : open -a /Users/viktor/Library/Application\ Support/JetBrains/Toolbox/apps/Rider/ch-0/232.10203.29/Rider.app
 hyper - 0x2A : open -a /Applications/Visual\ Studio\ Code.app
 hyper - o : open -a /Applications/Visual\ Studio\ Code.app
 
@@ -168,6 +168,3 @@ hyper - m : [[ $(yabai -m config focus_follows_mouse) = "disabled" ]] && \
 
 # Minize window using yabai
 cmd - m : yabai -m window --minimize
-
-# testing
-meh - z : yabai -m window --toggle topmost; yabai -m window --toggle topmost
