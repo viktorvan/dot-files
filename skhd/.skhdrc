@@ -81,15 +81,15 @@
 hyper - r : yabai --restart-service
 
 # Start applications
-meh - return : open -a /Applications/Warp.app
+meh - return : open -a /Applications/WezTerm.app
 hyper - return : open -a /Applications/Safari.app
-meh - o : open -a /Users/viktor/Library/Application\ Support/JetBrains/Toolbox/apps/Rider/ch-0/233.14015.60/Rider\ EAP.app/
-hyper - 0x2A : open -a /Applications/Visual\ Studio\ Code.app
+meh - o : open -a /Users/viktor/Applications/Rider.app
 hyper - o : open -a /Applications/Visual\ Studio\ Code.app
 hyper - s : open -a /Applications/Slack.app
 
 # Restart hammerspoon
-hyper - s : osascript -e 'quit app "HammerSpoon"'; open -a /Applications/HammerSpoon.app
+meh - p : osascript -e 'quit app "HammerSpoon"'
+hyper - p : osascript -e 'quit app "HammerSpoon"'; open -a /Applications/HammerSpoon.app
 
 # focus window
 meh - h : yabai -m window --focus west

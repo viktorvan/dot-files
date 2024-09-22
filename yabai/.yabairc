@@ -12,44 +12,43 @@ yabai -m config auto_balance off
 yabai -m config split_ratio 0.5
 
 # floating windows are always on top (default: off)
-yabai -m config window_topmost 				off
-
+# setting removed in v6
+# yabai -m config window_topmost 				off
 
 # modify window shadows (default: on, options: on, off, float)
-yabai -m config window_shadow 				off
+yabai -m config window_shadow 				on
 
 # Add top_padding if external display
-# internalDisplayId='37D8832A-2D66-02CA-B9F7-8F30A301B230'
+internalDisplayId='37D8832A-2D66-02CA-B9F7-8F30A301B230'
 if [ -z $(yabai -m query --displays | jq -r '.[] | select(.uuid == "37D8832A-2D66-02CA-B9F7-8F30A301B230")') ] 
 then
-    yabai -m config top_padding                 32
+    yabai -m config top_padding                 10
 else
-    yabai -m config top_padding                 0
+    yabai -m config top_padding                 10
 fi
 
-yabai -m config bottom_padding              0
-yabai -m config left_padding                0
-yabai -m config right_padding               0
-yabai -m config window_gap                  4
+yabai -m config bottom_padding              10
+yabai -m config left_padding                10
+yabai -m config right_padding               10
+yabai -m config window_gap                  12
 
-yabai -m config window_border               off
 yabai -m config window_opacity on
 yabai -m config active_window_opacity 		1.0
-# yabai -m config normal_window_opacity 		0.90
+yabai -m config normal_window_opacity 		0.95
 
 # set focus follows mouse mode (default: off, options: off, autoraise, autofocus)
-yabai -m config focus_follows_mouse off
+yabai -m config focus_follows_mouse autoraise
 
 # set mouse follows focus mode (default: off)
-yabai -m config mouse_follows_focus off
+yabai -m config mouse_follows_focus on
 
 # Disable yabai for these windows
 yabai -m rule --add app="^Docker Desktop$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^Karabiner-EventViewer" manage=off
-yabai -m rule --add app="^Microsoft Teams$" manage=off
-yabai -m rule --add app="^Slack$" manage=off
-yabai -m rule --add app="^Messages$" manage=off
+# yabai -m rule --add app="^Microsoft Teams (work or school)$" manage=off
+# yabai -m rule --add app="^Slack$" manage=off
+# yabai -m rule --add app="^Messages$" manage=off
 yabai -m rule --add app="^Finder$" manage=off
 yabai -m rule --add app="^Disk Utility$" manage=off
 yabai -m rule --add app="^Activity Monitor$" manage=off
@@ -99,7 +98,7 @@ yabai -m rule --add app="Warp" space=^"development"
 yabai -m rule --add app="Cursor" space=^"development"
 
 yabai -m rule --add app="^Safari*" space=^"web"
-yabai -m rule --add app="^Chrome*" space=^"web"
+yabai -m rule --add app="^Google Chrome*" space=^"web"
 
 yabai -m rule --add app="^Linear*" space=^"productivity"
 yabai -m rule --add app="^Postman*" space=^"productivity"
@@ -108,11 +107,11 @@ yabai -m rule --add app="^Karabiner*" space=^"productivity"
 yabai -m rule --add app="FaceTime" space=^"communication"
 yabai -m rule --add app="Messages" space=^"communication"
 yabai -m rule --add app="Slack" space=^"communication"
-#yabai -m rule --add app="Microsoft\ Teams" space=^"communication"
+yabai -m rule --add app="Microsoft Teams (work or school)" space=^"communication"
 yabai -m rule --add app="Discord" space=^"communication"
 
 # focus window after active space changes
-#yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id')"
+# yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id')"
 
 # focus window after active display changes
 #yabai -m signal --add event=display_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '.[0].id')"
