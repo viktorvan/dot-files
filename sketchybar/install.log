@@ -1,0 +1,9 @@
+[01:30:18 2024-10-12] FETCHING Version 2.38.4
+[01:30:18 2024-10-12] CREATING /Users/viktor/.spicetify
+[01:30:18 2024-10-12] DOWNLOADING https://github.com/spicetify/cli/releases/download/v2.38.4/spicetify-2.38.4-darwin-arm64.tar.gz
+[01:30:19 2024-10-12] EXTRACTING /Users/viktor/.spicetify/spicetify.tar.gz
+[01:30:19 2024-10-12] SETTING EXECUTABLE PERMISSIONS TO /Users/viktor/.spicetify/spicetify
+[01:30:19 2024-10-12] REMOVING /Users/viktor/.spicetify/spicetify.tar.gz
+[01:30:19 2024-10-12] APPENDING /Users/viktor/.spicetify to PATH in /Users/viktor/.zshrc
+[01:30:19 2024-10-12] spicetify v2.38.4 was installed successfully to /Users/viktor/.spicetify
+[01:30:19 2024-10-12] Run 'spicetify --help' to get started

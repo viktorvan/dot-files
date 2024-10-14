@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# INITIAL IMPORTS
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+source "$CONFIG_DIR/variables.sh"
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# VISUAL
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+# loading sketchybar with some visual sets
+sketchybar --bar height=30 \
+  blur_radius=30 \
+  position=top \
+  sticky=off \
+  padding_left=10 \
+  padding_right=10 \
+  color=$BAR_COLOR
+
+PADDINGS=3 # All paddings use this value (icon, label, background)
+# loading fonts and colors
+sketchybar --default icon.color=$WHITE \
+  label.font="Berkeley Mono Variable:Regular:15.0" \
+  label.color=$WHITE \
+  background.color=$ITEM_BG_COLOR \
+  background.corner_radius=5 \
+  background.height=24 \
+  padding_left=5 \
+  padding_right=5 \
+  label.padding_left=4 \
+  label.padding_right=10 \
+  icon.padding_left=10 \
+  icon.padding_right=4
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# ITEMS
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+# left
+source $ITEM_DIR/spaces.sh
+source $ITEM_DIR/front_app.sh
+
+# right (of notch)
+source $ITEM_DIR/media.sh
+
+# right
+source $ITEM_DIR/calendar.sh
+source $ITEM_DIR/volume.sh
+source $ITEM_DIR/battery.sh
+source $ITEM_DIR/cpu.sh
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# SETUP
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+# load configuration
+sketchybar --update
+sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$(aerospace list-workspaces --focused)
