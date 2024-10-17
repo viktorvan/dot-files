@@ -2,7 +2,5 @@
 
 sketchybar --add item cpu right \
   --set cpu update_freq=10 \
-  icon.color=$BLACK \
-  icon.font="sketchybar-app-font:Regular:16.0" \
-  label.color=$BLACK \
+  icon.font="sketchybar-app-font:Regular:15.0" \
   script="$PLUGIN_DIR/cpu.sh"

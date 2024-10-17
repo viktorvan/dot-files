@@ -12,10 +12,10 @@ if [ "$SENDER" = "volume_change" ]; then
     ICON="󰕾"
     ;;
   [3-5][0-9])
-    ICON="󰖀"
+    ICON="󰕾"
     ;;
   [1-9] | [1-2][0-9])
-    ICON="󰕿"
+    ICON="󰕾"
     ;;
   *) ICON="󰖁" ;;
   esac
@@ -23,9 +23,5 @@ if [ "$SENDER" = "volume_change" ]; then
   # adding it to sketchybar
   sketchybar --set $NAME \
     icon="$ICON" \
-    label="$VOLUME%" \
-    background.drawing=on \
-    background.color=$ACCENT_COLOR \
-    label.color=$BLACK \
-    icon.color=$BLACK
+    label="$(printf "%02d" $VOLUME)%"
 fi

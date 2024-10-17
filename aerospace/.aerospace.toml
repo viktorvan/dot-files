@@ -13,7 +13,7 @@ after-login-command = []
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
-  'exec-and-forget borders active_color=0xff84B6F6 inactive_color=0x00000000 width=5.0'
+  'exec-and-forget borders active_color=0xFFDC8A78 inactive_color=0x00000000 width=2.0'
 ]
 
 exec-on-workspace-change = ['/bin/bash', '-c',
@@ -62,7 +62,7 @@ inner.horizontal = 10
 inner.vertical =   10
 outer.left =       10
 outer.bottom =     10
-outer.top =        36
+outer.top = [{ monitor."built-in" = 8}, 40]
 outer.right =      10
 
 # 'main' binding mode declaration
@@ -107,6 +107,9 @@ ctrl-alt-shift-l = 'workspace 2'
 ctrl-alt-shift-u = 'workspace 3'
 ctrl-alt-shift-y = 'workspace 4'
 ctrl-alt-shift-semicolon = 'workspace 5'
+ctrl-alt-shift-leftSquareBracket = 'workspace 6'
+ctrl-alt-shift-7 = 'workspace 7'
+ctrl-alt-shift-8 = 'workspace 8'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-shift-cmd-j = 'move-node-to-workspace 1'
@@ -114,6 +117,9 @@ ctrl-alt-shift-cmd-l = 'move-node-to-workspace 2'
 ctrl-alt-shift-cmd-u = 'move-node-to-workspace 3'
 ctrl-alt-shift-cmd-y = 'move-node-to-workspace 4'
 ctrl-alt-shift-cmd-semicolon = 'move-node-to-workspace 5'
+ctrl-alt-shift-cmd-leftSquareBracket = 'move-node-to-workspace 6'
+ctrl-alt-shift-cmd-7 = 'move-node-to-workspace 7'
+ctrl-alt-shift-cmd-8 = 'move-node-to-workspace 8'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 ctrl-alt-shift-cmd-s = 'mode service'
@@ -173,4 +179,8 @@ run = 'move-node-to-workspace 5'
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
 run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'dev.warp.Warp-Stable'
+run = 'move-node-to-workspace 7'
 

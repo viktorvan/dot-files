@@ -1,11 +1,11 @@
 #!/bin/bash
 
-sketchybar --add item media e \
-  --set media label.color=$ACCENT_COLOR \
-  label.max_chars=40 \
+source "$CONFIG_DIR/variables.sh"
+
+sketchybar --add item media q \
+  --set media \
+  icon.font="sketchybar-app-font:Regular:15.0" \
   scroll_texts=on \
-  icon= \
-  icon.color=$ACCENT_COLOR \
-  background.drawing=off \
+  updates=on \
   script="$PLUGIN_DIR/media.sh" \
   --subscribe media media_change

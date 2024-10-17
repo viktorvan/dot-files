@@ -14,6 +14,4 @@ CPU_PERCENT="$(echo "$CPU_SYS $CPU_USER" | awk '{printf "%.0f\n", ($1 + $2)*100}
 # adding it to sketchybar
 sketchybar --set $NAME \
   icon=":cpu:" \
-  label="$CPU_PERCENT%" \
-  background.drawing=on \
-  background.color=$ACCENT_COLOR
+  label="$(printf "%02d" $CPU_PERCENT)%"

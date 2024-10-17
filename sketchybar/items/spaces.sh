@@ -1,23 +1,40 @@
 #!/bin/sh
 
+source "$CONFIG_DIR/variables.sh"
 sketchybar --add event aerospace_workspace_change
+focused=$(aerospace list-workspaces --focused)
 
 for sid in $(aerospace list-workspaces --all); do
-  sketchybar --add space space.$sid left \
+  sketchybar --add item space.$sid left \
     --subscribe space.$sid aerospace_workspace_change \
-    --set space.$sid space=$sid \
+    --set space.$sid icon.font="Berkeley Mono Variable:Regular:15.0" \
     icon=$sid \
-    label.font="sketchybar-app-font:Regular:16.0" \
-    label.padding_right=20 \
-    label.y_offset=-1 \
+    icon.align=left \
+    icon.width=24 \
+    icon.align=center \
+    icon.padding_left=0 \
+    icon.padding_right=0 \
+    icon.background.color=$PEACH \
+    icon.background.drawing=off \
+    icon.background.height=24 \
+    icon.background.border_color=$LAVENDER \
+    icon.background.border_width=0 \
+    icon.background.corner_radius=24 \
+    label.drawing=off \
+    background.padding_left=4 \
+    background.padding_right=4 \
+    background.drawing=off \
     script="$PLUGIN_DIR/space.sh $sid"
+  if [ "$focused" = "$sid" ]; then
+    sketchybar --set space.$sid \
+      icon.background.drawing=on \
+      icon.color=$CRUST
+  fi
 done
 
-# sketchybar --add item space_separator left \
-#   --set space_separator icon="SEP" \
-#   icon.color=$ACCENT_COLOR \
-#   icon.padding_left=4 \
-#   label.drawing=off \
-#   background.drawing=off \
-#   script="$PLUGIN_DIR/space_windows.sh" \
-#   --subscribe space_separator aerospace_workspace_change
+# consolidate space numbers and add a background
+sketchybar --add bracket spaces '/space\..*/' \
+  --set spaces background.color=$BASE \
+  blur_radius=2 \
+  background.padding_left=0 \
+  background.height=30

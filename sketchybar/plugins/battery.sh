@@ -34,8 +34,4 @@ fi
 # adding it to sketchybar
 sketchybar --set $NAME \
   icon="$ICON" \
-  label="${PERCENTAGE}%" \
-  background.drawing=on \
-  background.color=$ACCENT_COLOR \
-  label.color=$BLACK \
-  icon.color=$BLACK
+  label="${PERCENTAGE}%"

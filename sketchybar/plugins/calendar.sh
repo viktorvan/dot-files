@@ -5,8 +5,4 @@ source "$CONFIG_DIR/variables.sh"
 
 # adding it to sketchybar
 sketchybar --set $NAME \
-  label="$(date +'%a %d %b %H:%M')" \
-  background.drawing=on \
-  background.color=$ACCENT_COLOR \
-  label.color=$BLACK \
-  icon.color=$BLACK
+  label="$(date +'%a %d %b %H:%M')"
