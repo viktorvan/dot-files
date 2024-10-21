@@ -5,11 +5,18 @@ return {
   dependencies = { "neovim/nvim-lspconfig" },
   init = function()
     vim.g["fsharp#lsp_codelens"] = 0
+    vim.g["fsharp#show_signature_on_cursor_move"] = 0
     vim.g["fsharp#CodeLenses#Signature#Enabled"] = 0
     vim.g["fsharp#CodeLenses#References#Enabled"] = 0
     vim.g["fsharp#workspace_mode_peek_deep_level"] = 4
     vim.g["fsharp#record_stub_generation"] = 1
     vim.g["fsharp#automatic_workspace_init"] = 0
+    vim.g["fsharp#fsautocomplete_command"] = {
+      "fsautocomplete",
+      "--project-graph-enabled",
+      "--adaptive-lsp-server-enabled",
+      "--use-fcs-transparent-compiler",
+    }
   end,
   config = function()
     -- Function to find the nearest .fsproj file
@@ -59,9 +66,9 @@ return {
     end
 
     -- Create a user command for loading the nearest .fsproj
-    vim.api.nvim_create_user_command("FSharpLoadNearestProject", load_fsharp_project, {})
+    vim.api.nvim_create_user_command("FSharpLoadNearestProject", load_fsharp_project, { bang = true })
 
-    -- Set up keybinding for *.fs files
+    -- Set up keybinding for FSharpLoadNearestProject for *.fs files
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "fsharp",
       callback = function()
@@ -70,6 +77,79 @@ return {
           "n",
           "<leader>fl",
           ":FSharpLoadNearestProject<CR>",
+          { noremap = true, silent = true }
+        )
+      end,
+    })
+
+    vim.api.nvim_create_user_command("FSharpRefreshCodeLens", function()
+      vim.lsp.codelens.refresh()
+      print("[FSAC] Refreshing CodeLens")
+    end, {
+      bang = true,
+    })
+
+    -- Set up keybinding for FSharpRefreshCodeLens for *.fs files
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "fsharp",
+      callback = function()
+        vim.api.nvim_buf_set_keymap(
+          0,
+          "n",
+          "<leader>cr",
+          ":FSharpRefreshCodeLens<CR>",
+          { noremap = true, silent = true }
+        )
+      end,
+    })
+    -- Set up keybinding for FSharpLoadNearestProject for *.fs files
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "fsharp",
+      callback = function()
+        vim.api.nvim_buf_set_keymap(
+          0,
+          "n",
+          "<leader>fl",
+          ":FSharpLoadNearestProject<CR>",
+          { noremap = true, silent = true }
+        )
+      end,
+    })
+    -- Set up keybinding for FSharpLoadNearestProject for *.fs files
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "fsharp",
+      callback = function()
+        vim.api.nvim_buf_set_keymap(
+          0,
+          "n",
+          "<leader>fl",
+          ":FSharpLoadNearestProject<CR>",
+          { noremap = true, silent = true }
+        )
+      end,
+    })
+    -- Set up keybinding for FSharpLoadNearestProject for *.fs files
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "fsharp",
+      callback = function()
+        vim.api.nvim_buf_set_keymap(
+          0,
+          "n",
+          "<leader>fl",
+          ":FSharpLoadNearestProject<CR>",
+          { noremap = true, silent = true }
+        )
+      end,
+    })
+    -- Set up keybinding for FSharpLoadNearestProject for *.fs files
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "fsharp",
+      callback = function()
+        vim.api.nvim_buf_set_keymap(
+          0,
+          "n",
+          "<leader>cr",
+          ":FSharpRefreshCodeLens<CR>",
           { noremap = true, silent = true }
         )
       end,

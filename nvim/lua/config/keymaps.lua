@@ -45,3 +45,9 @@ vim.keymap.set("n", "<S-Tab>", "<<", { noremap = true, silent = true })
 vim.keymap.set("i", "<S-Tab>", "<C-d>", { noremap = true, silent = true })
 
 vim.keymap.set("t", "<leader>ft", "<cmd>close<CR>", { desc = "Close Terminal" })
+
+vim.keymap.set("n", "<C-c>", "<C-a>", { noremap = true })
+vim.keymap.set("v", "<C-c>", "<C-a> gv", { noremap = true })
+vim.keymap.set("v", "<C-x>", "<C-x> gv", { noremap = true })
+
+vim.keymap.set("n", "<leader><leader>", "<CMD>Oil<CR>", { desc = "Open parent directory" })

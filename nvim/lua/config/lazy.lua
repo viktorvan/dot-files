@@ -18,6 +18,10 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.LanguageClient_useVirtualText = "Diagnostics"
 
 require("lazy").setup({
+  ui = {
+    border = "rounded",
+    backdrop = 100,
+  },
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
@@ -56,6 +60,11 @@ require("lazy").setup({
       },
     },
   },
+})
+
+local bicep_lsp_bin = "/usr/local/bin/bicep-langserver/Bicep.LangServer.dll"
+require("lspconfig").bicep.setup({
+  cmd = { "dotnet", bicep_lsp_bin },
 })
 
 require("telescope").load_extension("git_worktree")

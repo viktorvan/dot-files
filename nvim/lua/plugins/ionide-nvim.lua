@@ -1,30 +1,39 @@
 return {}
 -- return {
---   "WillEhrendreich/Ionide-Nvim",
+--   "WillEhrendreich/Ionide-nvim",
 --   dependencies = {
 --     {
---       -- highly recommended to use Mason. very nice for lsp/linter/tool installations.
 --       "williamboman/mason.nvim",
 --       opts = {
---         -- here we make sure fsautocomplete is downloaded by mason, which Ionide absolutely needs in order to work.
 --         ensure_installed = {
 --           "fsautocomplete",
 --         },
 --       },
 --       {
---         -- very recommended to use nvim-lspconfig, as it takes care of much of the management of starting Ionide,
 --         "neovim/nvim-lspconfig",
---         version = false, -- last release is way too old
 --         opts = {
 --           servers = {
+--
 --             ---@type IonideOptions
 --             ionide = {
---               IonideNvimSettings = {},
+--
+--               IonideNvimSettings = {
+--                 -- LspRecommendedColorScheme = true,
+--                 EnableFsiStdOutTeeToFile = true,
+--                 ShowSignatureOnCursorMove = false,
+--                 FsiStdOutFileName = "./FsiOutput.txt",
+--               },
 --               cmd = {
---                 vim.fs.normalize(vim.fn.stdpath("data") .. "/mason/bin/fsautocomplete.cmd"),
+--                 vim.fs.normalize(vim.fn.stdpath("data") .. "/mason/bin/fsautocomplete"),
 --               },
 --               settings = {
---                 FSharp = {},
+--                 FSharp = {
+--                   enableMSBuildProjectGraph = true,
+--                   -- enableTreeView = true,
+--                   -- fsiExtraParameters = {
+--                   --   "--compilertool:C:/Users/Will.ehrendreich/.dotnet/tools/.store/depman-fsproj/0.2.6/depman-fsproj/0.2.6/tools/net7.0/any",
+--                   -- },
+--                 },
 --               },
 --             },
 --           },
@@ -32,17 +41,13 @@ return {}
 --           -- return true if you don't want this server to be setup with lspconfig
 --           ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
 --           setup = {
---             --- ***VERY IMPORTANT***
---             --- if you don't wan't both ionide AND fsautocomplete to
---             ---attach themselves to every fsharp file (you don't, trust me), you
---             --- need to make sure that fsautocomplete doesn't get it's setup function called.
---             --- from within a lazy.nvim setup it simply means that you do the following:
+--             ionide = function(_, opts)
+--               -- print("setup ionide")
+--               require("ionide").setup(opts)
+--             end,
+--             -- NOTE: returning true will make sure fsautocomplete is not setup with neovim, which is what we want if we're using Ionide-nvim
 --             fsautocomplete = function(_, _)
 --               return true
---             end,
---             --- and then pass the opts in from up above.
---             ionide = function(_, opts)
---               require("ionide").setup(opts)
 --             end,
 --           },
 --         },
