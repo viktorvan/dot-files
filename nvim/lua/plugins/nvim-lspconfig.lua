@@ -2,10 +2,10 @@ return {
   "neovim/nvim-lspconfig",
   opts = {
     codelens = { enabled = false },
-  },
-  servers = {
-    prolog_ls = {},
-    bicep = {},
+    servers = {
+      prolog_ls = {},
+      bicep = {},
+    },
   },
   config = function()
     -- You can copy the default capabilities from the lsp

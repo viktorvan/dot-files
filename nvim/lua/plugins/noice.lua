@@ -16,7 +16,7 @@ return {
         },
       },
       presets = {
-        bottom_search = true,
+        bottom_search = false,
         lsp_doc_border = true,
       },
     })

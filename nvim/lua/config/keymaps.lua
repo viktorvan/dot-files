@@ -51,3 +51,19 @@ vim.keymap.set("v", "<C-c>", "<C-a> gv", { noremap = true })
 vim.keymap.set("v", "<C-x>", "<C-x> gv", { noremap = true })
 
 vim.keymap.set("n", "<leader><leader>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+vim.keymap.set("n", "<leader><Tab>n", "<CMD>tabnext<CR>", { desc = "Next Tab" })
+vim.keymap.set("n", "<leader><Tab>p", "<CMD>tabprevious<CR>", { desc = "Previous Tab" })
+vim.keymap.set("n", "<space>", ",", { desc = "Find backwards" })
+
+-- fullscreen floating windows
+local Util = require("lazyvim.util")
+
+vim.keymap.set("n", "<leader>gg", function()
+  Util.terminal.open({ "lazygit" }, {
+    size = {
+      width = 1,
+      height = 1,
+    },
+  })
+end, { desc = "Lazygit (cwd)" })
