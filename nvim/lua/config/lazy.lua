@@ -62,34 +62,7 @@ require("lazy").setup({
   },
 })
 
--- tailwind setup
-local lspconfig = require("lspconfig")
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-local on_attach = --this is a custom function that sets several options
-  -- The initialization of TailwindCSS LSP
-  lspconfig.tailwindcss.setup({
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-      tailwindCSS = {
-        includeLanguages = {
-          fsharp = "html",
-        },
-        experimental = {
-          classRegex = {
-            "(?:_class )(?:'|\"|`)([^\"'`]*)(?:'|\"|`)", -- Giraffe.ViewEngine, looks for string preceded by '_class '
-          },
-        },
-      },
-    },
-    filetypes = {
-      "fsharp",
-      "html",
-    },
-
-    -- Add additional filetypes
-    -- vim.list_extend(opts.filetypes, { "fsharp" }),
-  })
+require("config.tailwind")
 
 local bicep_lsp_bin = "/usr/local/bin/bicep-langserver/Bicep.LangServer.dll"
 require("lspconfig").bicep.setup({
@@ -97,3 +70,7 @@ require("lspconfig").bicep.setup({
 })
 
 require("telescope").load_extension("git_worktree")
+
+-- disable copilot
+local copilot = require("copilot.command")
+copilot.disable()

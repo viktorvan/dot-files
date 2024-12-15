@@ -56,14 +56,25 @@ vim.keymap.set("n", "<leader><Tab>n", "<CMD>tabnext<CR>", { desc = "Next Tab" })
 vim.keymap.set("n", "<leader><Tab>p", "<CMD>tabprevious<CR>", { desc = "Previous Tab" })
 vim.keymap.set("n", "<space>", ",", { desc = "Find backwards" })
 
--- fullscreen floating windows
-local Util = require("lazyvim.util")
+-- Toggle configurations
+local function create_toggle(name, get_fn, set_fn, key)
+  Snacks.toggle
+    .new({
+      name = name,
+      get = get_fn,
+      set = set_fn,
+    })
+    :map(key)
+end
 
-vim.keymap.set("n", "<leader>gg", function()
-  Util.terminal.open({ "lazygit" }, {
-    size = {
-      width = 1,
-      height = 1,
-    },
-  })
-end, { desc = "Lazygit (cwd)" })
+-- Copilot toggle
+create_toggle("Copilot", function()
+  return not require("copilot.client").is_disabled()
+end, function(state)
+  local copilot = require("copilot.command")
+  if state then
+    copilot.enable()
+  else
+    copilot.disable()
+  end
+end, "<leader>uc")
