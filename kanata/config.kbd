@@ -1,0 +1,163 @@
+(defcfg
+  #|
+  This configuration will process all keys pressed inside of kanata, even if
+  they are not mapped in defsrc. This is so that certain actions can activate
+  at the right time for certain input sequences. By default, unmapped keys are
+  not processed through kanata due to a Windows issue related to AltGr. If you
+  use AltGr in your keyboard, you will likely want to follow the simple.kbd
+  file while unmapping lctl and ralt from defsrc.
+  |#
+  process-unmapped-keys yes
+  concurrent-tap-hold yes
+  chords-v2-min-idle 100
+  log-layer-changes no
+)
+
+(defsrc
+              q    w    e    r    t    y    u    i    o    p    [
+  caps        a    s    d    f    g    h    j    k    l    ;    '    \
+  Backquote   z    x    c    v    b    n    m    ,    .    /    rsft
+                            spc
+)
+
+(defchordsv2
+  (a s) (multi lmet lalt) 20 all-released ()
+  (s f) (multi lalt lsft) 20 all-released ()
+  (s d f) @meh 50 all-released ()
+  (a s d f) @hyp 100 all-released ()
+
+  (j k l o) @hyp 100 all-released ()
+  (j k l) @meh 50 all-released ()
+  (k l) (multi rctl ralt) 20 all-released ()
+  (j k) (multi rsft rctl) 20 all-released ()
+  (j ;) (multi rsft rmet) 20 all-released ()
+  (k ;) (multi rctl rmet) 20 all-released ()
+
+  (j k l x) lrld 100 all-released ()
+
+  ;; l-o-c
+  (u ; x) @localhost 100 all-released ()
+)
+
+(defvar
+  ;; Note: consider using different time values for your different fingers.
+  ;; For example, your pinkies might be slower to release keys and index
+  ;; fingers faster.
+  tap-time 200
+  hold-time 150
+
+  left-hand-keys (
+    q w e r t
+    a s d f g
+    z x c v b
+  )
+  right-hand-keys (
+    y u i o p
+    h j k l ;
+    n m , . /
+  )
+)
+
+(deflayer base
+             q    @w   f    @p   b    @j   @l   u    y    ;    [
+  @cap       @a   @r   @s   @t   g    m    @n   @e   @i   @o   '    \
+  z          x    c    d    v    bspc k    h    ,    .    /    @cw
+                            @spc
+)
+
+(deflayer nomods
+             q    w    f    p    b    j    l    u    y    ;    [
+  caps       a    r    s    t    g    m    n    e    i    o    '    \
+  z          x    c    d    v    bspc k    h    ,    .    /    rsft
+                            spc
+)
+
+(deflayer arrows
+             q    @w   f    @p   b    @j   @l   u    y    ;    [
+  @cap       @a   @r   @s   @t   g    @al  @ad  @au  @ar  @o   '    \
+  z          x    c    d    v    bspc k    h    ,    .    /    @cw
+                            @spc
+)
+
+(deflayer num
+             q    @w   f    @p   b    @=   4    5    6    ;    [
+  @cap       @a   @r   @s   @t   g    +    1    2    3    @*   '    \
+  z          x    c    d    v    bspc /    0    ,    .    @/    @cw
+                            @spc
+)
+
+(deflayer symr
+             q    @w   f    @p   b    @=   A-8  A-9  y    ;    [
+  @cap       @a   @r   @s   @t   g    A-7  @{   @}   <    S-<  '    \
+  z          x    c    d    v    bspc /    S-8  S-9  .    /    @cw
+                            @spc
+)
+
+(deflayer syml
+             q    A-]  S--  S-\   b    @j   @l   u    y    ;    [
+  @cap       @a   S-]  S-2  \     @`   m    @n   @e   @i   @o   '   \
+  z          x    c    =     @´   bspc k    h    ,    .    /    @cw
+                            @spc
+)
+
+(deflayer media
+             q    @prv f    @pl  @nxt @j   @l   u    y    ;    [
+  @cap       @a   @r   @v-  @v+  @mut m    @n   @e   @i   @o   '    \
+  z          x    c    d    v    bspc k    h    ,    .    /    @cw
+                            @spc
+)
+
+(deffakekeys
+  to-base (layer-switch base)
+)
+
+(defalias
+  tap (multi
+    (layer-switch nomods)
+    (on-idle-fakekey to-base tap 20)
+  )
+
+  ;; home row mods
+  a (tap-hold-release-keys $tap-time $hold-time (multi a @tap) lmet $left-hand-keys)
+  r (tap-hold-release-keys $tap-time $hold-time (multi r @tap) lalt $left-hand-keys)
+  s (tap-hold-release-keys $tap-time $hold-time (multi s @tap) lctl $left-hand-keys)
+  t (tap-hold-release-keys $tap-time $hold-time (multi t @tap) lsft $left-hand-keys)
+  n (tap-hold-release-keys $tap-time $hold-time (multi n @tap) rsft $right-hand-keys)
+  e (tap-hold-release-keys $tap-time $hold-time (multi e @tap) rctl $right-hand-keys)
+  i (tap-hold-release-keys $tap-time $hold-time (multi i @tap) ralt $right-hand-keys)
+  o (tap-hold-release-keys $tap-time $hold-time (multi o @tap) rmet $right-hand-keys)
+
+  ;; layers
+  w (tap-hold-release-keys $tap-time $hold-time (multi w @tap) (layer-while-held num) $left-hand-keys)
+  ;; mouse layer not supported f (tap-hold-release-keys $tap-time $hold-time (multi f @tap) _ $left-hand-keys)
+  p (tap-hold-release-keys $tap-time $hold-time (multi p @tap) (layer-while-held symr) $left-hand-keys)
+  j (tap-hold-release-keys $tap-time $hold-time (multi j @tap) (layer-while-held media) $right-hand-keys)
+  l (tap-hold-release-keys $tap-time $hold-time (multi l @tap) (layer-while-held syml) $right-hand-keys)
+  spc (tap-hold-press 200 200 spc (layer-while-held arrows))
+
+
+  ;;
+  ` (macro (S-= spc))
+  ´ (macro (= spc))
+  = S-0
+  { S-A-8
+  } S-A-9
+  / S-7
+  * S-Backslash
+  al ArrowLeft
+  ad ArrowDown
+  au ArrowUp
+  ar ArrowRight
+  bq Backquote
+  meh (multi lalt lctl lsft)
+  hyp (multi lmet lalt lctl lsft)
+  cw (caps-word-toggle 1000)
+  cap (tap-hold-press 200 200 esc lctl)
+  localhost (macro (h t t p s S-. S-7 S-7 l o c a l h o s t S-.))
+  v+ VolumeUp
+  v- VolumeDown
+  pl MediaPlayPause
+  prv MediaTrackPrevious
+  nxt MediaTrackNext
+  mut VolumeMute
+)
