@@ -3,6 +3,7 @@
 -- Add any additional options here
 
 vim.g.mapleader = ","
+vim.g.maplocalleader = ","
 
 -- LazyVim auto format
 vim.g.autoformat = false
