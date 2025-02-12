@@ -5,7 +5,7 @@ return {
   config = function()
     local Hooks = require("git-worktree.hooks")
     local onSwitch = function(type, prev_path)
-      local clients = vim.lsp.get_active_clients()
+      local clients = vim.lsp.get_clients()
       if next(clients) == nil then
         print("No active LSP clients.")
       else

@@ -56,6 +56,8 @@ vim.keymap.set("n", "<leader><Tab>n", "<CMD>tabnext<CR>", { desc = "Next Tab" })
 vim.keymap.set("n", "<leader><Tab>p", "<CMD>tabprevious<CR>", { desc = "Previous Tab" })
 vim.keymap.set("n", "<space>", ",", { desc = "Find backwards" })
 
+vim.keymap.set("n", "<leader>wrn", "<CMD>Tmw<CR>", { desc = "Rename tmux window to current branch name" })
+
 -- Toggle configurations
 local function create_toggle(name, get_fn, set_fn, key)
   Snacks.toggle
