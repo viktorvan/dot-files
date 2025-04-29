@@ -14,15 +14,17 @@
 )
 
 (defsrc
-              q    w    e    r    t    y    u    i    o    p    [
-  caps        a    s    d    f    g    h    j    k    l    ;    '    \
-  Backquote   z    x    c    v    b    n    m    ,    .    /    rsft
-                            spc
+                   q    w    e    r    t    y    u    i    o    p    [
+  caps             a    s    d    f    g    h    j    k    l    ;    '    \
+  lsft Backquote   z    x    c    v    b    n    m    ,    .    /    rsft
+                        lmet         spc              rmet
 )
 
 (defchordsv2
   (a s) (multi lmet lalt) 20 all-released ()
   (s f) (multi lalt lsft) 20 all-released ()
+  (s d) (multi lalt lctl) 20 all-released ()
+  (a f) (multi lsft lmet) 20 all-released ()
   (s d f) @meh 50 all-released ()
   (a s d f) @hyp 100 all-released ()
 
@@ -61,50 +63,50 @@
 (deflayer base
              q    @w   f    @p   b    @j   @l   u    y    ;    [
   @cap       @a   @r   @s   @t   g    m    @n   @e   @i   @o   '    \
-  z          x    c    d    v    bspc k    h    ,    .    /    @cw
-                            @spc
+  @cw   z   x    c    d    v    bspc k    h    ,    .    /     ret
+            @rp      @spc                 @rp
 )
 
 (deflayer nomods
              q    w    f    p    b    j    l    u    y    ;    [
   caps       a    r    s    t    g    m    n    e    i    o    '    \
-  z          x    c    d    v    bspc k    h    ,    .    /    rsft
-                            spc
+  lsft  z    x    c    d    v    bspc k    h    ,    .    /    rsft
+                       @rp spc  @rp
 )
 
 (deflayer arrows
              q    @w   f    @p   b    @j   @l   u    y    ;    [
   @cap       @a   @r   @s   @t   g    @al  @ad  @au  @ar  @o   '    \
-  z          x    c    d    v    bspc k    h    ,    .    /    @cw
-                            @spc
+  @cw  z    x    c    d    v    bspc k    h    ,    .    /    ret
+                       @rp  @spc @rp
 )
 
 (deflayer num
              q    @w   f    @p   b    @=   4    5    6    ;    [
   @cap       @a   @r   @s   @t   g    +    1    2    3    @*   '    \
-  z          x    c    d    v    bspc /    0    ,    .    @/    @cw
-                            @spc
+  @cw  z    x    c    d    v    bspc /    0    ,    .    @/    ret
+                       @rp  @spc @rp
 )
 
 (deflayer symr
              q    @w   f    @p   b    @=   A-8  A-9  y    ;    [
   @cap       @a   @r   @s   @t   g    A-7  @{   @}   <    S-<  '    \
-  z          x    c    d    v    bspc /    S-8  S-9  .    /    @cw
-                            @spc
+  @cw  z    x    c    d    v    bspc /    S-8  S-9  .    /    ret
+                       @rp  @spc @rp
 )
 
 (deflayer syml
              q    A-]  S--  S-\   b    @j   @l   u    y    ;    [
   @cap       @a   S-]  S-2  \     @`   m    @n   @e   @i   @o   '   \
-  z          x    c    =     @´   bspc k    h    ,    .    /    @cw
-                            @spc
+  @cw  z    x    c    =     @´   bspc k    h    ,    .    /    ret
+                       @rp @spc @rp
 )
 
 (deflayer media
              q    @prv f    @pl  @nxt @j   @l   u    y    ;    [
   @cap       @a   @r   @v-  @v+  @mut m    @n   @e   @i   @o   '    \
-  z          x    c    d    v    bspc k    h    ,    .    /    @cw
-                            @spc
+  @cw   z    x    c    d    v    bspc k    h    ,    .    /    ret
+                       @rp  @spc @rp
 )
 
 (deffakekeys
@@ -160,4 +162,5 @@
   prv MediaTrackPrevious
   nxt MediaTrackNext
   mut VolumeMute
+  rp rpt
 )
