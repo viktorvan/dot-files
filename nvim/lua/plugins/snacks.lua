@@ -1,5 +1,8 @@
 return {
   "folke/snacks.nvim",
+  keys = {
+    { "<leader>ft", false }
+  },
   opts = {
     terminal = {
       win = {
@@ -26,6 +29,21 @@ return {
         width = 140,
         backdrop = { transparent = false, blend = 80 }
       }
+    },
+    styles = {
+      scratch = {
+        width = 200,
+        height = 30,
+        bo = { buftype = "", buflisted = false, bufhidden = "hide", swapfile = false },
+        minimal = false,
+        noautocmd = false,
+        -- position = "right",
+        zindex = 20,
+        wo = { winhighlight = "NormalFloat:Normal" },
+        border = "rounded",
+        title_pos = "center",
+        footer_pos = "center",
+      }
     }
-  },
+  }
 }

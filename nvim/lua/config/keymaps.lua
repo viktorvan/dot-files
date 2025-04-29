@@ -44,7 +44,10 @@ vim.keymap.set("n", "<CR>", "o<Escape>l", { noremap = true, silent = true })
 vim.keymap.set("n", "<S-Tab>", "<<", { noremap = true, silent = true })
 vim.keymap.set("i", "<S-Tab>", "<C-d>", { noremap = true, silent = true })
 
-vim.keymap.set("t", "<leader>ft", "<cmd>close<CR>", { desc = "Close Terminal" })
+vim.keymap.del("n", "<leader>ft") -- lazyvim floating terminal
+vim.keymap.del("n", "<leader>fT") -- lazyvim floating terminal
+vim.keymap.set("n", "<leader>t", function() Snacks.terminal(nil, { cwd = vim.fn.getcwd() }) end, { desc = "Terminal (Root Dir)" })
+vim.keymap.set("t", "<leader>t", "<cmd>close<CR>", { desc = "Close Terminal" })
 
 vim.keymap.set("n", "<C-c>", "<C-a>", { noremap = true })
 vim.keymap.set("v", "<C-c>", "<C-a> gv", { noremap = true })
@@ -57,6 +60,12 @@ vim.keymap.set("n", "<leader><Tab>p", "<CMD>tabprevious<CR>", { desc = "Previous
 vim.keymap.set("n", "<space>", ",", { desc = "Find backwards" })
 
 vim.keymap.set("n", "<leader>wrn", "<CMD>Tmw<CR>", { desc = "Rename tmux window to current branch name" })
+vim.keymap.set("n", "<leader>yy", ":let @+ = @<CR>", { desc = "Copy Default register to system clipboard" })
+
+vim.keymap.set("n", "<leader>p", "\"0p", { desc = "paste from 0 register" })
+vim.keymap.set("n", "<leader>P", "\"0P", { desc = "Paste from 0 register" })
+vim.keymap.set("v", "<leader>p", "\"0p", { desc = "Paste from 0 register" })
+
 
 -- Toggle configurations
 local function create_toggle(name, get_fn, set_fn, key)

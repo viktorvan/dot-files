@@ -79,3 +79,41 @@ copilot.disable()
 vim.api.nvim_create_user_command('Tmw', function()
   vim.fn.system('zsh -c "$HOME/developer/utils/tmux-set-window-name.sh $(git branch --show-current)"')
 end, {})
+
+local finders = require('telescope.finders')
+local pickers = require('telescope.pickers')
+local conf = require('telescope.config').values
+local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
+
+local function delete_snacks_scratch_file()
+    local predefined_directory = vim.fn.stdpath("data") .. "/scratch"
+
+    -- List files using the built-in `vim.fs.dir()`
+    local files = {}
+    for name, type in vim.fs.dir(predefined_directory) do
+        if type == "file" then
+            table.insert(files, predefined_directory .. "/" .. name)
+        end
+    end
+
+    pickers.new({}, {
+        prompt_title = "Delete File",
+        finder = finders.new_table({ results = files }),
+        sorter = conf.generic_sorter({}),
+        previewer = conf.file_previewer({}),
+        attach_mappings = function(prompt_bufnr, _)
+            actions.select_default:replace(function()
+                local selection = action_state.get_selected_entry()
+                if not selection then return end
+                local filepath = selection[1]
+                actions.close(prompt_bufnr)
+                vim.fn.delete(filepath)
+            end)
+            return true
+        end,
+    }):find()
+end
+
+vim.api.nvim_create_user_command('ScratchDelete', delete_snacks_scratch_file, {})
+

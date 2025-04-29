@@ -6,7 +6,13 @@ return {
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
     preset = "classic",
-    delay = 1000
+    delay = function (ctx)
+      if ctx.keys == "\"" then return 0
+      elseif ctx.keys == "'" then return 0
+      else
+        return 1000
+      end
+    end
   },
   keys = {
     {

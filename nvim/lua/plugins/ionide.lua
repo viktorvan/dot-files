@@ -60,6 +60,7 @@ return {
       local fsproj_path = find_nearest_fsproj(buffer_dir)
 
       if fsproj_path then
+        vim.cmd("LspStart")
         vim.cmd("FSharpLoadProject " .. fsproj_path)
         print("[FSAC] loaded project" .. fsproj_path)
       else
