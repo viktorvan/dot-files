@@ -28,7 +28,7 @@ require("lazy").setup({
     -- import/override with your plugins
     { import = "plugins" },
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "catppuccin-latte",
     },
   },
   defaults = {
@@ -71,11 +71,6 @@ require("lspconfig").bicep.setup({
 
 require("telescope").load_extension("git_worktree")
 
--- disable copilot
-local copilot = require("copilot.command")
-copilot.disable()
-
-
 vim.api.nvim_create_user_command('Tmw', function()
   vim.fn.system('zsh -c "$HOME/developer/utils/tmux-set-window-name.sh $(git branch --show-current)"')
 end, {})
@@ -117,3 +112,4 @@ end
 
 vim.api.nvim_create_user_command('ScratchDelete', delete_snacks_scratch_file, {})
 
+require('leap').opts.preview_filter = function () return false end

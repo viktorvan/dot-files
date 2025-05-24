@@ -66,6 +66,12 @@ vim.keymap.set("n", "<leader>p", "\"0p", { desc = "paste from 0 register" })
 vim.keymap.set("n", "<leader>P", "\"0P", { desc = "Paste from 0 register" })
 vim.keymap.set("v", "<leader>p", "\"0p", { desc = "Paste from 0 register" })
 
+vim.keymap.del("n", "<leader><Space>")
+vim.keymap.del("n", "<leader>sg")
+vim.keymap.del("n", "<leader>sG")
+vim.keymap.set("n", "<leader><Space>", LazyVim.pick("files", { root = false }), { desc = "Find files (cwd)"})
+vim.keymap.set("n", "<leader>sg", LazyVim.pick("live_grep", { root = false }), { desc = "Grep (cwd)"})
+vim.keymap.set("n", "<leader>sG", LazyVim.pick("live_grep", { root = true }), { desc = "Grep (root)"})
 
 -- Toggle configurations
 local function create_toggle(name, get_fn, set_fn, key)
@@ -77,18 +83,6 @@ local function create_toggle(name, get_fn, set_fn, key)
     })
     :map(key)
 end
-
--- Copilot toggle
-create_toggle("Copilot", function()
-  return not require("copilot.client").is_disabled()
-end, function(state)
-  local copilot = require("copilot.command")
-  if state then
-    copilot.enable()
-  else
-    copilot.disable()
-  end
-end, "<leader>uc")
 
 -- zk
 local opts = { noremap=true, silent=false }
@@ -105,3 +99,6 @@ vim.api.nvim_set_keymap("n", "<leader>zt", "<Cmd>ZkTags<CR>", opts)
 vim.api.nvim_set_keymap("n", "<leader>zf", "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>", opts)
 -- Search for the notes matching the current visual selection.
 vim.api.nvim_set_keymap("v", "<leader>zf", ":'<,'>ZkMatch<CR>", opts)
+
+vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')
+vim.keymap.set('n',             'S', '<Plug>(leap-from-window)')
