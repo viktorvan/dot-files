@@ -1,0 +1,25 @@
+# monospace
+# https://usgraphics.com/products/berkeley-mono
+font-family = "Berkeley Mono Variable"
+font-variation = wght=600
+font-variation = wdth=100
+font-family-bold = "Berkeley Mono Variable"
+font-variation-bold = wght=800
+font-size = 15
+font-thicken
+font-thicken-strength = 0
+
+window-title-font-family = "Berkeley Mono Variable"
+
+
+font-feature = -liga
+font-feature = -clig
+font-feature = -calt
+
+theme = catppuccin-latte
+term = xterm-256color
+macos-titlebar-style = hidden
+
+cursor-style = block
+cursor-style-blink = false
+cursor-invert-fg-bg = true
