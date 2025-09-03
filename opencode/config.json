@@ -1,0 +1,97 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "catppuccin",
+  "model": "anthropic/claude-sonnet-4-20250514",
+  "keybinds": {
+    "messages_half_page_up": "ctrl+b",
+    "messages_half_page_down": "ctrl+f",
+    "messages_first": "ctrl+g",
+    "messages_last": "ctrl+l"
+  },
+  "provider": {
+    "openrouter": {
+      "models": {
+        "x-ai/grok-code-fast-1": {}
+      }
+    }
+  },
+  "agent": {
+    "delegating-manager": {
+      "description": "Plans work, decomposes tasks, and delegates to fresh coder sub-agents. Never edits files.",
+      "mode": "primary",
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "prompt": "{file:./prompts/delegating_manager.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "patch": false,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "webfetch": true
+      },
+      "reasoningEffort": "medium"
+    },
+    "fast-coder": {
+      "description": "Implements simple tasks from the manager. Writes code and runs safe bash.",
+      "mode": "subagent",
+      "model": "openrouter/x-ai/grok-code-fast-1",
+      "prompt": "{file:./prompts/coder.md}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "patch": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "expert-coder": {
+      "description": "Implements tasks from the manager. Writes code and runs safe bash.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "prompt": "{file:./prompts/coder.md}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "patch": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "reviewer": {
+      "description": "Reviews and verifies implementation plans from the manager. Read-only analysis and validation.",
+      "mode": "subagent",
+      "model": "openrouter/google/gemini-2.5-pro",
+      "prompt": "{file:./prompts/reviewer.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "patch": false,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "backup-reviewer": {
+      "description": "Reviews and verifies implementation plans from the manager. Read-only analysis and validation.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "prompt": "{file:./prompts/reviewer.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "patch": false,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    }
+  }
+}
