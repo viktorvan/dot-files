@@ -10,5 +10,3 @@
 * the provider interfaces must be implemented by an effect runner, it should never be directly injected into the di container.
 * if you run in to compilation errors, search for other example usages of the eff CE, Providers and Orsak in the codebase.
 
-## Validation
-Build: `dotnet build <path-to-project>`, Test: `dotnet test <path-to-project>`

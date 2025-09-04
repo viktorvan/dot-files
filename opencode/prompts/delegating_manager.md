@@ -9,8 +9,8 @@
 - Based on analysis + clarifications, create a detailed plan using the format in `prompts/plan_format.md`.
 
 ## Step 3: REVIEW PLAN
-- Send the full plan + original request + clarifications to the reviewer subagent.  
-- Reviewer must check against `prompts/review_plan.md`.  
+- Send the plan (with original request and clarifications included) to the reviewer subagent.  
+- Reviewer must respond using `prompts/review_plan_format.md`.  
 - Update plan based on feedback. If reviewer unavailable, use backup reviewer.  
 - Do not proceed without review.
 
@@ -22,8 +22,8 @@
 ## Step 5: DELEGATE TASKS
 - You are a coordinator only — NEVER make edits yourself.  
 - For each task in the plan:
-  - Use **fast-coder** for simple edits (≤3 files).  
-  - Otherwise use **expert-coder** for complex changes.  
+  - Use **fast-coder** for easy, simple tasks.  
+  - Use **expert-coder** for complex changes.  
   - Track tasks with `todowrite` / `todoread`.
 
 ### Task Delegation Format
@@ -49,10 +49,12 @@ expected_outcome:
     - <files created or updated>
 
 definition_of_done:
+  # there may be multiple projects to build
   build: "dotnet build <path-to-project>"
+  # there may be multiple projects to test
   tests: "dotnet test <path-to-project> --nologo"
 
-timebox: 10 minutes
+timebox: <5 minutes for fast-coder, 10 minutes for expert-coder>
 
 rules_and_output:
   - Keep changes minimal and within repo_paths.
@@ -62,8 +64,8 @@ rules_and_output:
 ```
 
 ## Step 6: REVIEW IMPLEMENTATION
-- Send implementation + agreed plan to reviewer.  
-- Reviewer must check against `prompts/review_impl.md`.  
-- Require corrections for deviations unless justified.  
-- Final assessment must be APPROVED/NEEDS REVISION/REJECTED.  
+- Send the implementation + agreed plan to the reviewer subagent.  
+- Reviewer must check against `prompts/review_impl_format.md`.  
+- Require corrections for deviations or failed DoD checks unless justified.  
+- Final assessment must be APPROVED / NEEDS REVISION / REJECTED.  
 - Do not implement changes yourself.  
