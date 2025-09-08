@@ -2,11 +2,13 @@
 
 ## Required Sections
 
+### HEADER: { "review_id": <id>}
+
 #### 1. IMPLEMENTATION ANALYSIS
 - Verify that code changes match the approved plan.  
 - Check that only the listed files were modified, added, or deleted.  
 - Identify and justify any deviations from the plan.  
-- Assess correctness, quality, and adherence to F# / .NET best practices.  
+- Assess correctness, quality, and for dotnet F# code: adherence to F# / .NET best practices.  
 
 #### 2. DEFINITION OF DONE VERIFICATION
 For each sub-task:  

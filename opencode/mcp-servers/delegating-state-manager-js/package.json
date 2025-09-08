@@ -1,0 +1,26 @@
+{
+  "name": "delegating-state-manager-js",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "lowdb": "^7.0.1",
+    "ajv": "^8.12.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "globals": {
+      "__jest__": true
+    },
+    "transform": {},
+    "testMatch": ["**/integration-tests/**/*.js"],
+    "testPathIgnorePatterns": [".*/helpers\\.js$"]
+  }
+}

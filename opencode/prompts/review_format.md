@@ -2,9 +2,11 @@
 
 ## Required Sections
 
+### HEADER: { "review_id": <id>}
+
 #### 1. PLAN ANALYSIS
 - Assess technical approach and design decisions.  
-- Check alignment with F# / .NET best practices.  
+- For dotnet F# code, check alignment with F# / .NET best practices.  
 - Suggest improvements, optimizations, or better alternatives.  
 
 #### 2. RISKS

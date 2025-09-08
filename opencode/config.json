@@ -22,6 +22,7 @@
       "model": "anthropic/claude-sonnet-4-20250514",
       "prompt": "{file:./prompts/delegating_manager.md}",
       "tools": {
+        "delegating-state-manager": true,
         "write": false,
         "edit": false,
         "patch": false,
@@ -92,6 +93,19 @@
         "grep": true,
         "glob": true
       }
+    }
+  },
+  "tools": {
+    "delegating-state-manager": false
+  },
+  "mcp": {
+    "delegating-state-manager": {
+      "type": "local",
+      "command": [
+        "node",
+        "/Users/viktor/.config/opencode/mcp-servers/delegating-state-manager-js/server.js"
+      ],
+      "enabled": true
     }
   }
 }
