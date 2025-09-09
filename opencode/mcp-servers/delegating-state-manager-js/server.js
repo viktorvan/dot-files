@@ -12,9 +12,11 @@ import { StateMachine } from './lib/state-machine.js';
 
 import { handleRequestNewSession } from './lib/tools/request-new-session.js';
 import { handleRequestNextState } from './lib/tools/request-next-state.js';
+import { handleRollbackState } from './lib/tools/rollback-state.js';
 import { handleSubmitReview } from './lib/tools/submit-review.js';
 import { handleStartTask } from './lib/tools/start-task.js';
 import { handleFinishTask } from './lib/tools/finish-task.js';
+import { handleGetCurrentState } from './lib/tools/get-current-state.js';
 
 /**
  * Delegating State Manager MCP Server
@@ -22,7 +24,7 @@ import { handleFinishTask } from './lib/tools/finish-task.js';
  */
 
 // Initialize core dependencies
-const sessionManager = new SessionManager('./sessions');
+const sessionManager = new SessionManager();
 const stateMachine = new StateMachine();
 
 // Create MCP server instance
@@ -102,6 +104,27 @@ const TOOLS = {
     handler: handleRequestNextState
   },
 
+  rollback_state: {
+    name: 'rollback_state',
+    description: 'Rollback to an earlier state in the delegation workflow.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        session_id: {
+          type: 'string',
+          description: 'Existing session ID (required)'
+        },
+        target_state: {
+          type: 'string',
+          description: 'Target state to rollback to (must be earlier in workflow)',
+          enum: ['ANALYSIS', 'PLAN', 'REVIEW_PLAN', 'USER_APPROVAL', 'DELEGATION', 'REVIEW_IMPLEMENTATION']
+        }
+      },
+      required: ['session_id', 'target_state']
+    },
+    handler: handleRollbackState
+  },
+
   submit_review: {
     name: 'submit_review',
     description: 'Submit a review verdict for PLAN or IMPLEMENTATION phases. Pure proof-of-work - creates review_id for evidence.',
@@ -171,6 +194,22 @@ const TOOLS = {
       required: ['session_id', 'task_id', 'status']
     },
     handler: handleFinishTask
+  },
+
+  get_current_state: {
+    name: 'get_current_state',
+    description: 'Returns current state and state_id for a given session_id.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        session_id: {
+          type: 'string',
+          description: 'Existing session ID (required)'
+        }
+      },
+      required: ['session_id']
+    },
+    handler: handleGetCurrentState
   }
 };
 

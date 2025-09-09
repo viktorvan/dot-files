@@ -3,6 +3,16 @@ import { JSONFileSync } from 'lowdb/node';
 import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import { randomUUID } from 'crypto';
+import { homedir } from 'os';
+
+/**
+ * Get the default sessions directory path
+ * Uses ~/.local/share/opencode/sessions
+ */
+function getDefaultSessionsDir() {
+  const home = homedir();
+  return join(home, '.local', 'share', 'opencode', 'sessions');
+}
 
 /**
  * Generate a date-based session ID with format: "2025-09-07-11-29-14-a1b2c3"
@@ -19,13 +29,13 @@ function generateDateBasedSessionId() {
  * Provides simple CRUD operations for session management
  */
 export class SessionManager {
-  constructor(sessionsDir = './sessions') {
-    this.sessionsDir = sessionsDir;
+  constructor() {
+    this.sessionsDir = getDefaultSessionsDir();
     this.sessions = new Map(); // Cache for loaded sessions
 
     // Ensure sessions directory exists
-    if (!existsSync(sessionsDir)) {
-      mkdirSync(sessionsDir, { recursive: true });
+    if (!existsSync(this.sessionsDir)) {
+      mkdirSync(this.sessionsDir, { recursive: true });
     }
   }
 
@@ -90,6 +100,12 @@ export class SessionManager {
       const db = await this._getSessionDB(id);
       db.data = sessionData;
       await db.write();
+
+      // Verify that the file was actually created on disk
+      const filePath = this._getSessionPath(id);
+      if (!existsSync(filePath)) {
+        throw new Error(`Failed to create session file: ${filePath}`);
+      }
 
       return sessionData;
     } catch (error) {

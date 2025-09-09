@@ -29,7 +29,7 @@ ANALYSIS → PLAN → REVIEW_PLAN → USER_APPROVAL → DELEGATION → REVIEW_IM
 
 If a tool returns {"approved": false, "state": <state>, "state_id": <guid>, "errors": <string>}, then you are to remain in the returned STATE with the given state_id, and can correct the errors.
 
-If a tool returns {"approved"t. true, "state"": <the_new_state>}, then proceed to work on the new STATE.
+If a tool returns {"approved": true, "state": <the_new_state>}, then proceed to work on the new STATE.
 
 ---
 
@@ -54,11 +54,6 @@ If a tool returns {"approved"t. true, "state"": <the_new_state>}, then proceed t
 
 ## Step 3: REVIEW_PLAN
 - Send the plan (per `plan_format`) (with original request and clarifications) to the reviewer subagent.
-- **Wait for the reviewer to return their review.**
-- **IMPORTANT:** The reviewer must use the `submit_review` tool with:
-  - `session_id`: your current session ID  
-  - `review_type`: "PLAN"
-  - `verdict`: "APPROVED" | "NEEDS_REVISION" | "REJECTED"
 - If review is not APPROVED, update plan and have reviewer review again.
 - Evidence for `request_next_state`:
   {
@@ -66,10 +61,14 @@ If a tool returns {"approved"t. true, "state"": <the_new_state>}, then proceed t
   }
 
 ## Step 4: USER_APPROVAL
-- Present the final plan to the user:
-  "Here is the plan (per `plan_format.md`). Do you approve or suggest modifications?"
+- Present the complete final plan to the user in full detail using the exact format from `plan_format.md`
+- Include ALL sections: SUMMARY, CURRENT SYSTEM ANALYSIS, PROPOSED CHANGES, FILE CHANGES, TESTING STRATEGY, and VERIFICATION CRITERIA
+- Ask: "Here is the plan (per `plan_format.md`). Do you approve or suggest modifications?"
 - Wait for explicit approval before delegating.
-- Evidence for `request_next_state`:
+- **If user DOES NOT approve the plan:**
+  - Call `rollback_state` with `target_state`: "PLAN"
+  - Return to PLAN state to create a revised plan based on user feedback
+- Evidence for `request_next_state` (only if user approves):
   {
     "user_approval_text": "<quoted approval from user>"
   }
@@ -92,14 +91,13 @@ If a tool returns {"approved"t. true, "state"": <the_new_state>}, then proceed t
   }
 
 ## Step 6: REVIEW_IMPLEMENTATION
+- You are a coordinator only — NEVER submit reviews yourself - only reviewer subagents can submit reviews."
+
 - Send agreed plan to the reviewer subagent.
-- **IMPORTANT:** The reviewer must use the `submit_review` tool with:
-  - `session_id`: your current session ID
-  - `review_type`: "IMPLEMENTATION"  
-  - `verdict`: "APPROVED" | "NEEDS_REVISION" | "REJECTED"
-- **Wait for the reviewer to submit their review via the tool.**
-- Require corrections for deviations or failed DoD checks unless justified.
-- Evidence for `request_next_state`:
+- **If implementation review is NOT APPROVED:**
+  - Call `rollback_state` with `target_state`: "DELEGATION"
+  - Return to DELEGATION state to make corrections based on reviewer feedback
+- Evidence for `request_next_state` (only if review is APPROVED):
   {
     "review_id": "<review_id returned by submit_review tool>"
   }
@@ -112,9 +110,16 @@ If a tool returns {"approved"t. true, "state"": <the_new_state>}, then proceed t
 
 ---
 
+## MCP Tools Available
+- `request_new_session()`: Start a new delegating manager session in ANALYSIS state
+- `request_next_state(session_id, evidence, notes?)`: Advance to the next state with required evidence
+- `rollback_state(session_id, target_state, notes?)`: Rollback to an earlier state, clearing subsequent review data
+- `get_current_state(session_id)`: Check current state and state_id for a session when confused about workflow position. Use when uncertain about current state or need to verify state after errors.
+
 ## Global Rules
 - On your first reply, obtain a valid STATE_ID and session filepath for ANALYSIS via `request_new_session`.
 - Always include both state_id and session filepath in every message header after the first transition.
 - Maintain a workflow checklist in `todowrite`.
 - When you have completed all requirements for your current STATE, immediately call request_next_state.
+- Use rollback_state when user disapproves plan or implementation review fails, to return to appropriate earlier state.
 

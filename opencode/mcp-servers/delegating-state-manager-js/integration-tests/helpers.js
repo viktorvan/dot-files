@@ -7,9 +7,19 @@ import { spawn } from 'child_process';
 import { randomUUID } from 'crypto';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { homedir } from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+/**
+ * Get the default sessions directory path
+ * Uses ~/.local/share/opencode/sessions
+ */
+function getDefaultSessionsDir() {
+  const home = homedir();
+  return path.join(home, '.local', 'share', 'opencode', 'sessions');
+}
 
 export class MCPTestClient {
   constructor() {
@@ -180,8 +190,34 @@ export async function completeWorkflowToDelegation(client, sessionId, planText =
   // USER_APPROVAL → DELEGATION
   await client.callTool('request_next_state', {
     session_id: sessionId,
-    evidence: { user_approval_text: 'Yes, approved for implementation' }
+    evidence: { user_approval_text: 'yes i approve' }
   });
 
   return planReview.review_id;
+}
+/**
+ * Helper function to clean up test sessions
+ */
+export async function cleanupTestSessions(sessionIds) {
+  const fs = await import('fs/promises');
+  const path = await import('path');
+  
+  for (const sessionId of sessionIds) {
+    try {
+      const sessionPath = path.join(getDefaultSessionsDir(), `${sessionId}.json`);
+      await fs.unlink(sessionPath);
+    } catch (error) {
+      // Ignore cleanup errors - session may not exist
+    }
+  }
+}
+
+/**
+ * Helper function to parse tool call responses
+ */
+export function parseToolResponse(result) {
+  if (result && result.content && result.content[0] && result.content[0].text) {
+    return JSON.parse(result.content[0].text);
+  }
+  return result;
 }

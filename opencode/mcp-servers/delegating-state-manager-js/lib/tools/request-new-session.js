@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 export async function handleRequestNewSession(args, { sessionManager }) {
   try {
     // Create new session (no parameters needed)
+    // This guarantees immediate file creation on disk
     const newSession = await sessionManager.createSession();
     
     return {

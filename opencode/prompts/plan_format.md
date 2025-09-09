@@ -2,6 +2,8 @@
 
 ## Required Sections
 
+session_id: <session_id>
+
 #### 1. SUMMARY
 **User Request**  
 - Concise restatement of the user’s request and clarifications.

@@ -1,6 +1,7 @@
 title: <one-line imperative>
 
 task_id: <unique_task_name_in_snake_case>
+session_id: <string>
 
 task:
   goal: <1–2 sentences>

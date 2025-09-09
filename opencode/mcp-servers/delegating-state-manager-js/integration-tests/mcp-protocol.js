@@ -26,7 +26,7 @@ describe('MCP Protocol Tests', () => {
   test('List Available Tools', async () => {
     await client.startServer();
     const tools = await client.listTools();
-    const expectedTools = ['request_new_session', 'request_next_state', 'submit_review', 'start_task', 'finish_task'];
+    const expectedTools = ['request_new_session', 'request_next_state', 'rollback_state', 'submit_review', 'start_task', 'finish_task'];
     
     expect(tools).toBeTruthy();
     expect(Array.isArray(tools.tools)).toBe(true);
@@ -36,6 +36,6 @@ describe('MCP Protocol Tests', () => {
       expect(toolNames).toContain(expected);
     }
     
-    expect(tools.tools.length).toBe(5);
+    expect(tools.tools.length).toBe(7); // Updated to include get_current_state
   });
 });

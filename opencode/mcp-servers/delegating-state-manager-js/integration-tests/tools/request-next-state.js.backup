@@ -351,23 +351,6 @@ describe('State Transition Tests', () => {
         notes: 'Testing empty task_ids validation - should fail'
       })).rejects.toThrow(/at least.*task.*required|must contain at least/i);
     });
-
-    test('validation fails if no tasks have been assigned in session (empty assigned_tasks)', async () => {
-      // Create a new session for this test
-      const newSessionId = await createNewSession(client);
-      await completeWorkflowToDelegation(client, newSessionId);
-
-      // Do NOT assign any tasks - session.assigned_tasks will be empty/undefined
-
-      // DELEGATION transition with empty session - should fail
-      await expect(client.callTool('request_next_state', {
-        session_id: newSessionId,
-        evidence: {
-          task_ids: ['fake-task-id'] // Trying to reference non-existent task
-        },
-        notes: 'Testing no assigned tasks validation - should fail'
-      })).rejects.toThrow(/No tasks have been assigned in session|at least one task must be assigned/i);
-    });
   });
 
   describe('USER_APPROVAL evidence validation', () => {
@@ -743,7 +726,7 @@ describe('Audit Logging Tests', () => {
 
     // Initialize session manager with same path as server
     const { SessionManager } = await import('../../lib/session.js');
-    sessionManager = new SessionManager();
+    sessionManager = new SessionManager('./sessions');
   });
 
   afterEach(async () => {

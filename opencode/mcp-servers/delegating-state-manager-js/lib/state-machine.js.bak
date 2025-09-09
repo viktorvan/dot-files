@@ -224,7 +224,7 @@ export class StateMachine {
           if (!session.plan_review_id) {
             errors.push(`No plan review found in session. Submit a plan review first.`);
           } else if (evidence[field] !== session.plan_review_id) {
-            errors.push(`review_id does not match session plan_review_id.}, got: ${evidence[field]}`);
+            errors.push(`review_id does not match session plan_review_id. Expected: ${session.plan_review_id}, got: ${evidence[field]}`);
           } else if (session.plan_review_state !== 'APPROVED') {
             errors.push(`Plan review verdict must be APPROVED. Current verdict: ${session.plan_review_state}`);
           }
@@ -233,7 +233,7 @@ export class StateMachine {
           if (!session.implementation_review_id) {
             errors.push(`No implementation review found in session. Submit an implementation review first.`);
           } else if (evidence[field] !== session.implementation_review_id) {
-            errors.push(`review_id does not match session implementation_review_id, got: ${evidence[field]}`);
+            errors.push(`review_id does not match session implementation_review_id. Expected: ${session.implementation_review_id}, got: ${evidence[field]}`);
           } else if (session.implementation_review_state !== 'APPROVED') {
             errors.push(`Implementation review verdict must be APPROVED. Current verdict: ${session.implementation_review_state}`);
           }
@@ -245,11 +245,6 @@ export class StateMachine {
         const providedTaskIds = evidence[field] || [];
         const sessionTasks = session.assigned_tasks || {};
         
-        
-        // Check that session has at least one assigned task
-        if (Object.keys(sessionTasks).length === 0) {
-          errors.push(`No tasks have been assigned in session - at least one task must be assigned before transitioning from DELEGATION state`);
-        }
         // Validate each task_id in evidence exists in session and has valid status
         for (const taskId of providedTaskIds) {
           const task = sessionTasks[taskId];

@@ -21,7 +21,7 @@ describe('Comprehensive Audit Logging Tests', () => {
     await client.startServer();
     
     // Initialize session manager with same path as server
-    sessionManager = new SessionManager('./sessions');
+    sessionManager = new SessionManager();
   });
 
   afterEach(async () => {
