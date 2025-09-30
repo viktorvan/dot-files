@@ -6,7 +6,7 @@
  */
 
 import { readFile } from 'fs/promises';
-import { SessionManager } from '../mcp-servers/delegating-state-manager-js/lib/session.js';
+import { SessionManager } from '../lib/session.js';
 
 export const DelegatingManagerValidator = async ({ project, client, $, directory, worktree }) => {
   console.log("🔍 Delegating Manager Validator (Production) plugin initialized");

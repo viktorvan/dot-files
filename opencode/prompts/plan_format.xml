@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://medoma.com/opencode/plan"
+  xmlns:tns="http://medoma.com/opencode/plan"
+  elementFormDefault="qualified">
+
+  <xs:element name="plan" type="tns:PlanType"/>
+
+  <xs:complexType name="PlanType">
+    <xs:sequence>
+      <xs:element name="session_id" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="summary" type="tns:SummaryType"
+        minOccurs="1"/>
+      <xs:element name="current_system_analysis"
+        type="tns:CurrentSystemAnalysisType" minOccurs="1"/>
+      <xs:element name="proposed_changes"
+        type="tns:ProposedChangesType" minOccurs="1"/>
+      <xs:element name="file_changes"
+        type="tns:FileChangesType" minOccurs="1"/>
+      <xs:element name="testing_strategy"
+        type="tns:TestingStrategyType" minOccurs="1"/>
+      <xs:element name="verification_criteria"
+        type="tns:VerificationCriteriaType" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SummaryType">
+    <xs:sequence>
+      <xs:element name="user_request" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CurrentSystemAnalysisType">
+    <xs:sequence>
+      <xs:element name="existing_implementation"
+        type="tns:ImplementationItemType" minOccurs="1"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ImplementationItemType">
+    <xs:choice>
+      <xs:element name="key_component" type="xs:string"/>
+      <xs:element name="architecture_pattern"
+        type="xs:string"/>
+      <xs:element name="dependency" type="xs:string"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="ProposedChangesType">
+    <xs:sequence>
+      <xs:element name="strategy_and_rationale"
+        type="xs:string" minOccurs="1"/>
+      <xs:element name="expected_impact" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FileChangesType">
+    <xs:sequence>
+      <xs:element name="add" type="tns:FileChangeType"
+        minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="modify" type="tns:FileChangeType"
+        minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="delete" type="tns:FileChangeType"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:assert test="count(tns:add) + count(tns:modify) +
+                count(tns:delete) >= 1"/>
+  </xs:complexType>
+
+  <xs:complexType name="FileChangeType">
+    <xs:sequence>
+      <xs:element name="path" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="description" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TestingStrategyType">
+    <xs:sequence>
+      <xs:element name="unit_tests" type="xs:string"
+        minOccurs="0"/>
+      <xs:element name="integration_tests" type="xs:string"
+        minOccurs="0"/>
+      <xs:element name="scenario_tests" type="xs:string"
+        minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="VerificationCriteriaType">
+    <xs:sequence>
+      <xs:element name="manual_check"
+        type="tns:ManualCheckType" minOccurs="1"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ManualCheckType">
+    <xs:choice>
+      <xs:element name="api_endpoint" type="xs:string"/>
+      <xs:element name="business_rule" type="xs:string"/>
+      <xs:element name="edge_case" type="xs:string"/>
+    </xs:choice>
+  </xs:complexType>
+
+</xs:schema>

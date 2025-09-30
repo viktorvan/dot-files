@@ -51,16 +51,16 @@
     "delegating-manager": {
       "description": "Plans work, decomposes tasks, and delegates to fresh coder sub-agents. Never edits files.",
       "mode": "primary",
-      "model": "openrouter/x-ai/grok-code-fast-1",
+      "model": "anthropic/claude-sonnet-4-20250514",
       "prompt": "{file:./prompts/delegating_manager.md}",
       "tools": {
-        "delegating-state-manager_request_new_session": true,
-        "delegating-state-manager_request_next_state": true,
-        "delegating-state-manager_rollback_state": true,
-        "delegating-state-manager_submit_review": false,
-        "delegating-state-manager_start_task": false,
-        "delegating-state-manager_finish_task": false,
-        "delegating-state-manager_get_current_state": true,
+        "request_new_session": true,
+        "request_next_state": true,
+        "rollback_state": true,
+        "submit_review": false,
+        "start_task": false,
+        "finish_task": false,
+        "get_current_state": true,
         "write": false,
         "edit": false,
         "patch": false,
@@ -78,13 +78,13 @@
       "model": "openrouter/x-ai/grok-code-fast-1",
       "prompt": "{file:./prompts/coder.md}",
       "tools": {
-        "delegating-state-manager_request_new_session": false,
-        "delegating-state-manager_request_next_state": false,
-        "delegating-state-manager_rollback_state": false,
-        "delegating-state-manager_submit_review": false,
-        "delegating-state-manager_start_task": true,
-        "delegating-state-manager_finish_task": true,
-        "delegating-state-manager_get_current_state": false,
+        "request_new_session": false,
+        "request_next_state": false,
+        "rollback_state": false,
+        "submit_review": false,
+        "start_task": true,
+        "finish_task": true,
+        "get_current_state": false,
         "write": true,
         "edit": true,
         "patch": true,
@@ -100,13 +100,13 @@
       "model": "anthropic/claude-sonnet-4-20250514",
       "prompt": "{file:./prompts/coder.md}",
       "tools": {
-        "delegating-state-manager_request_new_session": false,
-        "delegating-state-manager_request_next_state": false,
-        "delegating-state-manager_rollback_state": false,
-        "delegating-state-manager_submit_review": false,
-        "delegating-state-manager_start_task": true,
-        "delegating-state-manager_finish_task": true,
-        "delegating-state-manager_get_current_state": false,
+        "request_new_session": false,
+        "request_next_state": false,
+        "rollback_state": false,
+        "submit_review": false,
+        "start_task": true,
+        "finish_task": true,
+        "get_current_state": false,
         "write": true,
         "edit": true,
         "patch": true,
@@ -122,13 +122,13 @@
       "model": "openrouter/x-ai/grok-3",
       "prompt": "{file:./prompts/reviewer.md}",
       "tools": {
-        "delegating-state-manager_request_new_session": false,
-        "delegating-state-manager_request_next_state": false,
-        "delegating-state-manager_rollback_state": false,
-        "delegating-state-manager_submit_review": true,
-        "delegating-state-manager_start_task": false,
-        "delegating-state-manager_finish_task": false,
-        "delegating-state-manager_get_current_state": false,
+        "request_new_session": false,
+        "request_next_state": false,
+        "rollback_state": false,
+        "submit_review": true,
+        "start_task": false,
+        "finish_task": false,
+        "get_current_state": false,
         "write": false,
         "edit": false,
         "patch": false,
@@ -144,13 +144,13 @@
       "model": "anthropic/claude-sonnet-4-20250514",
       "prompt": "{file:./prompts/reviewer.md}",
       "tools": {
-        "delegating-state-manager_request_new_session": false,
-        "delegating-state-manager_request_next_state": false,
-        "delegating-state-manager_rollback_state": false,
-        "delegating-state-manager_submit_review": true,
-        "delegating-state-manager_start_task": false,
-        "delegating-state-manager_finish_task": false,
-        "delegating-state-manager_get_current_state": false,
+        "request_new_session": false,
+        "request_next_state": false,
+        "rollback_state": false,
+        "submit_review": true,
+        "start_task": false,
+        "finish_task": false,
+        "get_current_state": false,
         "write": false,
         "edit": false,
         "patch": false,
@@ -159,19 +159,6 @@
         "grep": true,
         "glob": true
       }
-    }
-  },
-  "tools": {
-    "delegating-state-manager": false
-  },
-  "mcp": {
-    "delegating-state-manager": {
-      "type": "local",
-      "command": [
-        "node",
-        "/Users/viktor/.config/opencode/mcp-servers/delegating-state-manager-js/server.js"
-      ],
-      "enabled": true
     }
   }
 }

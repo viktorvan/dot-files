@@ -1,0 +1,24 @@
+{
+  "name": "opencode-delegating-state-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "latest",
+    "lowdb": "^7.0.1",
+    "ajv": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "typescript": "^5.4.0"
+  }
+}

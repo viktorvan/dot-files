@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://medoma.com/opencode/review"
+  xmlns:tns="http://medoma.com/opencode/review"
+  elementFormDefault="qualified">
+
+  <xs:element name="review" type="tns:ReviewType"/>
+
+  <xs:complexType name="ReviewType">
+    <xs:sequence>
+      <xs:element name="review_id" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="session_id" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="plan_analysis"
+        type="tns:PlanAnalysisType" minOccurs="1"/>
+      <xs:element name="risks" type="tns:RisksType"
+        minOccurs="1"/>
+      <xs:element name="completeness_verification"
+        type="tns:CompletenessVerificationType" minOccurs="1"/>
+      <xs:element name="plan_modifications"
+        type="tns:PlanModificationsType" minOccurs="0"/>
+      <xs:element name="final_assessment"
+        type="tns:FinalAssessmentType" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PlanAnalysisType">
+    <xs:sequence>
+      <xs:element name="technical_approach" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="design_decisions" type="xs:string"
+        minOccurs="0"/>
+      <xs:element name="best_practices_alignment"
+        type="xs:string" minOccurs="0"/>
+      <xs:element name="improvements" type="xs:string"
+        minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RisksType">
+    <xs:sequence>
+      <xs:element name="implementation_risk"
+        type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="performance_risk" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="integration_risk" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="project_risk" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CompletenessVerificationType">
+    <xs:sequence>
+      <xs:element name="plan_format_compliance"
+        type="xs:string" minOccurs="1"/>
+      <xs:element name="user_request_coverage"
+        type="xs:string" minOccurs="1"/>
+      <xs:element name="file_changes_accuracy"
+        type="xs:string" minOccurs="1"/>
+      <xs:element name="testing_strategy_coverage"
+        type="xs:string" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PlanModificationsType">
+    <xs:sequence>
+      <xs:element name="modification"
+        type="tns:ModificationType" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ModificationType">
+    <xs:sequence>
+      <xs:element name="action" type="tns:ActionType"
+        minOccurs="1"/>
+      <xs:element name="path" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="reason" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="ActionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ADD"/>
+      <xs:enumeration value="MODIFY"/>
+      <xs:enumeration value="DELETE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="FinalAssessmentType">
+    <xs:sequence>
+      <xs:element name="status" type="tns:StatusType"
+        minOccurs="1"/>
+      <xs:element name="summary" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="StatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="APPROVED"/>
+      <xs:enumeration value="NEEDS REVISION"/>
+      <xs:enumeration value="REJECTED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
