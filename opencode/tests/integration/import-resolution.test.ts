@@ -3,6 +3,7 @@ import { SessionManager } from '../../lib/session';
 import { StateMachine } from '../../lib/state-machine';
 import { request_new_session, request_next_state, rollback_state, get_current_state } from '../../tool/session';
 import { start_task, finish_task } from '../../tool/task';
+import { submit_review } from '../../tool/review';
 
 describe('Import Resolution Integration Tests', () => {
   beforeEach(() => {
@@ -89,6 +90,13 @@ describe('Import Resolution Integration Tests', () => {
       expect(typeof finish_task.execute).toBe('function');
     });
 
+    test('review tools can be imported without errors', () => {
+      expect(submit_review).toBeDefined();
+
+      // Verify they are tool objects with execute methods
+      expect(typeof submit_review.execute).toBe('function');
+    });
+
     test('tool descriptions and metadata are accessible', () => {
       // Session tools
       expect(request_new_session.description).toBeDefined();
@@ -99,6 +107,9 @@ describe('Import Resolution Integration Tests', () => {
       // Task tools
       expect(start_task.description).toBeDefined();
       expect(finish_task.description).toBeDefined();
+
+      // Review tools
+      expect(submit_review.description).toBeDefined();
     });
   });
 

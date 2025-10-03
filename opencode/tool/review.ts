@@ -24,12 +24,12 @@ export const submit_review = tool({
       }
       
       // Validate review_type
-      if (!['PLAN', 'IMPLEMENTATION'].includes(review_type)) {
+      if (!['PLAN', 'IMPLEMENTATION'].includes(review_type.toUpperCase())) {
         throw new Error(`Invalid review_type: ${review_type}. Must be PLAN or IMPLEMENTATION`);
       }
       
       // Validate verdict  
-      if (!['APPROVED', 'REJECTED', 'NEEDS_REVISION'].includes(verdict)) {
+      if (!['APPROVED', 'REJECTED', 'NEEDS_REVISION'].includes(verdict.toUpperCase())) {
         throw new Error(`Invalid verdict: ${verdict}. Must be APPROVED, REJECTED, or NEEDS_REVISION`);
       }
       
@@ -41,7 +41,7 @@ export const submit_review = tool({
       
       // Update session data with review
       let updateData;
-      if (review_type === 'PLAN') {
+      if (review_type.toUpperCase() === 'PLAN') {
         updateData = {
           plan_review_id: reviewId,
           plan_review_state: verdict as ReviewState

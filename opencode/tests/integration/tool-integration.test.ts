@@ -5,6 +5,7 @@ import { homedir } from 'os';
 import { SessionManager } from '../../lib/session';
 import { request_new_session, request_next_state, rollback_state, get_current_state } from '../../tool/session';
 import { start_task, finish_task } from '../../tool/task';
+import { submit_review } from '../../tool/review';
 import type { Session } from '../../lib/types';
 
 // Test directory for isolated session files
@@ -453,6 +454,171 @@ describe('Tool Integration Tests', () => {
       await expect(get_current_state.execute({
         session_id: nonExistentSessionId
       }, {} as any)).rejects.toThrow(/not found/);
+    });
+  });
+
+  describe('Review Tool Integration', () => {
+    let sessionId: string;
+    let sessionPath: string;
+
+    beforeEach(async () => {
+      // Create a session for each test
+      const result = await request_new_session.execute({}, {} as any);
+      const response = JSON.parse(result);
+      sessionId = response.session_id;
+      sessionPath = response.session;
+    });
+
+    test('submit_review for PLAN creates review_id and persists to session file', async () => {
+      // Submit a plan review
+      const result = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'PLAN',
+        verdict: 'APPROVED'
+      }, {} as any);
+
+      const response = JSON.parse(result);
+      expect(response.success).toBe(true);
+      expect(response.review_id).toBeDefined();
+      expect(response.review_type).toBe('PLAN');
+      expect(response.verdict).toBe('APPROVED');
+      expect(response.session).toBe(sessionPath);
+
+      // Verify the plan_review_id was actually persisted to the session file on disk
+      const fileContent = readFileSync(sessionPath, 'utf-8');
+      const sessionData = JSON.parse(fileContent) as Session;
+
+      expect(sessionData.plan_review_id).toBe(response.review_id);
+      expect(sessionData.plan_review_state).toBe('APPROVED');
+    });
+
+    test('submit_review for IMPLEMENTATION creates review_id and persists to session file', async () => {
+      // Submit an implementation review
+      const result = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'IMPLEMENTATION',
+        verdict: 'REJECTED'
+      }, {} as any);
+
+      const response = JSON.parse(result);
+      expect(response.success).toBe(true);
+      expect(response.review_id).toBeDefined();
+      expect(response.review_type).toBe('IMPLEMENTATION');
+      expect(response.verdict).toBe('REJECTED');
+
+      // Verify the implementation_review_id was actually persisted to the session file on disk
+      const fileContent = readFileSync(sessionPath, 'utf-8');
+      const sessionData = JSON.parse(fileContent) as Session;
+
+      expect(sessionData.implementation_review_id).toBe(response.review_id);
+      expect(sessionData.implementation_review_state).toBe('REJECTED');
+    });
+
+    test('submit_review generates unique UUIDs for different reviews', async () => {
+      // Submit first plan review
+      const result1 = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'PLAN',
+        verdict: 'NEEDS_REVISION'
+      }, {} as any);
+
+      const response1 = JSON.parse(result1);
+
+      // Submit implementation review
+      const result2 = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'IMPLEMENTATION',
+        verdict: 'APPROVED'
+      }, {} as any);
+
+      const response2 = JSON.parse(result2);
+
+      // Verify different UUIDs were generated
+      expect(response1.review_id).not.toBe(response2.review_id);
+
+      // Verify both reviews were persisted with different IDs
+      const fileContent = readFileSync(sessionPath, 'utf-8');
+      const sessionData = JSON.parse(fileContent) as Session;
+
+      expect(sessionData.plan_review_id).toBe(response1.review_id);
+      expect(sessionData.plan_review_state).toBe('NEEDS_REVISION');
+      expect(sessionData.implementation_review_id).toBe(response2.review_id);
+      expect(sessionData.implementation_review_state).toBe('APPROVED');
+    });
+
+    test('submit_review overwrites previous review of same type', async () => {
+      // Submit first plan review
+      const result1 = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'PLAN',
+        verdict: 'NEEDS_REVISION'
+      }, {} as any);
+
+      const response1 = JSON.parse(result1);
+
+      // Submit second plan review (should overwrite)
+      const result2 = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'PLAN',
+        verdict: 'APPROVED'
+      }, {} as any);
+
+      const response2 = JSON.parse(result2);
+
+      // Verify different review IDs
+      expect(response1.review_id).not.toBe(response2.review_id);
+
+      // Verify only the latest review is persisted
+      const fileContent = readFileSync(sessionPath, 'utf-8');
+      const sessionData = JSON.parse(fileContent) as Session;
+
+      expect(sessionData.plan_review_id).toBe(response2.review_id);
+      expect(sessionData.plan_review_state).toBe('APPROVED');
+      expect(sessionData.plan_review_id).not.toBe(response1.review_id);
+    });
+
+    test('submit_review fails with invalid session_id', async () => {
+      await expect(submit_review.execute({
+        session_id: 'non-existent-session',
+        review_type: 'PLAN',
+        verdict: 'APPROVED'
+      }, {} as any)).rejects.toThrow(/not found/);
+    });
+
+    test('submit_review validates review_type parameter', async () => {
+      await expect(submit_review.execute({
+        session_id: sessionId,
+        review_type: 'INVALID_TYPE',
+        verdict: 'APPROVED'
+      }, {} as any)).rejects.toThrow(/Invalid review_type: INVALID_TYPE/);
+    });
+
+    test('submit_review validates verdict parameter', async () => {
+      await expect(submit_review.execute({
+        session_id: sessionId,
+        review_type: 'PLAN',
+        verdict: 'INVALID_VERDICT'
+      }, {} as any)).rejects.toThrow(/Invalid verdict: INVALID_VERDICT/);
+    });
+
+    test('submit_review handles case-insensitive review_type and verdict', async () => {
+      const result = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'plan',
+        verdict: 'approved'
+      }, {} as any);
+
+      const response = JSON.parse(result);
+      expect(response.success).toBe(true);
+      expect(response.review_type).toBe('plan');
+      expect(response.verdict).toBe('approved');
+
+      // Verify it was persisted correctly
+      const fileContent = readFileSync(sessionPath, 'utf-8');
+      const sessionData = JSON.parse(fileContent) as Session;
+
+      expect(sessionData.plan_review_id).toBe(response.review_id);
+      expect(sessionData.plan_review_state).toBe('approved');
     });
   });
 });
