@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@opencode-ai/plugin": "latest",
+    "@types/xml2js": "^0.4.14",
+    "ajv": "^8.12.0",
     "lowdb": "^7.0.1",
-    "ajv": "^8.12.0"
+    "xml2js": "^0.6.2",
+    "xsd-schema-validator": "^0.11.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

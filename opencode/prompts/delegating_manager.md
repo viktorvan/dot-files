@@ -68,7 +68,8 @@ opencode/delegating-state-manager-sessions/delegating-20250904-143022-12345.json
 
 ## Step 3: REVIEW_PLAN
 
-* Send plan (In working directory Read format: ./.opencode/prompts/plan_format.xml). Include original request, and clarifications to reviewer subagent.
+* Save the plan using the plan_plan_read tool. 
+* Ask the reviewer for a review of the plan for the session_id. **DO NOT** send the plan in the prompt.
 * For an approved review the reviewer must respond with an xml schema containing the review_id. If review_id is missing, remind the reviewer to use the read tool in working directory to read ./.opencode/prompts/review_plan_format.xml.
 * Call request_next_state with evidence: { "review_id": "<review_id>" }
 * If not APPROVED by reviewer, update plan and re-review, then try request_next_state again.
@@ -94,7 +95,7 @@ VERIFICATION CRITERIA).
 ## Step 6: REVIEW_IMPLEMENTATION
 
 * Coordinator only — NEVER submit reviews; only reviewers can.
-* Request reviewer to review the implementation, send plan (use format: ./.opencode/prompts/plan_format.xml). Include original request, and clarifications to reviewer subagent.
+* Ask the reviewer to review the IMPLEMENTATION for the plan for the session_id. **DO NOT** send the plan in the prompt.
 * The reviewer must respond using the format defined in ./.opencode/prompts/review_impl_format.xml, otherwise reject the review and request a new review.
 * Call request_next_state with evidence: { "review_id": "<review_id_from_reviewer>" }
 * If not APPROVED by reviewer, rollback to "DELEGATION" and correct based on feedback.

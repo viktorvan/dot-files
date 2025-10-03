@@ -67,8 +67,6 @@
       <xs:element name="delete" type="tns:FileChangeType"
         minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:assert test="count(tns:add) + count(tns:modify) +
-                count(tns:delete) >= 1"/>
   </xs:complexType>
 
   <xs:complexType name="FileChangeType">

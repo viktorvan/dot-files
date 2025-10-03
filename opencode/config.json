@@ -58,6 +58,8 @@
         "session_request_next_state": true,
         "session_rollback_state": true,
         "session_get_current_state": true,
+        "plan_add": true,
+        "plan_read": true,
         "review_submit_review": false,
         "task_start_task": false,
         "task_finish_task": false,
@@ -135,9 +137,10 @@
         "bash": true,
         "read": true,
         "grep": true,
-        "glob": true
-      }
-    },
+        "glob": true,
+        "plan_add": false,
+        "plan_read": true
+      },
     "backup-reviewer": {
       "description": "Reviews and verifies implementation plans from the manager. Read-only analysis and validation.",
       "mode": "subagent",

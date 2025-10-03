@@ -1,11 +1,12 @@
 import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
-import { join } from 'path';
+import { join, dirname } from 'path';
 import { existsSync, rmSync, mkdirSync, readFileSync } from 'fs';
 import { homedir } from 'os';
 import { SessionManager } from '../../lib/session';
 import { request_new_session, request_next_state, rollback_state, get_current_state } from '../../tool/session';
 import { start_task, finish_task } from '../../tool/task';
 import { submit_review } from '../../tool/review';
+import { plan_add, plan_read } from '../../tool/plan';
 import type { Session } from '../../lib/types';
 
 // Test directory for isolated session files
@@ -762,6 +763,269 @@ describe('Tool Integration Tests', () => {
 
       expect(sessionData.plan_review_id).toBe(response.review_id);
       expect(sessionData.plan_review_state).toBe('APPROVED');
+    });
+  });
+
+  describe('Plan Tool Integration', () => {
+    let sessionId: string;
+    let sessionPath: string;
+
+    beforeEach(async () => {
+      // Create a session for each test
+      const result = await request_new_session.execute({}, {} as any);
+      const response = JSON.parse(result);
+      sessionId = response.session_id;
+      sessionPath = response.session;
+    });
+
+    test('plan_add saves XML plan to file', async () => {
+      const planXml = `<?xml version="1.0" encoding="UTF-8"?>
+<plan xmlns="http://medoma.com/opencode/plan">
+  <session_id>${sessionId}</session_id>
+  <summary>
+    <user_request>Implement user authentication system</user_request>
+  </summary>
+  <current_system_analysis>
+    <existing_implementation>
+      <key_component>Basic user model exists</key_component>
+    </existing_implementation>
+  </current_system_analysis>
+  <proposed_changes>
+    <strategy_and_rationale>Add JWT authentication</strategy_and_rationale>
+    <expected_impact>Secure user access</expected_impact>
+  </proposed_changes>
+  <file_changes>
+    <add>
+      <path>auth.js</path>
+      <description>Add authentication module</description>
+    </add>
+  </file_changes>
+  <testing_strategy>
+    <unit_tests>Test login/logout functions</unit_tests>
+  </testing_strategy>
+  <verification_criteria>
+    <manual_check>
+      <api_endpoint>POST /login</api_endpoint>
+    </manual_check>
+  </verification_criteria>
+</plan>`;
+
+      const result = await plan_add.execute({
+        session_id: sessionId,
+        plan_xml: planXml
+      }, {} as any);
+
+      const response = JSON.parse(result);
+      expect(response.success).toBe(true);
+      expect(response.message).toContain('Plan XML saved to');
+
+      // Verify the plan XML was saved to the file in the same directory as session
+      const sessionPath = sessionManager._getSessionPath(sessionId);
+      const sessionDir = dirname(sessionPath);
+      const planFilePath = join(sessionDir, `${sessionId}_plan.xml`);
+      expect(existsSync(planFilePath)).toBe(true);
+      const fileContent = readFileSync(planFilePath, 'utf-8');
+      expect(fileContent).toBe(planXml);
+    });
+
+    test('plan_read retrieves stored XML plan', async () => {
+      const planXml = `<?xml version="1.0" encoding="UTF-8"?>
+<plan xmlns="http://medoma.com/opencode/plan">
+  <session_id>${sessionId}</session_id>
+  <summary>
+    <user_request>Build dashboard</user_request>
+  </summary>
+  <current_system_analysis>
+    <existing_implementation>
+      <architecture_pattern>MVC pattern</architecture_pattern>
+    </existing_implementation>
+  </current_system_analysis>
+  <proposed_changes>
+    <strategy_and_rationale>Add dashboard components</strategy_and_rationale>
+    <expected_impact>Better UX</expected_impact>
+  </proposed_changes>
+  <file_changes>
+    <modify>
+      <path>dashboard.html</path>
+      <description>Update dashboard layout</description>
+    </modify>
+  </file_changes>
+  <testing_strategy>
+    <integration_tests>Test dashboard loading</integration_tests>
+  </testing_strategy>
+  <verification_criteria>
+    <manual_check>
+      <business_rule>Dashboard displays data correctly</business_rule>
+    </manual_check>
+  </verification_criteria>
+</plan>`;
+
+      // First add the plan
+      await plan_add.execute({
+        session_id: sessionId,
+        plan_xml: planXml
+      }, {} as any);
+
+      // Now read it back
+      const result = await plan_read.execute({
+        session_id: sessionId
+      }, {} as any);
+
+      expect(result).toBe(planXml);
+    });
+
+    test('plan_add validates XML structure', async () => {
+      // Test invalid XML (missing closing tag)
+      const invalidXml = `<plan><summary><user_request>Test</user_request></summary>`;
+
+      await expect(plan_add.execute({
+        session_id: sessionId,
+        plan_xml: invalidXml
+      }, {} as any)).rejects.toThrow(/Invalid XML/);
+    });
+
+    test('plan_add validates XML against XSD schema', async () => {
+      // Test XML missing required session_id element
+      const invalidSchemaXml = `<?xml version="1.0" encoding="UTF-8"?>
+<plan xmlns="http://medoma.com/opencode/plan">
+  <summary>
+    <user_request>Test request</user_request>
+  </summary>
+  <current_system_analysis>
+    <existing_implementation>
+      <key_component>Test component</key_component>
+    </existing_implementation>
+  </current_system_analysis>
+  <proposed_changes>
+    <strategy_and_rationale>Test strategy</strategy_and_rationale>
+    <expected_impact>Test impact</expected_impact>
+  </proposed_changes>
+  <file_changes>
+    <add>
+      <path>test.js</path>
+      <description>Test file</description>
+    </add>
+  </file_changes>
+  <testing_strategy>
+    <unit_tests>Test units</unit_tests>
+  </testing_strategy>
+  <verification_criteria>
+    <manual_check>
+      <api_endpoint>POST /test</api_endpoint>
+    </manual_check>
+  </verification_criteria>
+</plan>`;
+
+      await expect(plan_add.execute({
+        session_id: sessionId,
+        plan_xml: invalidSchemaXml
+      }, {} as any)).rejects.toThrow(/Schema validation failed/);
+    });
+
+    test('plan_add accepts valid XML conforming to XSD schema', async () => {
+      const validXml = `<?xml version="1.0" encoding="UTF-8"?>
+<plan xmlns="http://medoma.com/opencode/plan">
+  <session_id>${sessionId}</session_id>
+  <summary>
+    <user_request>Test request</user_request>
+  </summary>
+  <current_system_analysis>
+    <existing_implementation>
+      <key_component>Test component</key_component>
+    </existing_implementation>
+  </current_system_analysis>
+  <proposed_changes>
+    <strategy_and_rationale>Test strategy</strategy_and_rationale>
+    <expected_impact>Test impact</expected_impact>
+  </proposed_changes>
+  <file_changes>
+    <add>
+      <path>test.js</path>
+      <description>Test file</description>
+    </add>
+  </file_changes>
+  <testing_strategy>
+    <unit_tests>Test units</unit_tests>
+  </testing_strategy>
+  <verification_criteria>
+    <manual_check>
+      <api_endpoint>POST /test</api_endpoint>
+    </manual_check>
+  </verification_criteria>
+</plan>`;
+
+      const result = await plan_add.execute({
+        session_id: sessionId,
+        plan_xml: validXml
+      }, {} as any);
+
+      const response = JSON.parse(result);
+      expect(response.success).toBe(true);
+    });
+
+    test('plan_read validates stored XML against XSD schema', async () => {
+      // First add a valid plan
+      const validXml = `<?xml version="1.0" encoding="UTF-8"?>
+<plan xmlns="http://medoma.com/opencode/plan">
+  <session_id>${sessionId}</session_id>
+  <summary>
+    <user_request>Read test request</user_request>
+  </summary>
+  <current_system_analysis>
+    <existing_implementation>
+      <architecture_pattern>Test pattern</architecture_pattern>
+    </existing_implementation>
+  </current_system_analysis>
+  <proposed_changes>
+    <strategy_and_rationale>Read test strategy</strategy_and_rationale>
+    <expected_impact>Read test impact</expected_impact>
+  </proposed_changes>
+  <file_changes>
+    <modify>
+      <path>readtest.js</path>
+      <description>Modify test file</description>
+    </modify>
+  </file_changes>
+  <testing_strategy>
+    <integration_tests>Read test integration</integration_tests>
+  </testing_strategy>
+  <verification_criteria>
+    <manual_check>
+      <business_rule>Read test rule</business_rule>
+    </manual_check>
+  </verification_criteria>
+</plan>`;
+
+      await plan_add.execute({
+        session_id: sessionId,
+        plan_xml: validXml
+      }, {} as any);
+
+      // Now read it back - should validate and return
+      const result = await plan_read.execute({
+        session_id: sessionId
+      }, {} as any);
+
+      expect(result).toBe(validXml);
+    });
+
+    test('plan_read fails when no plan exists', async () => {
+      await expect(plan_read.execute({
+        session_id: sessionId
+      }, {} as any)).rejects.toThrow(/no such file or directory/);
+    });
+
+    test('plan_add and plan_read fail with invalid session_id', async () => {
+      const planXml = `<plan><summary><user_request>Test</user_request></summary></plan>`;
+
+      await expect(plan_add.execute({
+        session_id: 'non-existent-session',
+        plan_xml: planXml
+      }, {} as any)).rejects.toThrow(/not found/);
+
+      await expect(plan_read.execute({
+        session_id: 'non-existent-session'
+      }, {} as any)).rejects.toThrow(/not found/);
     });
   });
 });
