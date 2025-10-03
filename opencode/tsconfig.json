@@ -29,7 +29,7 @@
     "resolveJsonModule": true
   },
   "include": [
-    "tools/**/*",
+    "tool/**/*",
     "lib/**/*",
     "src/**/*",
     "tests/**/*"

@@ -11,7 +11,7 @@ export default {
     }],
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(lowdb|steno)/)'
+    'node_modules/(?!(lowdb|steno|@opencode-ai)/)'
   ],
   testMatch: [
     '**/tests/**/*.test.ts',

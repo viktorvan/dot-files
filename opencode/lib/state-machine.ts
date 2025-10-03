@@ -7,7 +7,7 @@ import type {
   Session, 
   CompiledValidator,
   AjvError
-} from './types.js';
+} from './types';
 
 // State definitions with transitions and required evidence
 const STATES: Record<StateType, StateDefinition> = {

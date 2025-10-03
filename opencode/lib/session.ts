@@ -4,7 +4,7 @@ import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import { randomUUID } from 'crypto';
 import { homedir } from 'os';
-import type { Session, ValidationFailure, TransitionFailure } from './types.js';
+import type { Session, ValidationFailure, TransitionFailure } from './types';
 
 // Type for LowDB instance with Session data
 type SessionDB = Low<Session | null>;
