@@ -23,9 +23,6 @@ describe('Tool Integration Tests', () => {
 
     // Initialize session manager
     sessionManager = new SessionManager();
-    
-    // Clear any cached sessions
-    sessionManager.clearCache();
   });
 
   afterEach(() => {
@@ -397,6 +394,152 @@ describe('Tool Integration Tests', () => {
       expect(sessionData.state_history[1]!.from_state).toBe('PLAN');
       expect(sessionData.state_history[1]!.to_state).toBe('REVIEW_PLAN');
     });
+
+    test('complete state machine progression from ANALYSIS to DONE', async () => {
+      // Step 1: Create new session (starts in ANALYSIS state)
+      const sessionResult = await request_new_session.execute({}, {} as any);
+      const sessionResponse = JSON.parse(sessionResult);
+      const sessionId = sessionResponse.session_id;
+      const sessionPath = sessionResponse.session;
+
+      expect(sessionResponse.approved).toBe(true);
+      expect(sessionResponse.state).toBe('ANALYSIS');
+
+      // Step 2: ANALYSIS -> PLAN
+      const planResult = await request_next_state.execute({
+        session_id: sessionId,
+        evidence: {
+          clarifying_questions_text: 'What are the main requirements for this system?',
+          clarifying_answers_text: 'We need a user management system with authentication and data analytics dashboard.'
+        },
+        notes: 'Analysis completed, moving to planning phase'
+      }, {} as any);
+
+      const planResponse = JSON.parse(planResult);
+      expect(planResponse.approved).toBe(true);
+      expect(planResponse.state).toBe('PLAN');
+
+      // Step 3: PLAN -> REVIEW_PLAN  
+      const reviewPlanResult = await request_next_state.execute({
+        session_id: sessionId,
+        evidence: {
+          plan_summary: 'Comprehensive plan to implement user authentication with JWT tokens, role-based access control, and a data analytics dashboard with real-time metrics visualization.'
+        },
+        notes: 'Plan completed, ready for review'
+      }, {} as any);
+
+      const reviewPlanResponse = JSON.parse(reviewPlanResult);
+      expect(reviewPlanResponse.approved).toBe(true);
+      expect(reviewPlanResponse.state).toBe('REVIEW_PLAN');
+
+      // Step 4: Submit plan review (required for REVIEW_PLAN -> USER_APPROVAL transition)
+      const planReviewResult = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'PLAN',
+        verdict: 'APPROVED'
+      }, {} as any);
+
+      const planReviewResponse = JSON.parse(planReviewResult);
+      expect(planReviewResponse.success).toBe(true);
+      const planReviewId = planReviewResponse.review_id;
+
+      // Step 5: REVIEW_PLAN -> USER_APPROVAL
+      const userApprovalResult = await request_next_state.execute({
+        session_id: sessionId,
+        evidence: {
+          review_id: planReviewId
+        },
+        notes: 'Plan review completed, requesting user approval'
+      }, {} as any);
+
+      const userApprovalResponse = JSON.parse(userApprovalResult);
+      expect(userApprovalResponse.approved).toBe(true);
+      expect(userApprovalResponse.state).toBe('USER_APPROVAL');
+
+      // Step 6: USER_APPROVAL -> DELEGATION
+      const delegationResult = await request_next_state.execute({
+        session_id: sessionId,
+        evidence: {
+          user_approval_text: 'Yes I approve this plan to proceed with implementation.'
+        },
+        notes: 'User approval received, moving to delegation'
+      }, {} as any);
+
+      const delegationResponse = JSON.parse(delegationResult);
+      expect(delegationResponse.approved).toBe(true);
+      expect(delegationResponse.state).toBe('DELEGATION');
+
+      // Step 7: Start and complete tasks (required for DELEGATION -> REVIEW_IMPLEMENTATION)
+      const taskIds = ['auth_implementation', 'dashboard_implementation', 'analytics_implementation'];
+      
+      for (const taskId of taskIds) {
+        await start_task.execute({
+          session_id: sessionId,
+          task_id: taskId
+        }, {} as any);
+      }
+
+      for (const taskId of taskIds) {
+        await finish_task.execute({
+          session_id: sessionId,
+          task_id: taskId,
+          status: 'COMPLETED'
+        }, {} as any);
+      }
+
+      // Step 8: DELEGATION -> REVIEW_IMPLEMENTATION
+      const reviewImplResult = await request_next_state.execute({
+        session_id: sessionId,
+        evidence: {
+          task_ids: taskIds
+        },
+        notes: 'All tasks completed, ready for implementation review'
+      }, {} as any);
+
+      const reviewImplResponse = JSON.parse(reviewImplResult);
+      expect(reviewImplResponse.approved).toBe(true);
+      expect(reviewImplResponse.state).toBe('REVIEW_IMPLEMENTATION');
+
+      // Step 9: Submit implementation review (required for REVIEW_IMPLEMENTATION -> DONE)
+      const implReviewResult = await submit_review.execute({
+        session_id: sessionId,
+        review_type: 'IMPLEMENTATION',
+        verdict: 'APPROVED'
+      }, {} as any);
+
+      const implReviewResponse = JSON.parse(implReviewResult);
+      expect(implReviewResponse.success).toBe(true);
+      const implReviewId = implReviewResponse.review_id;
+
+      // Step 10: REVIEW_IMPLEMENTATION -> DONE
+      const doneResult = await request_next_state.execute({
+        session_id: sessionId,
+        evidence: {
+          review_id: implReviewId
+        },
+        notes: 'Implementation review completed, project finished'
+      }, {} as any);
+
+      const doneResponse = JSON.parse(doneResult);
+      expect(doneResponse.approved).toBe(true);
+      expect(doneResponse.state).toBe('DONE');
+
+      // Final verification: Check that session file reflects DONE state
+      const finalContent = readFileSync(sessionPath, 'utf-8');
+      const finalSessionData = JSON.parse(finalContent) as Session;
+      
+      expect(finalSessionData.current_state).toBe('DONE');
+      expect(finalSessionData.state_history).toHaveLength(6); // All 6 transitions
+      expect(finalSessionData.plan_review_id).toBe(planReviewId);
+      expect(finalSessionData.implementation_review_id).toBe(implReviewId);
+      expect(Object.keys(finalSessionData.assigned_tasks)).toHaveLength(3);
+      
+      // Verify all tasks are completed
+      for (const taskId of taskIds) {
+        expect(finalSessionData.assigned_tasks[taskId]).toBeDefined();
+        expect(finalSessionData.assigned_tasks[taskId]!.status).toBe('completed');
+      }
+    });
   });
 
   describe('Error Handling and File Integrity', () => {
@@ -610,15 +753,15 @@ describe('Tool Integration Tests', () => {
 
       const response = JSON.parse(result);
       expect(response.success).toBe(true);
-      expect(response.review_type).toBe('plan');
-      expect(response.verdict).toBe('approved');
+      expect(response.review_type).toBe('PLAN');
+      expect(response.verdict).toBe('APPROVED');
 
       // Verify it was persisted correctly
       const fileContent = readFileSync(sessionPath, 'utf-8');
       const sessionData = JSON.parse(fileContent) as Session;
 
       expect(sessionData.plan_review_id).toBe(response.review_id);
-      expect(sessionData.plan_review_state).toBe('approved');
+      expect(sessionData.plan_review_state).toBe('APPROVED');
     });
   });
 });

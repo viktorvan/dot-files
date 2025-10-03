@@ -44,12 +44,12 @@ export const submit_review = tool({
       if (review_type.toUpperCase() === 'PLAN') {
         updateData = {
           plan_review_id: reviewId,
-          plan_review_state: verdict as ReviewState
+          plan_review_state: verdict.toUpperCase() as ReviewState
         };
       } else { // IMPLEMENTATION
         updateData = {
           implementation_review_id: reviewId,
-          implementation_review_state: verdict as ReviewState
+          implementation_review_state: verdict.toUpperCase() as ReviewState
         };
       }
       
@@ -58,8 +58,8 @@ export const submit_review = tool({
       return JSON.stringify({
         success: true,
         review_id: reviewId,
-        review_type: review_type,
-        verdict: verdict,
+        review_type: review_type.toUpperCase(),
+        verdict: verdict.toUpperCase(),
         session: sessionManager._getSessionPath(session_id)
       });
       

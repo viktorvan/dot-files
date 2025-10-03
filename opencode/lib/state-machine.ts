@@ -204,7 +204,7 @@ export class StateMachine {
           if (!session.plan_review_id) {
             errors.push(`No plan review found in session. Submit a plan review first.`);
           } else if (evidence[field] !== session.plan_review_id) {
-            errors.push(`review_id does not match session plan_review_id.}, got: ${evidence[field]}`);
+            errors.push(`review_id does not match session plan_review_id. Expected: ${session.plan_review_id}, got: ${evidence[field]}`);
           } else if (session.plan_review_state !== 'APPROVED') {
             errors.push(`Plan review verdict must be APPROVED. Current verdict: ${session.plan_review_state}`);
           }

@@ -26,11 +26,9 @@ function generateDateBasedSessionId(): string {
 // Session Manager using LowDB for persistent JSON storage
 export class SessionManager {
   private readonly sessionsDir: string;
-  private readonly sessions: Map<string, SessionDB>;
 
   constructor() {
     this.sessionsDir = getDefaultSessionsDir();
-    this.sessions = new Map(); // Cache for loaded sessions
 
     // Ensure sessions directory exists
     if (!existsSync(this.sessionsDir)) {
@@ -43,17 +41,12 @@ export class SessionManager {
   }
 
   private async _getSessionDB(sessionId: string): Promise<SessionDB> {
-    if (this.sessions.has(sessionId)) {
-      return this.sessions.get(sessionId)!;
-    }
-
     const filePath = this._getSessionPath(sessionId);
     const adapter = new JSONFileSync(filePath) as any;
     const db = new Low(adapter, null) as SessionDB;
 
-    // Read the database data
+    // Read the database data from disk
     await db.read();
-    this.sessions.set(sessionId, db);
 
     return db;
   }
@@ -232,10 +225,7 @@ export class SessionManager {
     }
   }
 
-  // Clear the session cache (useful for testing)
-  clearCache(): void {
-    this.sessions.clear();
-  }
+
 }
 
 export default SessionManager;

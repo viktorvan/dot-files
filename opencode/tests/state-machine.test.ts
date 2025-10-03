@@ -211,7 +211,7 @@ describe('StateMachine', () => {
         };
 
         expect(() => stateMachine.validateEvidence('REVIEW_PLAN', evidence, session))
-          .toThrow('review_id does not match session plan_review_id.}, got: 12345678-1234-1234-1234-123456789abc');
+          .toThrow('review_id does not match session plan_review_id. Expected: 87654321-4321-4321-4321-cba987654321, got: 12345678-1234-1234-1234-123456789abc');
       });
 
       it('should throw error when plan review is not approved', () => {
