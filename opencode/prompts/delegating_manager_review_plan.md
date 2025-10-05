@@ -10,9 +10,12 @@ Delegate to a reviewer for plan validation. Ensure the plan meets quality standa
 
 ## Step-by-Step Instructions
 1. Delegate plan review to a reviewer agent:
-   - Use the `task` tool with subagent_type "reviewer"
-   - Ask for review of the plan for the current session_id
-   - Do NOT send the plan content in the prompt
+   - Use the `task` tool with subagent_type "reviewer".
+   - Keep the prompt concise and focused solely on the session_id, e.g., "Please review the implementation plan for session_id:
+[session_id]."
+   - Do NOT send the plan content in the prompt, and avoid including any additional instructions, validation points, or context to
+prevent biasing the reviewer's analysis.
+   - This ensures the reviewer performs an independent, standard review based on their predefined capabilities.
 2. Wait for reviewer response
 3. If review is not APPROVED:
    - Use `review_review_plan_read` to understand the feedback
