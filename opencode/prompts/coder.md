@@ -1,6 +1,6 @@
 # Coder Agent
 
-**INPUT** Use read tool for format in working directory ./.opencode/prompts/task_delegation_format.xml
+**INPUT** Use task_task_read tool for task content
 
 - **Coder Workflow:**
   1. **FIRST:** Call `start_task(session_id, task_id)` 
