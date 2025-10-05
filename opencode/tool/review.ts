@@ -6,12 +6,17 @@ import { randomUUID } from 'crypto';
 import { promises as fs } from 'fs';
 import fsSync from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { parseStringPromise } from 'xml2js';
 import { validateXML } from 'xsd-schema-validator';
 
 // Initialize shared instances
 const sessionManager = new SessionManager();
 const stateMachine = new StateMachine();
+
+// Get directory for schema paths
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const submit_review = tool({
   description: 'Submit review for plan or implementation with verdict tracking',
@@ -103,7 +108,7 @@ export const review_plan_add = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewPlanSchemaPath = path.join('./prompts', 'review_plan_format.xml');
+       const reviewPlanSchemaPath = path.join(__dirname, '../prompts', 'review_plan_format.xml');
        try {
          const validationResult = await validateXML(plan_xml, reviewPlanSchemaPath);
          if (!validationResult.valid) {
@@ -161,7 +166,7 @@ export const review_plan_read = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewPlanSchemaPath = path.join('./prompts', 'review_plan_format.xml');
+       const reviewPlanSchemaPath = path.join(__dirname, '../prompts', 'review_plan_format.xml');
        try {
          const validationResult = await validateXML(planXml, reviewPlanSchemaPath);
          if (!validationResult.valid) {
@@ -209,7 +214,7 @@ export const review_implementation_add = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewImplSchemaPath = path.join('./prompts', 'review_impl_format.xml');
+       const reviewImplSchemaPath = path.join(__dirname, '../prompts', 'review_impl_format.xml');
        try {
          const validationResult = await validateXML(plan_xml, reviewImplSchemaPath);
          if (!validationResult.valid) {
@@ -267,7 +272,7 @@ export const review_implementation_read = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewImplSchemaPath = path.join('./prompts', 'review_impl_format.xml');
+       const reviewImplSchemaPath = path.join(__dirname, '../prompts', 'review_impl_format.xml');
        try {
          const validationResult = await validateXML(planXml, reviewImplSchemaPath);
          if (!validationResult.valid) {
@@ -316,7 +321,7 @@ export const review_review_plan_add = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewPlanSchemaPath = path.join('./prompts', 'review_plan_format.xml');
+       const reviewPlanSchemaPath = path.join(__dirname, '../prompts', 'review_plan_format.xml');
        try {
          const validationResult = await validateXML(plan_xml, reviewPlanSchemaPath);
          if (!validationResult.valid) {
@@ -374,7 +379,7 @@ export const review_review_plan_read = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewPlanSchemaPath = path.join('./prompts', 'review_plan_format.xml');
+       const reviewPlanSchemaPath = path.join(__dirname, '../prompts', 'review_plan_format.xml');
        try {
          const validationResult = await validateXML(planXml, reviewPlanSchemaPath);
          if (!validationResult.valid) {
@@ -422,7 +427,7 @@ export const review_review_implementation_add = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewImplSchemaPath = path.join('./prompts', 'review_impl_format.xml');
+       const reviewImplSchemaPath = path.join(__dirname, '../prompts', 'review_impl_format.xml');
        try {
          const validationResult = await validateXML(plan_xml, reviewImplSchemaPath);
          if (!validationResult.valid) {
@@ -480,7 +485,7 @@ export const review_review_implementation_read = tool({
        }
 
        // Validate XML against XSD schema
-       const reviewImplSchemaPath = path.join('./prompts', 'review_impl_format.xml');
+       const reviewImplSchemaPath = path.join(__dirname, '../prompts', 'review_impl_format.xml');
        try {
          const validationResult = await validateXML(planXml, reviewImplSchemaPath);
          if (!validationResult.valid) {

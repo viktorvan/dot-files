@@ -4,12 +4,17 @@ import { StateMachine } from '../lib/state-machine.js';
 import type { TaskStatus } from '../lib/types.js';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { parseStringPromise } from 'xml2js';
 import { validateXML } from 'xsd-schema-validator';
 
 // Initialize shared instances
 const sessionManager = new SessionManager();
 const stateMachine = new StateMachine();
+
+// Get directory for schema paths
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const start_task = tool({
   description: 'Start working on a task. Creates task record in session with STARTED status.',
@@ -145,7 +150,7 @@ export const finish_task = tool({
 });
 
 // Path to XSD schema for validation
-const taskSchemaPath = path.join('./prompts', 'task_delegation_format.xml');
+const taskSchemaPath = path.join(__dirname, '../prompts', 'task_delegation_format.xml');
 
 export const task_add = tool({
   description: 'Add a task in XML format to a file. Validates XML structure using xml2js.',
