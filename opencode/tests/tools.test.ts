@@ -3,6 +3,11 @@
  * This tests the core functionality of custom tools by mocking dependencies
  */
 
+import { plan_add, plan_read } from '../tool/plan';
+import { submit_review, review_plan_add, review_plan_read, review_implementation_add, review_implementation_read, review_review_plan_add, review_review_plan_read, review_review_implementation_add, review_review_implementation_read } from '../tool/review';
+import { task_add, task_read } from '../tool/task';
+import { type ToolContext } from '@opencode-ai/plugin';  // Import for mocking
+
 describe('Tools Business Logic', () => {
   describe('Session Tools Logic', () => {
     it('should validate session creation parameters', () => {
@@ -230,6 +235,239 @@ describe('Tools Business Logic', () => {
     });
   });
 
+describe('New Tools Tests', () => {
+  const mockContext: ToolContext = { 
+    sessionID: 'mock-session', 
+    messageID: 'mock-message', 
+    agent: 'mock-agent', 
+    abort: new AbortController().signal 
+  };
+
+  describe('plan_add', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(plan_add.execute({ session_id: '', plan_xml: '<plan>...</plan>' }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with invalid XML', async () => {
+      await expect(plan_add.execute({ session_id: 'invalid-session', plan_xml: '<invalid>' }, mockContext))
+        .rejects.toThrow();
+    });
+  });
+
+  describe('plan_read', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(plan_read.execute({ session_id: '' }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+  });
+
+  describe('submit_review', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(submit_review.execute({ 
+        session_id: '', 
+        review_type: 'IMPLEMENTATION', 
+        verdict: 'APPROVED' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with invalid review_type', async () => {
+      await expect(submit_review.execute({ 
+        session_id: 'any-session', 
+        review_type: 'INVALID', 
+        verdict: 'APPROVED' 
+      }, mockContext))
+        .rejects.toThrow('Invalid review_type: INVALID');
+    });
+  });
+
+  describe('review_plan_add', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_plan_add.execute({ session_id: '', plan_xml: '<review_plan>...</review_plan>' }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with invalid XML', async () => {
+      await expect(review_plan_add.execute({ session_id: 'invalid-session', plan_xml: '<invalid>' }, mockContext))
+        .rejects.toThrow();
+    });
+  });
+
+  describe('review_plan_read', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_plan_read.execute({ session_id: '' }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+  });
+
+  describe('review_implementation_add', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_implementation_add.execute({ session_id: '', plan_xml: '<review_impl>...</review_impl>' }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with invalid XML', async () => {
+      await expect(review_implementation_add.execute({ session_id: 'invalid-session', plan_xml: '<invalid>' }, mockContext))
+        .rejects.toThrow();
+    });
+  });
+
+  describe('review_implementation_read', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_implementation_read.execute({ session_id: '' }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+  });
+
+  describe('task_add', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(task_add.execute({ 
+        session_id: '', 
+        task_id: 'valid-task', 
+        task_xml: '<task>...</task>' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+  });
+
+  describe('task_read', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(task_read.execute({ 
+        session_id: '', 
+        task_id: 'valid-task' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+  });
+
+  // Tests for new consistently named tools
+  describe('review_review_plan_add', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_review_plan_add.execute({ 
+        session_id: '', 
+        plan_xml: '<review_plan>...</review_plan>' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with missing plan_xml', async () => {
+      await expect(review_review_plan_add.execute({ 
+        session_id: 'valid-session', 
+        plan_xml: '' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: plan_xml');
+    });
+
+    it('should fail with invalid XML', async () => {
+      await expect(review_review_plan_add.execute({ 
+        session_id: 'invalid-session', 
+        plan_xml: '<invalid>' 
+      }, mockContext))
+        .rejects.toThrow();
+    });
+  });
+
+  describe('review_review_plan_read', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_review_plan_read.execute({ 
+        session_id: '' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+  });
+
+  describe('review_review_implementation_add', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_review_implementation_add.execute({ 
+        session_id: '', 
+        plan_xml: '<review_impl>...</review_impl>' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with missing plan_xml', async () => {
+      await expect(review_review_implementation_add.execute({ 
+        session_id: 'valid-session', 
+        plan_xml: '' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: plan_xml');
+    });
+
+    it('should fail with invalid XML', async () => {
+      await expect(review_review_implementation_add.execute({ 
+        session_id: 'invalid-session', 
+        plan_xml: '<invalid>' 
+      }, mockContext))
+        .rejects.toThrow();
+    });
+  });
+
+  describe('review_review_implementation_read', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(review_review_implementation_read.execute({ 
+        session_id: '' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+  });
+
+  describe('task_task_add', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(task_add.execute({ 
+        session_id: '', 
+        task_id: 'valid-task', 
+        task_xml: '<task>...</task>' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with missing task_id', async () => {
+      await expect(task_add.execute({ 
+        session_id: 'valid-session', 
+        task_id: '', 
+        task_xml: '<task>...</task>' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: task_id');
+    });
+
+    it('should fail with missing task_xml', async () => {
+      await expect(task_add.execute({ 
+        session_id: 'valid-session', 
+        task_id: 'valid-task', 
+        task_xml: '' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: task_xml');
+    });
+
+    it('should fail with invalid XML', async () => {
+      await expect(task_add.execute({ 
+        session_id: 'invalid-session', 
+        task_id: 'valid-task', 
+        task_xml: '<invalid>' 
+      }, mockContext))
+        .rejects.toThrow();
+    });
+  });
+
+  describe('task_task_read', () => {
+    it('should fail with missing session_id', async () => {
+      await expect(task_read.execute({ 
+        session_id: '', 
+        task_id: 'valid-task' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: session_id');
+    });
+
+    it('should fail with missing task_id', async () => {
+      await expect(task_read.execute({ 
+        session_id: 'valid-session', 
+        task_id: '' 
+      }, mockContext))
+        .rejects.toThrow('Missing required parameter: task_id');
+    });
+  });
+
   describe('JSON Response Formatting', () => {
     it('should format successful session creation response', () => {
       const formatSessionCreationResponse = (sessionId: string, state: string, stateId: string, sessionPath: string) => {
@@ -241,7 +479,7 @@ describe('Tools Business Logic', () => {
           session: sessionPath
         });
       };
-
+  
       const response = JSON.parse(formatSessionCreationResponse('test-123', 'ANALYSIS', 'state-456', '/path/to/session.json'));
       expect(response).toEqual({
         approved: true,
@@ -251,7 +489,7 @@ describe('Tools Business Logic', () => {
         session: '/path/to/session.json'
       });
     });
-
+  
     it('should format successful state transition response', () => {
       const formatStateTransitionResponse = (state: string, stateId: string, sessionPath: string) => {
         return JSON.stringify({
@@ -261,7 +499,7 @@ describe('Tools Business Logic', () => {
           session: sessionPath
         });
       };
-
+  
       const response = JSON.parse(formatStateTransitionResponse('PLAN', 'new-state-id', '/path/to/session.json'));
       expect(response).toEqual({
         approved: true,
@@ -270,7 +508,7 @@ describe('Tools Business Logic', () => {
         session: '/path/to/session.json'
       });
     });
-
+  
     it('should format successful task operation response', () => {
       const formatTaskResponse = (taskId: string, sessionPath: string, status?: string) => {
         const baseResponse = {
@@ -285,14 +523,14 @@ describe('Tools Business Logic', () => {
         
         return JSON.stringify(baseResponse);
       };
-
+  
       const startResponse = JSON.parse(formatTaskResponse('test_task', '/path/session.json'));
       expect(startResponse).toEqual({
         success: true,
         task_id: 'test_task',
         session: '/path/session.json'
       });
-
+  
       const finishResponse = JSON.parse(formatTaskResponse('test_task', '/path/session.json', 'COMPLETED'));
       expect(finishResponse).toEqual({
         success: true,
@@ -301,7 +539,7 @@ describe('Tools Business Logic', () => {
         status: 'COMPLETED'
       });
     });
-
+  
     it('should format successful review response', () => {
       const formatReviewResponse = (reviewId: string, reviewType: string, verdict: string, sessionPath: string) => {
         return JSON.stringify({
@@ -312,7 +550,7 @@ describe('Tools Business Logic', () => {
           session: sessionPath
         });
       };
-
+  
       const response = JSON.parse(formatReviewResponse('review-123', 'PLAN', 'APPROVED', '/path/session.json'));
       expect(response).toEqual({
         success: true,
@@ -323,4 +561,5 @@ describe('Tools Business Logic', () => {
       });
     });
   });
+});
 });

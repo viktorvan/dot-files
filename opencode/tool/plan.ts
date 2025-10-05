@@ -1,16 +1,18 @@
-  import { tool, type ToolContext } from '@opencode-ai/plugin';
-  import { SessionManager } from '../lib/session.js';
-  import { promises as fs } from 'fs';
-  import fsSync from 'fs';
-  import path from 'path';
-  import { parseStringPromise } from 'xml2js';
-  import { validateXML } from 'xsd-schema-validator';
+import { tool, type ToolContext } from '@opencode-ai/plugin';
+import { SessionManager } from '../lib/session.js';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { parseStringPromise } from 'xml2js';
+import { validateXML } from 'xsd-schema-validator';
 
 // Initialize shared instance
 const sessionManager = new SessionManager();
 
 // Path to XSD schema for validation
-const planSchemaPath = path.join('./prompts', 'plan_format.xml');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const planSchemaPath = path.join(__dirname, '../prompts', 'plan_format.xml');
 
 export const plan_add = tool({
   description: 'Add a plan in XML format to a file. Validates XML structure using xml2js.',

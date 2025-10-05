@@ -1,12 +1,15 @@
 import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
 import { join, dirname } from 'path';
 import { existsSync, rmSync, mkdirSync, readFileSync } from 'fs';
+import fsSync from 'fs';
+import path from 'path';
 import { homedir } from 'os';
 import { SessionManager } from '../../lib/session';
 import { request_new_session, request_next_state, rollback_state, get_current_state } from '../../tool/session';
-import { start_task, finish_task } from '../../tool/task';
+import { start_task, finish_task, task_add, task_read } from '../../tool/task';
 import { submit_review } from '../../tool/review';
 import { plan_add, plan_read } from '../../tool/plan';
+import { review_review_plan_add, review_review_plan_read, review_review_implementation_add, review_review_implementation_read } from '../../tool/review';
 import type { Session } from '../../lib/types';
 
 // Test directory for isolated session files
@@ -1026,6 +1029,484 @@ describe('Tool Integration Tests', () => {
       await expect(plan_read.execute({
         session_id: 'non-existent-session'
       }, {} as any)).rejects.toThrow(/not found/);
+    });
+  });
+
+  describe('New Consistently Named Tools Integration', () => {
+    let sessionId: string;
+    let sessionPath: string;
+
+    beforeEach(async () => {
+      // Create a session for each test
+      const result = await request_new_session.execute({}, {} as any);
+      const response = JSON.parse(result);
+      sessionId = response.session_id;
+      sessionPath = response.session;
+    });
+
+    describe('review_review_plan_add and review_review_plan_read', () => {
+      test('review_review_plan_add saves XML plan review to file', async () => {
+        const reviewPlanXml = `<?xml version="1.0" encoding="UTF-8"?>
+<review xmlns="http://medoma.com/opencode/review">
+  <review_id>test-review-123</review_id>
+  <session_id>${sessionId}</session_id>
+  <plan_analysis>
+    <technical_approach>JWT-based authentication with middleware pattern</technical_approach>
+    <design_decisions>Using bcrypt for password hashing</design_decisions>
+    <best_practices_alignment>Follows OAuth 2.0 principles</best_practices_alignment>
+    <improvements>Add rate limiting and session management</improvements>
+  </plan_analysis>
+  <risks>
+    <implementation_risk>Password policy enforcement complexity</implementation_risk>
+    <performance_risk>Database query optimization needed</performance_risk>
+  </risks>
+  <completeness_verification>
+    <plan_format_compliance>All required sections present</plan_format_compliance>
+    <user_request_coverage>Authentication requirements fully addressed</user_request_coverage>
+    <file_changes_accuracy>File modifications clearly specified</file_changes_accuracy>
+    <testing_strategy_coverage>Unit and integration tests planned</testing_strategy_coverage>
+  </completeness_verification>
+  <final_assessment>
+    <status>NEEDS_REVISION</status>
+    <summary>Good plan but needs rate limiting and session management details</summary>
+  </final_assessment>
+</review>`;
+
+        const result = await review_review_plan_add.execute({
+          session_id: sessionId,
+          plan_xml: reviewPlanXml
+        }, {} as any);
+
+        const response = JSON.parse(result);
+        expect(response.success).toBe(true);
+        expect(response.message).toContain('Review plan XML saved to');
+
+        // Verify the review plan XML was saved to the file in the same directory as session
+        const sessionPath = sessionManager._getSessionPath(sessionId);
+        const sessionDir = dirname(sessionPath);
+        const reviewPlanFilePath = join(sessionDir, `${sessionId}_plan_review.xml`);
+        expect(existsSync(reviewPlanFilePath)).toBe(true);
+        const fileContent = readFileSync(reviewPlanFilePath, 'utf-8');
+        expect(fileContent).toBe(reviewPlanXml);
+      });
+
+      test('review_review_plan_read retrieves stored XML review plan', async () => {
+        const reviewPlanXml = `<?xml version="1.0" encoding="UTF-8"?>
+<review xmlns="http://medoma.com/opencode/review">
+  <review_id>test-review-456</review_id>
+  <session_id>${sessionId}</session_id>
+  <plan_analysis>
+    <technical_approach>Component-based dashboard with React</technical_approach>
+    <design_decisions>Using CSS Grid for responsive layout</design_decisions>
+    <best_practices_alignment>Follows React best practices</best_practices_alignment>
+    <improvements>Add lazy loading for performance</improvements>
+  </plan_analysis>
+  <risks>
+    <performance_risk>Large data sets may cause rendering delays</performance_risk>
+  </risks>
+  <completeness_verification>
+    <plan_format_compliance>All sections properly formatted</plan_format_compliance>
+    <user_request_coverage>Dashboard requirements fully covered</user_request_coverage>
+    <file_changes_accuracy>Component files clearly specified</file_changes_accuracy>
+    <testing_strategy_coverage>Component testing strategy defined</testing_strategy_coverage>
+  </completeness_verification>
+  <final_assessment>
+    <status>APPROVED</status>
+    <summary>Well-designed dashboard plan ready for implementation</summary>
+  </final_assessment>
+</review>`;
+
+        // First add the review plan
+        await review_review_plan_add.execute({
+          session_id: sessionId,
+          plan_xml: reviewPlanXml
+        }, {} as any);
+
+        // Now read it back
+        const result = await review_review_plan_read.execute({
+          session_id: sessionId
+        }, {} as any);
+
+        expect(result).toBe(reviewPlanXml);
+      });
+
+      test('review_review_plan_add validates XML structure', async () => {
+        // Test invalid XML (missing closing tag)
+        const invalidXml = `<review_plan><review_summary><original_plan_summary>Test</original_plan_summary></review_summary>`;
+
+        await expect(review_review_plan_add.execute({
+          session_id: sessionId,
+          plan_xml: invalidXml
+        }, {} as any)).rejects.toThrow(/Invalid XML/);
+      });
+
+      test('review_review_plan_read fails when no review plan exists', async () => {
+        await expect(review_review_plan_read.execute({
+          session_id: sessionId
+        }, {} as any)).rejects.toThrow(/no such file or directory/);
+      });
+    });
+
+    describe('review_review_implementation_add and review_review_implementation_read', () => {
+      test('review_review_implementation_add saves XML implementation review to file', async () => {
+        const reviewImplXml = `<?xml version="1.0" encoding="UTF-8"?>
+<implementation_review xmlns="http://medoma.com/opencode/review-implementation">
+  <review_id>impl-review-123</review_id>
+  <session_id>${sessionId}</session_id>
+  <implementation_analysis>
+    <plan_adherence>Implementation follows the approved plan closely</plan_adherence>
+    <file_changes_verification>All planned file changes completed correctly</file_changes_verification>
+    <deviations>Added extra validation helper function</deviations>
+    <code_quality_assessment>Code quality is high with good test coverage</code_quality_assessment>
+  </implementation_analysis>
+  <definition_of_done_verification>
+    <subtask_verification>
+      <task_id>auth_implementation</task_id>
+      <command_result>
+        <command>npm test</command>
+        <exit_code>0</exit_code>
+        <stdout>All tests passed</stdout>
+      </command_result>
+      <success_criteria_met>true</success_criteria_met>
+    </subtask_verification>
+  </definition_of_done_verification>
+  <risks_and_issues>
+    <integration_risk>Session timeout configuration needs review</integration_risk>
+    <testing_gap>Edge case validation could be improved</testing_gap>
+  </risks_and_issues>
+  <final_assessment>
+    <status>APPROVED</status>
+    <summary>Implementation is solid and ready for deployment</summary>
+  </final_assessment>
+</implementation_review>`;
+
+        const result = await review_review_implementation_add.execute({
+          session_id: sessionId,
+          plan_xml: reviewImplXml
+        }, {} as any);
+
+        const response = JSON.parse(result);
+        expect(response.success).toBe(true);
+        expect(response.message).toContain('Review implementation XML saved to');
+
+        // Verify the review implementation XML was saved to the file in the same directory as session
+        const sessionPath = sessionManager._getSessionPath(sessionId);
+        const sessionDir = dirname(sessionPath);
+        const reviewImplFilePath = join(sessionDir, `${sessionId}_implementation_review.xml`);
+        expect(existsSync(reviewImplFilePath)).toBe(true);
+        const fileContent = readFileSync(reviewImplFilePath, 'utf-8');
+        expect(fileContent).toBe(reviewImplXml);
+      });
+
+      test('review_review_implementation_read retrieves stored XML implementation review', async () => {
+        const reviewImplXml = `<?xml version="1.0" encoding="UTF-8"?>
+<implementation_review xmlns="http://medoma.com/opencode/review-implementation">
+  <review_id>impl-review-456</review_id>
+  <session_id>${sessionId}</session_id>
+  <implementation_analysis>
+    <plan_adherence>Dashboard implementation matches approved design</plan_adherence>
+    <file_changes_verification>All component files created as specified</file_changes_verification>
+    <code_quality_assessment>High quality modular code with good performance</code_quality_assessment>
+  </implementation_analysis>
+  <definition_of_done_verification>
+    <subtask_verification>
+      <task_id>dashboard_implementation</task_id>
+      <command_result>
+        <command>npm run build</command>
+        <exit_code>0</exit_code>
+        <stdout>Build successful</stdout>
+      </command_result>
+      <success_criteria_met>true</success_criteria_met>
+    </subtask_verification>
+  </definition_of_done_verification>
+  <risks_and_issues>
+    <performance_risk>Large data sets may need optimization</performance_risk>
+  </risks_and_issues>
+  <final_assessment>
+    <status>APPROVED</status>
+    <summary>Dashboard implementation is production ready</summary>
+  </final_assessment>
+</implementation_review>`;
+
+        // First add the implementation review
+        await review_review_implementation_add.execute({
+          session_id: sessionId,
+          plan_xml: reviewImplXml
+        }, {} as any);
+
+        // Now read it back
+        const result = await review_review_implementation_read.execute({
+          session_id: sessionId
+        }, {} as any);
+
+        expect(result).toBe(reviewImplXml);
+      });
+
+      test('review_review_implementation_add validates XML structure', async () => {
+        // Test invalid XML (missing closing tag)
+        const invalidXml = `<review_implementation><review_summary><implementation_scope>Test</implementation_scope></review_summary>`;
+
+        await expect(review_review_implementation_add.execute({
+          session_id: sessionId,
+          plan_xml: invalidXml
+        }, {} as any)).rejects.toThrow(/Invalid XML/);
+      });
+
+      test('review_review_implementation_read fails when no implementation review exists', async () => {
+        await expect(review_review_implementation_read.execute({
+          session_id: sessionId
+        }, {} as any)).rejects.toThrow(/no such file or directory/);
+      });
+    });
+
+    describe('task_add and task_read with new consistently named interface', () => {
+      test('task_add saves XML task to file and task_read retrieves it', async () => {
+        const taskId = 'test_implementation_task';
+        const taskXml = `<?xml version="1.0" encoding="UTF-8"?>
+<task_delegation xmlns="http://medoma.com/opencode/task-delegation">
+  <title>Implement user authentication</title>
+  <task_id>${taskId}</task_id>
+  <session_id>${sessionId}</session_id>
+  <task>
+    <goal>Implement secure user authentication system</goal>
+  </task>
+  <context>
+    <repo_paths>
+      <path>./src/auth</path>
+      <path>./src/models/user.js</path>
+    </repo_paths>
+    <background>Need to add JWT-based authentication with proper security measures</background>
+  </context>
+  <expected_outcome>
+    <behavior>Users can securely log in and access protected resources</behavior>
+    <artifacts>
+      <artifact>Authentication middleware</artifact>
+      <artifact>User login/logout endpoints</artifact>
+      <artifact>JWT token management</artifact>
+    </artifacts>
+  </expected_outcome>
+  <definition_of_done>
+    <build>npm run build</build>
+    <tests>npm test</tests>
+  </definition_of_done>
+  <timebox>10m</timebox>
+  <rules_and_output>
+    <rule>Follow security best practices</rule>
+    <rule>Implement proper error handling</rule>
+    <rule>Add comprehensive tests</rule>
+  </rules_and_output>
+</task_delegation>`;
+
+        // Add the task
+        const addResult = await task_add.execute({
+          session_id: sessionId,
+          task_id: taskId,
+          task_xml: taskXml
+        }, {} as any);
+
+        const addResponse = JSON.parse(addResult);
+        expect(addResponse.success).toBe(true);
+        expect(addResponse.message).toContain('Task XML saved to');
+
+        // Verify the task XML was saved to the file in the same directory as session
+        const sessionPath = sessionManager._getSessionPath(sessionId);
+        const sessionDir = dirname(sessionPath);
+        const taskFilePath = join(sessionDir, `${sessionId}_${taskId}.xml`);
+        expect(existsSync(taskFilePath)).toBe(true);
+        const fileContent = readFileSync(taskFilePath, 'utf-8');
+        expect(fileContent).toBe(taskXml);
+
+        // Now read it back
+        const readResult = await task_read.execute({
+          session_id: sessionId,
+          task_id: taskId
+        }, {} as any);
+
+        expect(readResult).toBe(taskXml);
+      });
+
+      test('task_add handles task_id sanitization (hyphens to underscores)', async () => {
+        const taskIdWithHyphens = 'test-auth-task';
+        const expectedTaskId = 'test_auth_task';
+        const taskXml = `<?xml version="1.0" encoding="UTF-8"?>
+<task_delegation xmlns="http://medoma.com/opencode/task-delegation">
+  <title>Test authentication task</title>
+  <task_id>${expectedTaskId}</task_id>
+  <session_id>${sessionId}</session_id>
+  <task>
+    <goal>Test goal</goal>
+  </task>
+  <context>
+    <repo_paths>
+      <path>./test</path>
+    </repo_paths>
+    <background>Test background</background>
+  </context>
+  <expected_outcome>
+    <behavior>Test behavior</behavior>
+    <artifacts>
+      <artifact>Test artifact</artifact>
+    </artifacts>
+  </expected_outcome>
+  <definition_of_done>
+    <build>npm test</build>
+    <tests>npm test</tests>
+  </definition_of_done>
+  <timebox>5m</timebox>
+  <rules_and_output>
+    <rule>Test rule</rule>
+  </rules_and_output>
+</task_delegation>`;
+
+        // Add task with hyphens in ID
+        await task_add.execute({
+          session_id: sessionId,
+          task_id: taskIdWithHyphens,
+          task_xml: taskXml
+        }, {} as any);
+
+        // Verify file was created with underscores
+        const sessionPath = sessionManager._getSessionPath(sessionId);
+        const sessionDir = dirname(sessionPath);
+        const taskFilePath = join(sessionDir, `${sessionId}_${expectedTaskId}.xml`);
+        expect(existsSync(taskFilePath)).toBe(true);
+
+        // Read using original hyphenated ID should work
+        const result = await task_read.execute({
+          session_id: sessionId,
+          task_id: taskIdWithHyphens
+        }, {} as any);
+
+        expect(result).toBe(taskXml);
+      });
+
+      test('task_add validates XML structure', async () => {
+        // Test invalid XML (missing closing tag)
+        const invalidXml = `<task_delegation><title>Test</title><task_id>test</task_id>`;
+
+        await expect(task_add.execute({
+          session_id: sessionId,
+          task_id: 'test_task',
+          task_xml: invalidXml
+        }, {} as any)).rejects.toThrow(/Invalid XML/);
+      });
+
+      test('task_read fails when no task exists', async () => {
+        await expect(task_read.execute({
+          session_id: sessionId,
+          task_id: 'non_existent_task'
+        }, {} as any)).rejects.toThrow(/no such file or directory/);
+      });
+
+      test('task tools fail with invalid session_id', async () => {
+        const taskXml = `<task_delegation><title>Test</title></task_delegation>`;
+
+        await expect(task_add.execute({
+          session_id: 'non-existent-session',
+          task_id: 'test_task',
+          task_xml: taskXml
+        }, {} as any)).rejects.toThrow(/not found/);
+
+        await expect(task_read.execute({
+          session_id: 'non-existent-session',
+          task_id: 'test_task'
+        }, {} as any)).rejects.toThrow(/not found/);
+      });
+    });
+
+    describe('XML Validation Integration', () => {
+      test('all new tools properly validate XML against their schemas', async () => {
+        // Test that XML validation is working for all new tools by attempting
+        // to add valid XML that should pass basic parsing but fail schema validation
+
+        const basicValidXml = `<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <session_id>${sessionId}</session_id>
+  <title>Valid XML but wrong schema</title>
+</root>`;
+
+        // All these should fail schema validation
+        await expect(review_review_plan_add.execute({
+          session_id: sessionId,
+          plan_xml: basicValidXml
+        }, {} as any)).rejects.toThrow(/Schema validation failed/);
+
+        await expect(review_review_implementation_add.execute({
+          session_id: sessionId,
+          plan_xml: basicValidXml
+        }, {} as any)).rejects.toThrow(/Schema validation failed/);
+
+        await expect(task_add.execute({
+          session_id: sessionId,
+          task_id: 'test_task',
+          task_xml: basicValidXml
+        }, {} as any)).rejects.toThrow(/Schema validation failed/);
+      });
+    });
+
+    describe('Error Handling and File Integrity for New Tools', () => {
+      test('new tool failures do not corrupt session files', async () => {
+        // Get initial session state
+        const initialContent = readFileSync(sessionPath, 'utf-8');
+        const initialData = JSON.parse(initialContent);
+
+        // Try operations that should fail
+        await expect(review_review_plan_add.execute({
+          session_id: sessionId,
+          plan_xml: '<invalid>'
+        }, {} as any)).rejects.toThrow();
+
+        await expect(review_review_implementation_add.execute({
+          session_id: sessionId,
+          plan_xml: '<invalid>'
+        }, {} as any)).rejects.toThrow();
+
+        await expect(task_add.execute({
+          session_id: sessionId,
+          task_id: 'test_task',
+          task_xml: '<invalid>'
+        }, {} as any)).rejects.toThrow();
+
+        // Verify session file is unchanged after failed operations
+        const finalContent = readFileSync(sessionPath, 'utf-8');
+        const finalData = JSON.parse(finalContent);
+        expect(finalData).toEqual(initialData);
+      });
+
+      test('new tools operations on non-existent session fail gracefully', async () => {
+        const nonExistentSessionId = 'non-existent-session-id';
+        const validXml = `<?xml version="1.0" encoding="UTF-8"?>
+<test><session_id>${nonExistentSessionId}</session_id></test>`;
+
+        await expect(review_review_plan_add.execute({
+          session_id: nonExistentSessionId,
+          plan_xml: validXml
+        }, {} as any)).rejects.toThrow(/not found/);
+
+        await expect(review_review_plan_read.execute({
+          session_id: nonExistentSessionId
+        }, {} as any)).rejects.toThrow(/not found/);
+
+        await expect(review_review_implementation_add.execute({
+          session_id: nonExistentSessionId,
+          plan_xml: validXml
+        }, {} as any)).rejects.toThrow(/not found/);
+
+        await expect(review_review_implementation_read.execute({
+          session_id: nonExistentSessionId
+        }, {} as any)).rejects.toThrow(/not found/);
+
+        await expect(task_add.execute({
+          session_id: nonExistentSessionId,
+          task_id: 'test_task',
+          task_xml: validXml
+        }, {} as any)).rejects.toThrow(/not found/);
+
+        await expect(task_read.execute({
+          session_id: nonExistentSessionId,
+          task_id: 'test_task'
+        }, {} as any)).rejects.toThrow(/not found/);
+      });
     });
   });
 });
