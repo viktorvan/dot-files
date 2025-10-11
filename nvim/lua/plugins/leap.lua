@@ -30,6 +30,7 @@ return {
       crust     = "#dce0e8",
     }
 
-    vim.api.nvim_set_hl(0, "LeapLabelPrimary", { fg=colors.base, bg=colors.mauve })
+    vim.api.nvim_set_hl(0, "LeapLabel", { fg=colors.base, bg=colors.mauve })
+    require('leap').opts.equivalence_classes = { ' \t\r\n', '([{', ')]}', '\'"`' }
   end,
 }

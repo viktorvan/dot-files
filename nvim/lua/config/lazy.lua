@@ -17,6 +17,9 @@ vim.opt.rtp:prepend(lazypath)
 -- The codelenses settings have been changed in fsac, but maybe not yet fixed in ionide.
 vim.g.LanguageClient_useVirtualText = "Diagnostics"
 
+-- only use conjure for clojure 
+vim.g["conjure#filetypes"] = { "clojure" } -- restrict to just these
+
 require("lazy").setup({
   ui = {
     border = "rounded",
@@ -40,7 +43,7 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "habamax", "catppuccin" } },
+  -- install = { colorscheme = { "catppuccin" } },
   checker = {
     enabled = true, -- check for plugin updates periodically
     notify = false, -- notify on update
@@ -113,3 +116,6 @@ end
 vim.api.nvim_create_user_command('ScratchDelete', delete_snacks_scratch_file, {})
 
 require('leap').opts.preview_filter = function () return false end
+require('leap').opts.labels = "ntesiroamplfuwyhdcxgbNTESIROAMPLFUWYHDCXGB"
+-- s", "f", "n", "u", "t", "/", "S", "F", "N", "L", "H", "M", "U", "G", "T", "Z", "?"
+require('leap').opts.safe_labels = "ntsfroa"

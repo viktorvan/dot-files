@@ -4,6 +4,7 @@ return {
     { "<leader>ft", false }
   },
   opts = {
+    dashboard = { enabled = false },
     terminal = {
       win = {
         position = "float",
@@ -26,7 +27,7 @@ return {
         tabline = false,
       },
       win = {
-        width = 140,
+        width = 160,
         backdrop = { transparent = false, blend = 80 }
       }
     },

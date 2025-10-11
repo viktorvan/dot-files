@@ -8,3 +8,16 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.spell = false
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.wo.conceallevel = 0
+  end,
+})
+
+vim.api.nvim_create_autocmd("DirChanged", {
+  callback = function(args)
+    vim.notify("CWD changed to: " .. args.file, vim.log.levels.INFO)
+  end,
+})

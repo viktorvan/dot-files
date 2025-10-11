@@ -10,7 +10,15 @@ return {
           filter = {
             event = "lsp",
             kind = "progress",
-            find = ".*.fs.*",
+            find = "ionide",
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = "notify",
+            kind = "info",
+            find = "Ionide"
           },
           opts = { skip = true },
         },

@@ -8,7 +8,7 @@ return {
         border = 'single',
       },
       ghost_text = {
-        enabled = false
+        enabled = true
       },
       documentation = { window = { border = 'single' } },
     },
@@ -17,8 +17,7 @@ return {
       enabled = true,
       completion =
         {
-          menu = { auto_show = false },
-          ghost_text = { enabled = true }
+          menu = { auto_show = true },
         }
     }
   },
