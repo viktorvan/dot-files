@@ -90,7 +90,7 @@ describe('StateMachine', () => {
       it('should validate correct ANALYSIS evidence', () => {
         const evidence: Evidence = {
           clarifying_questions_text: 'What are the requirements?',
-          clarifying_answers_text: 'The requirements are XYZ'
+          clarifying_answers_text: 'The requirements are XYZ and analysis approved'
         };
 
         expect(stateMachine.validateEvidence('ANALYSIS', evidence)).toBe(true);
@@ -113,6 +113,43 @@ describe('StateMachine', () => {
 
         expect(() => stateMachine.validateEvidence('ANALYSIS', evidence))
           .toThrow('clarifying_questions_text must be at least 10 characters long (got 5)');
+      });
+
+      it('should validate successful ANALYSIS evidence when clarifying_answers_text contains "analysis approved"', () => {
+        const evidence: Evidence = {
+          clarifying_questions_text: 'What are the specific requirements for this project?',
+          clarifying_answers_text: 'The requirements have been reviewed and analysis approved'
+        };
+
+        expect(stateMachine.validateEvidence('ANALYSIS', evidence)).toBe(true);
+      });
+
+      it('should validate successful ANALYSIS evidence when clarifying_answers_text contains "ANALYSIS APPROVED" (case insensitive)', () => {
+        const evidence: Evidence = {
+          clarifying_questions_text: 'What are the specific requirements for this project?',
+          clarifying_answers_text: 'The requirements have been reviewed and ANALYSIS APPROVED by the team'
+        };
+
+        expect(stateMachine.validateEvidence('ANALYSIS', evidence)).toBe(true);
+      });
+
+      it('should validate successful ANALYSIS evidence when clarifying_answers_text contains "analysis approved" as substring', () => {
+        const evidence: Evidence = {
+          clarifying_questions_text: 'What are the specific requirements for this project?',
+          clarifying_answers_text: 'After thorough review, the technical analysis approved all proposed solutions and methodologies'
+        };
+
+        expect(stateMachine.validateEvidence('ANALYSIS', evidence)).toBe(true);
+      });
+
+      it('should throw error when clarifying_answers_text does not contain "analysis approved"', () => {
+        const evidence: Evidence = {
+          clarifying_questions_text: 'What are the specific requirements for this project?',
+          clarifying_answers_text: 'The requirements are clear and well documented'
+        };
+
+        expect(() => stateMachine.validateEvidence('ANALYSIS', evidence))
+          .toThrow('the user must answer the clarifying questions before you are allowed to transition from analysis state');
       });
     });
 

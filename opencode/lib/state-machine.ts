@@ -271,6 +271,16 @@ export class StateMachine {
           errors.push(`user approval is missing`);
         }
       }
+      
+      // Validate clarifying_answers_text contains analysis approval for ANALYSIS state
+      if (field === 'clarifying_answers_text' && state === 'ANALYSIS') {
+        const clarifyingAnswersText = evidence[field] as string || '';
+        // Check if it contains the substring "analysis approved" (case insensitive)
+        const containsAnalysisApproved = clarifyingAnswersText.toLowerCase().includes('analysis approved');
+        if (!containsAnalysisApproved) {
+          errors.push(`the user must answer the clarifying questions before you are allowed to transition from analysis state`);
+        }
+      }
     }
 
     // Report missing fields

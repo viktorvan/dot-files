@@ -106,7 +106,7 @@ describe('Tool Integration Tests', () => {
       // Transition from ANALYSIS to PLAN
       const evidence = {
         clarifying_questions_text: 'What are the main requirements?',
-        clarifying_answers_text: 'The system needs to handle user authentication and data storage.'
+        clarifying_answers_text: 'The system needs to handle user authentication and data storage. Analysis approved.'
       };
 
       const result = await request_next_state.execute({
@@ -156,7 +156,7 @@ describe('Tool Integration Tests', () => {
         session_id: sessionId,
         evidence: {
           clarifying_questions_text: 'What are the requirements?',
-          clarifying_answers_text: 'Need authentication system.'
+          clarifying_answers_text: 'Need authentication system and analysis approved.'
         }
       }, {} as any);
 
@@ -316,7 +316,7 @@ describe('Tool Integration Tests', () => {
         session_id: sessionId,
         evidence: {
           clarifying_questions_text: 'What features are needed?',
-          clarifying_answers_text: 'User management and data analytics dashboard.'
+          clarifying_answers_text: 'User management and data analytics dashboard. Analysis approved.'
         }
       }, {} as any);
 
@@ -414,7 +414,7 @@ describe('Tool Integration Tests', () => {
         session_id: sessionId,
         evidence: {
           clarifying_questions_text: 'What are the main requirements for this system?',
-          clarifying_answers_text: 'We need a user management system with authentication and data analytics dashboard.'
+          clarifying_answers_text: 'We need a user management system with authentication and data analytics dashboard. Analysis approved.'
         },
         notes: 'Analysis completed, moving to planning phase'
       }, {} as any);

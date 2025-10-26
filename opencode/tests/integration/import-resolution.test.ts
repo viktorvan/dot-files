@@ -136,7 +136,7 @@ describe('Import Resolution Integration Tests', () => {
         session_id: sessionId,
         evidence: {
           clarifying_questions_text: 'What are the requirements?',
-          clarifying_answers_text: 'Need a comprehensive system.'
+          clarifying_answers_text: 'Need a comprehensive system and analysis approved.'
         }
       }, {} as any);
 
@@ -194,7 +194,7 @@ describe('Import Resolution Integration Tests', () => {
       try {
         stateMachine.validateEvidence('ANALYSIS', {
           clarifying_questions_text: 'valid question',
-          clarifying_answers_text: 'valid answer'
+          clarifying_answers_text: 'valid answer and analysis approved'
         });
       } catch (error) {
         // Expected to pass, if AJV import failed this would throw a different error
