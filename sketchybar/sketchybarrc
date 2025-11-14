@@ -52,7 +52,8 @@ source $ITEM_DIR/calendar.sh
 source $ITEM_DIR/volume.sh
 source $ITEM_DIR/battery.sh
 source $ITEM_DIR/cpu.sh
-source $ITEM_DIR/docker.sh
+source $ITEM_DIR/disk.sh
+# source $ITEM_DIR/docker.sh
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # SETUP
