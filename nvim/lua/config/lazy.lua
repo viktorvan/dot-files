@@ -67,11 +67,6 @@ require("lazy").setup({
 
 require("config.tailwind")
 
-local bicep_lsp_bin = "/usr/local/bin/bicep-langserver/Bicep.LangServer.dll"
-require("lspconfig").bicep.setup({
-  cmd = { "dotnet", bicep_lsp_bin },
-})
-
 require("telescope").load_extension("git_worktree")
 
 vim.api.nvim_create_user_command('Tmw', function()

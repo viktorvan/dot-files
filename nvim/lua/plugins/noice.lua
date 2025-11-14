@@ -1,37 +1,32 @@
 return {
   "folke/noice.nvim",
-  config = function()
-    local noice = require("noice")
-    noice.setup({
-      routes = {
-        {
-          -- this is needed to filter out excessive lsp progress messages from Ionide(F#)
-          -- we just check if the message contains .fs extension and skip it
-          filter = {
-            event = "lsp",
-            kind = "progress",
-            find = "ionide",
-          },
-          opts = { skip = true },
+  event = "VeryLazy",
+  opts = {
+    routes = {
+      {
+        filter = {
+          event = "notify",
+          kind = "info",
+          find = "Ionide"
         },
-        {
-          filter = {
-            event = "notify",
-            kind = "info",
-            find = "Ionide"
-          },
-          opts = { skip = true },
-        },
+        opts = { skip = true },
       },
-      presets = {
-        bottom_search = false,
-        lsp_doc_border = true,
+    },
+    presets = {
+      bottom_search = false,
+      lsp_doc_border = true,
+    },
+    lsp = {
+      progress = {
+        enabled = false, -- Disable LSP progress notifications UI
       },
-      lsp = {
-        hover = {
-          silent = true,
-        },
+      hover = {
+        silent = true,
       },
-    })
-  end,
+    },
+  },
+  dependencies = {
+    "MunifTanjim/nui.nvim",
+    "rcarriga/nvim-notify",
+  }
 }
