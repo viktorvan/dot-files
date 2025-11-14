@@ -62,6 +62,7 @@
         "plan_read": true,
         "task_add": true,
         "task_read": true,
+        "review_submit_review": false,
         "review_plan_read": true,
         "review_implementation_read": true,
         "review_review_plan_read": true,
