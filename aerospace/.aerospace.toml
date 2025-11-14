@@ -13,7 +13,7 @@ after-login-command = []
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
-  'exec-and-forget borders active_color=0xFFDC8A78 inactive_color=0x00000000 width=2.0'
+  'exec-and-forget borders active_color=0xFFFE640B inactive_color=0x00000000 width=4.0'
 ]
 
 exec-on-workspace-change = ['/bin/bash', '-c',
@@ -86,19 +86,19 @@ outer.right =      10
 # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-ctrl-alt-shift-h = 'focus --boundaries-action stop left'
+ctrl-alt-shift-m = 'focus --boundaries-action stop left'
 ctrl-alt-shift-n = 'focus --boundaries-action stop down'
 ctrl-alt-shift-e = 'focus --boundaries-action stop up'
 ctrl-alt-shift-i = 'focus --boundaries-action stop right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
-ctrl-alt-shift-cmd-h = 'move left'
+ctrl-alt-shift-cmd-m = 'move left'
 ctrl-alt-shift-cmd-n = 'move down'
 ctrl-alt-shift-cmd-e = 'move up'
 ctrl-alt-shift-cmd-i = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-ctrl-alt-shift-m = 'resize smart -50'
+ctrl-alt-shift-h = 'resize smart -50'
 ctrl-alt-shift-comma = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
@@ -107,9 +107,10 @@ ctrl-alt-shift-l = 'workspace 2'
 ctrl-alt-shift-u = 'workspace 3'
 ctrl-alt-shift-y = 'workspace 4'
 ctrl-alt-shift-semicolon = 'workspace 5'
-ctrl-alt-shift-leftSquareBracket = 'workspace 6'
+ctrl-alt-shift-6 = 'workspace 6'
 ctrl-alt-shift-7 = 'workspace 7'
 ctrl-alt-shift-8 = 'workspace 8'
+ctrl-alt-shift-9 = 'workspace 9'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-shift-cmd-j = 'move-node-to-workspace 1'
@@ -117,9 +118,10 @@ ctrl-alt-shift-cmd-l = 'move-node-to-workspace 2'
 ctrl-alt-shift-cmd-u = 'move-node-to-workspace 3'
 ctrl-alt-shift-cmd-y = 'move-node-to-workspace 4'
 ctrl-alt-shift-cmd-semicolon = 'move-node-to-workspace 5'
-ctrl-alt-shift-cmd-leftSquareBracket = 'move-node-to-workspace 6'
+ctrl-alt-shift-cmd-6 = 'move-node-to-workspace 6'
 ctrl-alt-shift-cmd-7 = 'move-node-to-workspace 7'
 ctrl-alt-shift-cmd-8 = 'move-node-to-workspace 8'
+ctrl-alt-shift-cmd-9 = 'move-node-to-workspace 9'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 ctrl-alt-shift-cmd-s = 'mode service'
@@ -130,7 +132,7 @@ ctrl-alt-shift-cmd-s = 'mode service'
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 
-ctrl-alt-shift-cmd-h = ['join-with left', 'mode main']
+ctrl-alt-shift-cmd-m = ['join-with left', 'mode main']
 ctrl-alt-shift-cmd-n = ['join-with down', 'mode main']
 ctrl-alt-shift-cmd-e = ['join-with up', 'mode main']
 ctrl-alt-shift-cmd-i = ['join-with right', 'mode main']
@@ -153,6 +155,10 @@ run = 'move-node-to-workspace 1'
 if.app-id = 'com.github.wez.wezterm'
 run = 'move-node-to-workspace 2'
 
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+run = 'move-node-to-workspace 2'
+
 # browsing
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
@@ -160,7 +166,7 @@ run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Chrome'
-run = 'move-node-to-workspace 3'
+run = 'move-node-to-workspace 7'
 
 # productivity
 [[on-window-detected]]
@@ -184,3 +190,6 @@ run = 'move-node-to-workspace 5'
 if.app-id = 'dev.warp.Warp-Stable'
 run = 'move-node-to-workspace 7'
 
+[[on-window-detected]]
+if.app-id = 'com.1password.1password'
+run = 'move-node-to-workspace 8'
