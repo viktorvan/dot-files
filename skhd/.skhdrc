@@ -72,15 +72,24 @@
 
 
 # Start applications
-meh - return : open -a /Applications/WezTerm.app
+meh - return : open -a /Applications/Ghostty.app
+meh - space : open -a /Applications/Slack.app
+meh - p : open -a /Applications/Spotify.app
+meh - c : open -a /Applications/ChatGPT.app
+meh - b : open -a /Applications/Safari.app
+meh - g : open -a "/Applications/Google Chrome.app"
+meh - t : open -a "/Applications/Microsoft Teams.app"
 # hyper - return : open -a /Applications/Safari.app
 # meh - o : open -a /Users/viktor/Applications/Rider.app
 # hyper - o : open -a /Applications/Visual\ Studio\ Code.app
 # hyper - s : open -a /Applications/Slack.app
 
-# Restart hammerspoon
-meh - p : osascript -e 'quit app "HammerSpoon"'
-hyper - p : osascript -e 'quit app "HammerSpoon"'; open -a /Applications/HammerSpoon.app
+# meh - a : '/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli'  --select-profile 'External'; osascript -e 'display notification "External" with title "Karabiner Profile"'
+# meh - r : '/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli'  --select-profile 'Laptop'; osascript -e 'display notification "Laptop" with title "Karabiner Profile"'
+
+# Restart sketchy[B]ar
+hyper - b: sketchybar --reload
 
 # Disable native hiding
 cmd - h : :
+
