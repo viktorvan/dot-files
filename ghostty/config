@@ -6,7 +6,7 @@ font-variation = wdth=100
 font-family-bold = "Berkeley Mono Variable"
 font-variation-bold = wght=800
 font-size = 15
-font-thicken
+font-thicken = true
 font-thicken-strength = 0
 
 window-title-font-family = "Berkeley Mono Variable"
@@ -16,10 +16,12 @@ font-feature = -liga
 font-feature = -clig
 font-feature = -calt
 
-theme = catppuccin-latte
+theme = Catppuccin Latte
 term = xterm-256color
 macos-titlebar-style = hidden
 
 cursor-style = block
 cursor-style-blink = false
-cursor-invert-fg-bg = true
+cursor-text = "#eff1f5"
+
+mouse-hide-while-typing = true
