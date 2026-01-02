@@ -1,16 +1,18 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "catppuccin",
-  "model": "anthropic/claude-sonnet-4-20250514",
+  "model": "anthropic/claude-sonnet-4-5",
+  "permission": {
+    "bash": {
+      "docker *": "deny",
+      "docker-compose *": "deny"
+    }
+  },
   "keybinds": {
     "leader": "ctrl+x",
-    "app_help": "<leader>h",
     "app_exit": "ctrl+c,<leader>q",
     "editor_open": "<leader>e",
     "theme_list": "<leader>t",
-    "project_init": "<leader>i",
-    "tool_details": "<leader>d",
-    "thinking_blocks": "<leader>b",
     "session_export": "<leader>x",
     "session_new": "<leader>n",
     "session_list": "<leader>l",
@@ -40,18 +42,11 @@
     "input_submit": "enter",
     "input_newline": "shift+enter,ctrl+j"
   },
-  "provider": {
-    "openrouter": {
-      "models": {
-        "x-ai/grok-code-fast-1": {}
-      }
-    }
-  },
   "agent": {
     "delegating-manager": {
       "description": "Plans work, decomposes tasks, and delegates to fresh coder sub-agents. Never edits files.",
       "mode": "primary",
-      "model": "anthropic/claude-sonnet-4-20250514",
+      "model": "anthropic/claude-sonnet-4-5",
       "prompt": "{file:./prompts/delegating_manager.md}",
       "tools": {
         "session_request_new_session": true,
@@ -78,10 +73,29 @@
         "glob": true
       }
     },
+    "fast-coder": {
+      "description": "Implements tasks from the manager. Writes code and runs safe bash.",
+      "mode": "subagent",
+      "model": "anthropic/claude-haiku-4-5",
+      "prompt": "{file:./prompts/coder.md}",
+      "tools": {
+        "task_read": true,
+        "task_start_task": true,
+        "task_finish_task": true,
+        "task_task_read": true,
+        "write": true,
+        "edit": true,
+        "patch": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    },
     "expert-coder": {
       "description": "Implements tasks from the manager. Writes code and runs safe bash.",
       "mode": "subagent",
-      "model": "anthropic/claude-sonnet-4-20250514",
+      "model": "anthropic/claude-sonnet-4-5",
       "prompt": "{file:./prompts/coder.md}",
       "tools": {
         "task_read": true,
@@ -100,7 +114,7 @@
     "reviewer": {
       "description": "Reviews and verifies implementation plans from the manager. Read-only analysis and validation.",
       "mode": "subagent",
-      "model": "anthropic/claude-sonnet-4-20250514",
+      "model": "zen/glm-4.6",
       "prompt": "{file:./prompts/reviewer.md}",
       "tools": {
         "review_submit_review": true,
@@ -117,5 +131,12 @@
         "glob": true
       }
     }
-  }
+  },
+  "plugin": [
+    "file:///Users/viktor/developer/oss/opencode-supermemory",
+    "file:///Users/viktor/developer/oss/opencode-morph-fast-apply"
+  ],
+  "instructions": [
+    "/Users/viktor/developer/oss/opencode-morph-fast-apply/MORPH_INSTRUCTIONS.md"
+  ]
 }

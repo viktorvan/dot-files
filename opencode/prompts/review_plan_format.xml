@@ -103,7 +103,7 @@
   <xs:simpleType name="StatusType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="APPROVED"/>
-      <xs:enumeration value="NEEDS_REVISION"/>
+      <xs:enumeration value="NEEDS REVISION"/>
       <xs:enumeration value="REJECTED"/>
     </xs:restriction>
   </xs:simpleType>

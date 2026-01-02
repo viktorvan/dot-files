@@ -10,7 +10,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "latest",
+    "@opencode-ai/plugin": "1.0.223",
     "@types/xml2js": "^0.4.14",
     "ajv": "^8.12.0",
     "lowdb": "^7.0.1",
