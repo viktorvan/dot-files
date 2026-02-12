@@ -79,8 +79,8 @@ meh - c : open -a /Applications/ChatGPT.app
 meh - b : open -a /Applications/Safari.app
 meh - g : open -a "/Applications/Google Chrome.app"
 meh - t : open -a "/Applications/Microsoft Teams.app"
+meh - o : open -a /Applications/Ghostty.app && tmux switch-client -t api:orbit 2>/dev/null || true
 # hyper - return : open -a /Applications/Safari.app
-# meh - o : open -a /Users/viktor/Applications/Rider.app
 # hyper - o : open -a /Applications/Visual\ Studio\ Code.app
 # hyper - s : open -a /Applications/Slack.app
 
