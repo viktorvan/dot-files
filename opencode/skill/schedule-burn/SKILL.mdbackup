@@ -15,15 +15,11 @@ WHEN TO USE
 
 SCOPE CHECK - BEFORE BUILDING THE DIAGRAM
 
-One burn = one narrow behavior slice with 3-8 action steps.
+One burn = one delegation with 3-8 action steps addressing a single concern.
 
-When in doubt, make the burn smaller. A too-small burn has zero cost. A too-large burn causes repeated aborts and wasted cycles.
+If the burn combines independent concerns (e.g., core logic changes + test updates in separate modules, or validation logic + API endpoints), split it into multiple burns.
 
-A burn should do one thing — e.g., extract one piece of shared logic, migrate one caller, add tests for one behavior, or fix one defect — not combinations of these.
-
-If the description uses "and" between independent actions, split it.
-
-Each implementation burn follows TDD: write tests before the code they test, not after. A burn may contain multiple red → green cycles. Tests and the implementation they verify must be in the same burn — never split across separate burns.
+A burn can touch many files if the change is mechanical and uniform (e.g., updating a type signature across 50 call sites).
 
 MERMAID SYNTAX
 
@@ -74,7 +70,7 @@ Where <description> is a concise summary (1-2 sentences), <instructions> are det
 Then delegate to the pilot agent with YAML front-matter only:
 ```
 ---
-orbit-id: MED-7620
+id: MED-7620
 burn-number: 3
 ---
 ```
@@ -94,15 +90,15 @@ EXAMPLE - Adding an API endpoint
 flowchart TD
     Start[Start: Add CSV export endpoint to PatientController] --> S1[Find existing controller and identify endpoint patterns]
     S1 --> C1{Controller found with consistent patterns?}
-    C1 -->|yes| S2[Write integration test for GET /patients/export endpoint]
+    C1 -->|yes| S2[Add GET /patients/export endpoint following existing patterns]
     C1 -->|no| Abort1[[ABORT: Report - controller not found or inconsistent patterns]]
-    S2 --> C2{Test written and fails as expected?}
-    C2 -->|yes| S3[Implement export endpoint following existing patterns]
-    C2 -->|no| Abort2[[ABORT: Report - test does not compile or does not fail as expected]]
-    S3 --> C3{Test passes?}
-    C3 -->|yes| S4[Run full test suite to verify no regressions]
-    C3 -->|no| Abort3[[ABORT: Report - implementation does not make test pass, describe errors]]
-    S4 --> C4{All tests pass?}
-    C4 -->|yes| End[End: Export endpoint added with passing test]
+    S2 --> C2{Endpoint added and compiles?}
+    C2 -->|yes| S3[Add request validation for query parameters]
+    C2 -->|no| Abort2[[ABORT: Report - endpoint fails to compile, describe errors]]
+    S3 --> C3{Validation works for valid and invalid inputs?}
+    C3 -->|yes| S4[Run existing tests to verify no regressions]
+    C3 -->|no| Abort3[[ABORT: Report - validation not working as expected]]
+    S4 --> C4{All existing tests pass?}
+    C4 -->|yes| End[End: Export endpoint added with validation]
     C4 -->|no| Abort4[[ABORT: Report - existing tests failing, describe failures]]
 ```
