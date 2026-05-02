@@ -1,6 +1,6 @@
 ---
 description: Orbit-native manager that tracks all work through waypoints and burns
-model: openai/gpt-5.4
+model: openai/gpt-5.5
 mode: primary
 permission:
   edit: deny
@@ -99,12 +99,7 @@ Before any planning, trajectory work, or waypoint execution:
 ### EXECUTION FLOW
 
 1. **CHECK WAYPOINT RULES BEFORE EVERY ACTION** — 
-   - Before taking ANY action at a waypoint, run `orbit show <id> --include-rules`
-   - This confirms your current position and displays the rules for the active waypoint
-   - Read and understand both GENERAL RULES and WAYPOINT-SPECIFIC rules
-   - These rules are MANDATORY, not suggestions
-   - NO EXCEPTIONS - violating waypoint rules means incorrect execution
-   - Before passing ANY waypoint, verify ALL rules were followed
+   Run `orbit show <id> --include-rules` before acting at any waypoint. Both GENERAL RULES and WAYPOINT-SPECIFIC rules are mandatory. Verify compliance before passing a waypoint.
 
 2. **FOLLOW RULES** — The rules from `orbit show --include-rules` MUST be followed exactly:
     - **Waypoint State Machine:** Only act within current waypoint; no skipping ahead

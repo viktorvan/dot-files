@@ -36,21 +36,23 @@ WORKFLOW (follow in order)
      EOF
 
 HARD RULES
-- If the issue already contains a plan, adopt it. Do not redo discovery for work that's already been planned.
-- If no plan exists, do NOT create the diagram until all critical questions are answered.
 - Do NOT implement, draft code, propose patches, or include file contents. Planning only.
 - Do NOT schedule or register burns - this skill is for trajectory planning only.
 - The final plan output must contain EXACTLY two parts and NOTHING ELSE:
   (1) a single Mermaid code block
   (2) exactly 3-5 bullet points summarizing the trajectory
 - No preface, no extra headings, no extra paragraphs, no checklists, no "next steps" outside the bullets.
-- Bullets are a SUMMARY of decisions made, NOT questions or open items.
 
 BURN SIZING
-- When in doubt, make burns smaller. A too-small burn has zero cost; a too-large burn causes repeated aborts and wasted cycles.
+- Burns must be aggressively small.
+- If there is any doubt, split the work into smaller burns.
+- Do not optimize for fewer burns.
+- Do not group work just because it feels cohesive.
+- Over-splitting is preferred; under-splitting is a mistake.
 - Each burn should be one narrow behavior slice — not multiple independent changes combined.
 - If a burn description uses "and" between independent actions, split it into separate burns.
-- Each implementation burn follows TDD: write tests before the code they test, not after. A burn may contain multiple red → green cycles. Tests and the implementation they verify must be in the same burn — never split across separate burns.
+- Each implementation burn follows TDD: write tests before the code they test, not after. A burn may contain multiple red -> green cycles. Tests and the implementation they verify must be in the same burn — never split across separate burns.
+- A too-small burn has near-zero cost; a too-large burn causes aborts, rework, and poor results.
 
 MERMAID REQUIREMENTS
 - Use: flowchart TD
@@ -84,9 +86,8 @@ flowchart TD
     Start[Start: MED-7620 - Add patient data export] --> WP1
 
     subgraph WP1[Waypoint: implementation]
-        B1[Burn 1: Add export endpoint to PatientController]
-        B1 --> B2[Burn 2: Add CSV serializer for patient data]
-        B2 --> B3[Burn 3: Write integration tests for export endpoint]
+        B1[Burn 1: Test and implement export endpoint in PatientController]
+        B1 --> B2[Burn 2: Test and implement CSV serializer for patient data]
     end
 
     WP1 --> D1{Implementation complete?}
@@ -123,8 +124,8 @@ flowchart TD
 
 - Export endpoint follows existing PatientController patterns, returns CSV with configurable delimiter
 - CSV serializer handles Unicode and special characters per RFC 4180
-- Integration tests written in implementation waypoint cover happy path, empty results, and malformed query parameters
+- Each implementation burn follows TDD: tests written before production code within the same burn
 - Test waypoint runs all tests as QA gate before self-review
 - Rollback paths loop back to implementation if issues are found in test or self-review
 
-Note: This example uses 3 burns for brevity. Apply the BURN SIZING rules above to determine the correct granularity for your trajectory.
+Note: This example uses few burns for brevity. Apply the BURN SIZING rules above to determine the correct granularity for your trajectory.

@@ -1,15 +1,23 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "catppuccin",
-  "model": "github-copilot/claude-sonnet-4.5",
+  "model": "openai/gpt-5.5",
   "small_model": "github-copilot/gpt-5-mini",
   "default_agent": "captain",
   "permission": {
     "bash": {
-      "docker *": "deny",
+      "dotnet test *": "ask",
+      "just local dotnet-test Api.slnx": "deny",
+      "just local dotnet-test \"Api.slnx\"": "deny",
+      "just local dotnet-test Api.slnx *": "deny",
+      "just local dotnet-test \"Api.slnx\" *": "deny",
+      "just all-logistics-tests-sln": "deny",
+      "just all-patient-tests-sln": "deny",
+      "dotnet build *": "deny",
+      "docker *": "allow",
       "docker-compose *": "deny",
       "git *": "ask",
       "rm *": "ask",
+      "git checkout *": "allow",
       "git status": "allow",
       "git status *": "allow",
       "git diff": "allow",
@@ -39,42 +47,18 @@
       "git config --get*": "allow",
       "git help": "allow",
       "git help *": "allow",
-      "git branch --show-current": "allow"
-    }
-  },
-  "keybinds": {
-    "leader": "ctrl+x",
-    "app_exit": "ctrl+c,<leader>q",
-    "editor_open": "<leader>e",
-    "theme_list": "<leader>t",
-    "session_export": "<leader>x",
-    "session_new": "<leader>n",
-    "session_list": "<leader>l",
-    "session_share": "<leader>s",
-    "session_unshare": "none",
-    "session_interrupt": "esc",
-    "session_compact": "<leader>c",
-    "session_child_cycle": "ctrl+right",
-    "session_child_cycle_reverse": "ctrl+left",
-    "messages_page_up": "pgup",
-    "messages_page_down": "pgdown",
-    "messages_half_page_up": "ctrl+b",
-    "messages_half_page_down": "ctrl+f",
-    "messages_first": "ctrl+g",
-    "messages_last": "ctrl+l",
-    "messages_copy": "<leader>y",
-    "messages_undo": "<leader>u",
-    "messages_redo": "<leader>r",
-    "model_list": "<leader>m",
-    "model_cycle_recent": "f2",
-    "model_cycle_recent_reverse": "shift+f2",
-    "agent_list": "<leader>a",
-    "agent_cycle": "tab",
-    "agent_cycle_reverse": "shift+tab",
-    "input_clear": "ctrl+c",
-    "input_paste": "ctrl+v",
-    "input_submit": "enter",
-    "input_newline": "shift+enter,ctrl+j"
+      "git branch --show-current": "allow",
+      "git add *": "allow",
+      "git commit *": "allow",
+      "git stash *": "allow"
+    },
+    "read": {
+     "*": "allow",
+      "scripts/dotnet_test.sh": "deny",
+      "scripts/dotnet_build.sh": "deny",
+    },
+    "external_directory": "ask"
+
   },
   "mcp": {
     "context7": {
@@ -89,11 +73,40 @@
       "type": "local",
       "command": ["npx", "-y", "mcp-remote", "https://mcp.linear.app/mcp"],
       "enabled": true
+    },
+    "sagefs": {
+      "type": "remote",
+      "url": "http://localhost:37749",
+      "enabled": false
+    },
+    "elastic": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "ES_URL",
+        "-e",
+        "ES_API_KEY",
+        "docker.elastic.co/mcp/elasticsearch",
+        "stdio"
+      ],
+      "environment": {
+        "ES_URL": "https://app-logs-elk-dev.es.westus2.azure.elastic-cloud.com:9243"
+      }
+    },
+    "supabase": {
+      "type": "remote",
+      "url": "https://mcp.supabase.com/mcp",
+      "enabled": false
     }
   },
   "plugin": [
-    "file:///Users/viktor/developer/oss/opencode-supermemory",
-    "file:///Users/viktor/developer/oss/opencode-morph-fast-apply"
+    "file:///Users/viktor/developer/oss/opencode-morph-fast-apply",
+    "@franlol/opencode-md-table-formatter@latest"
   ],
   "instructions": [
     "/Users/viktor/developer/oss/opencode-morph-fast-apply/MORPH_INSTRUCTIONS.md"
