@@ -102,3 +102,10 @@ vim.api.nvim_set_keymap("v", "<leader>zf", ":'<,'>ZkMatch<CR>", opts)
 
 vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')
 vim.keymap.set('n',             'S', '<Plug>(leap-from-window)')
+
+vim.keymap.set("n", "<leader>mm", "<cmd>MermaidPreview<CR>", { desc = "Mermaid Preview (Buffer)" })
+vim.keymap.set("x", "<leader>mm", ":'<,'>MermaidPreview<CR>", { desc = "Mermaid Preview (Selection)" })
+vim.keymap.set("n", "<leader>mb", "<cmd>MermaidBrowser<CR>", { desc = "Mermaid Browser (Buffer)" })
+vim.keymap.set("x", "<leader>mb", ":'<,'>MermaidBrowser<CR>", { desc = "Mermaid Browser (Selection)" })
+vim.keymap.set("n", "<leader>mc", "<cmd>MermaidCli<CR>", { desc = "Mermaid CLI (Buffer)" })
+vim.keymap.set("x", "<leader>mc", ":'<,'>MermaidCli<CR>", { desc = "Mermaid CLI (Selection)" })

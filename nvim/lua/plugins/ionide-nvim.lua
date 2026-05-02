@@ -26,6 +26,9 @@ return {
       FsiKeymapSend = "<M-cr>",
       FsiKeymapToggle = "<M-@>",
     },
+    init_options = {
+      AutomaticWorkspaceInit = false,
+    },
     cmd = {
       vim.fs.normalize(vim.fn.stdpath("data") .. "/mason/bin/fsautocomplete"),
     },

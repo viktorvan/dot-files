@@ -1,5 +1,5 @@
 return {
-  'ggandor/leap.nvim',
+  url = "https://codeberg.org/andyg/leap.nvim",
   config = function()
     local colors = {
       rosewater = "#dc8a78",

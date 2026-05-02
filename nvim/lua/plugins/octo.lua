@@ -1,5 +1,9 @@
 return {
   "pwntester/octo.nvim",
+  cmd = "Octo",
+  keys = {
+    { "<leader>oa", "<cmd>Octo actions<CR>", desc = "Octo actions", mode = { "n", "x" } },
+  },
   opts = {
     mappings = {
       submit_win = {

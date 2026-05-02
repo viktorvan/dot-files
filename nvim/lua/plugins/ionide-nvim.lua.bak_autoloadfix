@@ -1,0 +1,78 @@
+return {
+  {
+    "mason-org/mason-lspconfig.nvim",
+    opts = {
+      automatic_enable = {
+        -- IMPORTANT: don't let mason-lspconfig auto-enable fsautocomplete
+        exclude = { "fsautocomplete" },
+      },
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "mason-org/mason.nvim",
+      "WillEhrendreich/Ionide-nvim",
+    },
+    opts = function(_, opts)
+      -- Make sure these tables exist (LazyVim fills them too)
+      opts.servers = opts.servers or {}
+      opts.ensure_installed = opts.ensure_installed or {}
+
+      -- Ensure mason installs fsautocomplete
+      if not vim.tbl_contains(opts.ensure_installed, "fsautocomplete") then
+        table.insert(opts.ensure_installed, "fsautocomplete")
+      end
+
+      -- Let Ionide define the fsautocomplete server *and* override AutomaticWorkspaceInit
+      opts.servers.fsautocomplete = require("ionide").setup({
+        IonideNvimSettings = {
+          ShowSignatureOnCursorMove = false,
+          FsiStdOutFileName = "./FsiOutput.txt",
+          FsautocompleteCommand = {
+            vim.fs.normalize(vim.fn.stdpath("data") .. "/mason/bin/fsautocomplete"),
+            "--project-graph-enabled",
+            "--adaptive-lsp-server-enabled",
+            "--use-fcs-transparent-compiler",
+          },
+          UseRecommendedServerConfig = false,
+          AutomaticWorkspaceInit = false,
+          AutomaticReloadWorkspace = false,
+          AutomaticCodeLensRefresh = false,
+          FsiCommand = "dotnet fsi",
+          FsiKeymap = "vscode",
+          FsiWindowCommand = "botright 10new",
+          FsiFocusOnSend = false,
+          EnableFsiStdOutTeeToFile = false,
+          LspAutoSetup = false,
+          LspRecommendedColorScheme = false,
+          FsiVscodeKeymaps = true,
+          StatusLine = "Ionide",
+          FsiKeymapSend = "<M-cr>",
+          FsiKeymapToggle = "<M-@>",
+        },
+        init_options = {
+          AutomaticWorkspaceInit = false,
+        },
+        settings = {
+          FSharp = {
+            enableMSBuildProjectGraph = true,
+            enableReferenceCodeLens = false,
+            lineLens = { enabled = "never", prefix = "ll//" },
+            codeLenses = {
+              signature = { enabled = false },
+              references = { enabled = false },
+            },
+            inlayHints = {
+              enabled = true,
+              typeAnnotations = false,
+              disableLongTooltip = false,
+              parameterNames = false,
+            },
+            indentationSize = 4,
+          },
+        },
+      })
+    end,
+  },
+}

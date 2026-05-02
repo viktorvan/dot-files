@@ -1,4 +1,5 @@
 return {
+    enabled = false,
     "seblyng/roslyn.nvim",
     ft = "cs",
     ---@module 'roslyn.config'
