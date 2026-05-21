@@ -10,6 +10,7 @@ Run without an operation to choose one with fzf.
 Operations:
   status             List remote-dev servers and their status
   up                 Start existing server or create one from the latest snapshot
+  tunnels            Start SSH tunnels to remote dev server ports
   stop-and-snapshot  Gracefully stop the server and create a snapshot
   snapshots          List remote-dev snapshots
   delete-snapshots   Select and delete remote-dev snapshots
@@ -46,6 +47,7 @@ pick_operation() {
   selection="$(printf '%-18s %s\n' \
     'status' 'List remote-dev servers and their status' \
     'up' 'Start or create the server from the latest snapshot' \
+    'tunnels' 'Start SSH tunnels to remote dev server ports' \
     'stop-and-snapshot' 'Stop the server and create a snapshot' \
     'snapshots' 'List available snapshots' \
     'delete-snapshots' 'Select and delete remote-dev snapshots' \
@@ -75,6 +77,9 @@ case "$operation" in
     ;;
   up|start)
     exec "$script_dir/remote-dev-up.sh" "$@"
+    ;;
+  tunnels|tunnel|forward)
+    exec "$script_dir/remote-dev-tunnels.sh" "$@"
     ;;
   stop-and-snapshot|snapshot|stop)
     exec "$script_dir/remote-dev-stop-and-snapshot.sh" "$@"
