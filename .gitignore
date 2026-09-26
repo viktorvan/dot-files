@@ -1,3 +1,11 @@
-opencode/.opencode
-opencode/node_modules
-opencode/dist
+.DS_Store
+**/node_modules/
+**/__pycache__/
+*.pyc
+.env
+secrets/
+**/hosts.yml
+**/auth.json
+**/account.json
+**/*.sqlite*
+**/*.db*

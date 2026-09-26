@@ -1,0 +1,71 @@
+# workmux project configuration
+# For global settings, edit ~/.config/workmux/config.yaml
+
+# The primary branch to merge into.
+# Default: Auto-detected from remote's HEAD, or falls back to main or master.
+# main_branch: main
+
+# Custom directory where worktrees should be created.
+# Can be relative to the repository root or an absolute path.
+# Default: A sibling directory named '<project_name>__worktrees'.
+# worktree_dir: .worktrees
+
+# Custom prefix for tmux window names.
+window_prefix: "\uf418 "
+
+# The agent command to use when <agent> is specified in pane commands.
+agent: opencode --port
+
+# Default merge strategy for `workmux merge`.
+# Options: merge (default), rebase, squash
+# CLI flags (--rebase, --squash) always override this setting.
+# merge_strategy: rebase
+
+# Commands to run in the new worktree before the tmux window is opened.
+# These hooks block window creation, so reserve them for short tasks.
+# For long-running setup (e.g., pnpm install), prefer pane `command`s instead.
+# To disable, set to an empty list: `post_create: []`
+# post_create:
+  # Use "<global>" to inherit hooks from your global config.
+  # - "<global>"
+  # - mise use
+
+# Cleanup commands run before worktree deletion
+# Default: Auto-detects Node.js projects and fast-deletes node_modules in background
+# You can override or disable this behavior:
+# pre_delete:
+#   - echo "Custom cleanup"
+# Or disable:
+# pre_delete: []
+
+# Custom tmux pane layout for this project.
+# Default: A two-pane layout with a shell and clear command
+panes:
+  - command: ''
+  - split: horizontal
+    percentage: 60
+    focus: true
+
+#   # Just a default shell (command is omitted)
+#   - split: horizontal
+#
+#   # Run a command that exits immediately
+#   - command: clear
+#     split: vertical
+
+# File operations to perform when creating a worktree.
+files:
+  # Glob patterns for files to copy from the repo root.
+  # Useful for files that need to be unique per worktree.
+  # copy:
+    # - .env
+
+  # Glob patterns for files/directories to symlink from the repo root.
+  # Ideal for shared resources like dependency caches to save disk space and time.
+  # Use "<global>" to inherit patterns from your global config.
+  # symlink:
+    # - "<global>"
+    # - node_modules
+    # - .pnpm-store
+
+status_format: false

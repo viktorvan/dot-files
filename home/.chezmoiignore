@@ -1,0 +1,6 @@
+# Target paths, not source-state paths.
+**/.DS_Store
+**/*.bak
+**/*.bak_*
+**/*.zwc
+**/node_modules/**

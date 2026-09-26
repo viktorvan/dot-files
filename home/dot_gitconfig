@@ -1,0 +1,5 @@
+[user]
+	email = v.andersson@me.com
+	name = Viktor Andersson
+[core]
+	editor = nvim

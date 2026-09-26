@@ -1,3 +1,0 @@
-Source repository does not contain a license file.
-
-https://github.com/obra/the-elements-of-style/tree/main

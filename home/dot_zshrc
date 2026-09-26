@@ -1,0 +1,177 @@
+# Start configuration added by Zim Framework install {{{
+#
+# User configuration sourced by interactive shells
+#
+
+# -----------------
+# Zsh configuration
+# -----------------
+
+# User binaries
+for brew_bin in /home/linuxbrew/.linuxbrew/bin/brew /opt/homebrew/bin/brew /usr/local/bin/brew; do
+  if [[ -x "$brew_bin" ]]; then
+    eval "$("$brew_bin" shellenv zsh)"
+    fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
+    break
+  fi
+done
+unset brew_bin
+
+path=($HOME/.opencode/bin $HOME/.local/bin $path)
+typeset -U path fpath
+
+
+#
+# History
+#
+
+# Remove older command from the history if a duplicate is to be added.
+setopt HIST_IGNORE_ALL_DUPS
+HISTFILE=${ZDOTDIR:-$HOME}/.zhistory
+HISTSIZE=20000
+SAVEHIST=10000
+setopt APPEND_HISTORY
+
+#
+# Input/output
+#
+
+# Set editor default keymap to emacs (`-e`) or vi (`-v`)
+bindkey -e
+
+# Prompt for spelling correction of commands.
+#setopt CORRECT
+
+# Customize spelling correction prompt.
+#SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+
+# Remove path separator from WORDCHARS.
+WORDCHARS=${WORDCHARS//[\/]}
+
+# --------------------
+# Module configuration
+# --------------------
+
+
+
+#
+# input
+#
+
+# Append `../` to your input for each `.` you type after an initial `..`
+zstyle ':zim:input' double-dot-expand yes
+
+#
+# termtitle
+#
+
+# Set a custom terminal title format using prompt expansion escape sequences.
+# See http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Simple-Prompt-Escapes
+# If none is provided, the default '%n@%m: %~' is used.
+#zstyle ':zim:termtitle' format '%1~'
+
+#
+# zsh-autosuggestions
+#
+
+# Disable automatic widget re-binding on each precmd. This can be set when
+# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
+# Customize the style that the suggestions are shown with.
+# See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
+#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+
+#
+# zsh-syntax-highlighting
+#
+
+# Set what highlighters will be used.
+# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+
+# Customize the main highlighter styles.
+# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
+#typeset -A ZSH_HIGHLIGHT_STYLES
+#ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
+
+# ------------------
+# Initialize modules
+# ------------------
+
+ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+# Provisioning installs Zim. Recovery shells must not download tools implicitly.
+if [[ -r ${ZIM_HOME}/zimfw.zsh &&
+      ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init
+fi
+# Initialize modules once per shell.
+if [[ -z ${__ZIM_INIT_SOURCED:-} && -r ${ZIM_HOME}/init.zsh ]]; then
+  source ${ZIM_HOME}/init.zsh
+  __ZIM_INIT_SOURCED=1
+fi
+# }}} End configuration added by Zim Framework install
+
+
+# Start/reuse ssh-agent without adding keys at shell startup.
+# The first SSH use prompts for the key passphrase and AddKeysToAgent caches it.
+if (( ${+commands[keychain]} )) && [[ -f ~/.ssh/id_ed25519_github_devserver ]]; then
+  eval "$(keychain --eval --quiet --noask --agents ssh id_ed25519_github_devserver)"
+fi
+
+zstyle ':completion:*:*:kill:*:processes' command 'ps -eo pid,user,tty,time,comm,args'
+zstyle ':completion:*:*:kill:*:processes' verbose yes
+zstyle ':completion:*:descriptions' format '[%d]'
+
+FZF_LIGHT_COLORS='--color=light,fg:#4c4f69,bg:#eff1f5,hl:#d20f39,fg+:#4c4f69,bg+:#ccd0da,hl+:#d20f39,info:#8839ef,prompt:#1e66f5,pointer:#d20f39,marker:#40a02b,spinner:#fe640b,header:#179299,border:#bcc0cc,gutter:#eff1f5'
+export FZF_DEFAULT_OPTS="$FZF_LIGHT_COLORS ${FZF_DEFAULT_OPTS-}"
+zstyle ':fzf-tab:*' fzf-flags $FZF_LIGHT_COLORS
+
+if [[ -r ~/tools/fzf-tab/fzf-tab.plugin.zsh ]]; then
+  source ~/tools/fzf-tab/fzf-tab.plugin.zsh
+fi
+
+alias vim=nvim
+alias v=nvim
+alias lg=lazygit
+alias wm=workmux
+alias wmcon="nvim ~/.config/workmux/config.yaml"
+alias oc="opencode --port"
+alias ncon="cd ~/.config/nvim;nvim init.lua; cd -"
+alias zcon="nvim ~/.zshrc; exec zsh"
+j() {
+    if [ -f ".viktor.justfile" ]; then
+        just -f .viktor.justfile "$@"
+    else
+        just "$@"
+    fi
+}
+if (( ${+functions[compdef]} )); then
+  compdef j=just
+fi
+
+if (( ${+commands[pbcopy]} )); then
+  alias uuid="uuidgen | tr -d '\n' | pbcopy"
+else
+  alias uuid=uuidgen
+fi
+
+# temporary fix for white quoted text in opencode, until a fix is merged
+export EDITOR=nvim
+export VISUAL=nvim
+export OPENCODE_EXPERIMENTAL_MARKDOWN=0
+export ENHANCE_THEME=catppuccin_latte
+
+if (( ${+commands[zoxide]} )); then
+  eval "$(zoxide init zsh)"
+fi
+export DOTNET_ROOT=$HOME/.dotnet
+export PATH=$DOTNET_ROOT:$DOTNET_ROOT/tools:$PATH
+if [[ "$OSTYPE" == linux* ]]; then
+  export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:/etc/ssl/certs"
+fi
+
+# Source secret environment variables if the file exists
+if [[ -r ~/secrets/set_secret_env_vars.sh ]]; then
+  source ~/secrets/set_secret_env_vars.sh
+fi

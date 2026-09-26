@@ -16,5 +16,13 @@
 ## Conventions
 - Plugin files named after the plugin they configure (e.g. catppuccin.lua)
 - Use snake_case for Lua variables and functions
-- Configuration files should be named without leading dots in repo
+- Configuration files under home/ use chezmoi source-state naming conventions
 - Hammerspoon modules use camelCase (Lua)
+
+## Migration constraints
+- Do not use Orbit for this work.
+- Do not apply these dotfiles to the live home directory during validation.
+- Preserve the legacy branch. Do not force-push or rewrite history.
+- This repository is public. Never import credentials, session databases, caches, histories, or private documents.
+- Use isolated temporary destinations to validate chezmoi.
+- Keep tool installation and machine services in viktorvan/dev-server-provisioning.

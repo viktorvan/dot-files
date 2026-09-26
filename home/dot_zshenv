@@ -1,0 +1,4 @@
+# Let Zim Framework initialize completions instead of the global zshrc.
+skip_global_compinit=1
+export EDITOR=nvim
+export VISUAL=nvim
