@@ -17,13 +17,19 @@ The source follows chezmoi naming conventions (`dot_`, `private_`, and `executab
 
 ## Scope
 
-Initial import includes Zsh/Zim configuration, tmux, Git, Neovim, workmux, Yazi, bat, Lazygit, and GitHub CLI/dashboard preferences. Existing Neovim plugin versions remain in `lazy-lock.json`.
+The import includes Zsh/Zim configuration, tmux, Git, Neovim, workmux, Yazi, bat, Lazygit, and GitHub CLI/dashboard preferences. Existing Neovim plugin versions remain in `lazy-lock.json`.
+
+The second capture adds personal OpenCode configuration, non-Orbit agents and skills, commands, prompts, the workmux plugin, Codex settings/hooks, and the nine active `~/developer/utils` scripts. These were read from the active server, not restored from legacy.
 
 Tool installation belongs to the private `viktorvan/dev-server-provisioning` repository. This repo does not run installers or start services during apply.
 
 SSH keys, GitHub OAuth state, provider credentials, application databases, histories, caches, plugin checkouts, and node_modules are not imported. Shell references to manually restored credentials are conditional.
 
-OpenCode agents/skills, Orbit configuration, Codex hooks, workflow scripts, and T3 service configuration require a separate reviewed import. Do not copy entire application directories into this public repository.
+Orbit owns its agents, workflow skills, and workflow configuration. They are intentionally absent here. Install its definitions from `viktorvan/orbit`, using that repository's explicit-destination installer. Do not duplicate them in chezmoi. API and Frontend own their project-local skills.
+
+The current OpenCode default agent is `captain`. Install the Orbit definitions before using that default on a fresh machine. The source intentionally preserves the active models, permissions, and MCP configuration rather than replacing them with generic defaults.
+
+T3 service definitions belong to server provisioning. Authentication and runtime databases remain on the persistent disk. See [source ownership and capture notes](docs/source-ownership.md).
 
 ## Portability
 
@@ -32,7 +38,9 @@ OpenCode agents/skills, Orbit configuration, Codex hooks, workflow scripts, and 
 - Linux and macOS Brew locations are detected without requiring Brew as the future installer.
 - Remote clipboard configuration remains OSC52-based.
 - The macOS-only debugger/1Password integrations are enabled only on macOS.
-- Existing tmux and Neovim helpers still refer to `~/developer/utils`. Those scripts must be available before using the associated key bindings.
+- Existing tmux and Neovim helpers refer to `~/developer/utils`. Those scripts are now managed here, but their external tools remain provisioning dependencies.
+- Codex's existing trusted-home and API paths follow the target home directory through a template. Authentication is not managed.
+- The scratch-file helper uses the current user's data directory instead of a hardcoded macOS home.
 
 ## Review before publishing
 
@@ -44,4 +52,4 @@ Check that the public source contains no credential values, private documents, l
 CHEZMOI="$(command -v chezmoi)" python3 -m unittest discover -s tests -v
 ```
 
-The apply test creates an isolated temporary home and state database, applies twice, and verifies that unmanaged authentication files are left alone. It does not load Neovim, Zsh plugins, or tmux plugins. Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.
+The apply test creates an isolated temporary home and state database, applies twice, and verifies that unmanaged authentication and Orbit-owned files are left alone. It does not load OpenCode, Neovim, Codex hooks, or shell/tmux plugins. Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.

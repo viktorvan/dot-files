@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://medoma.com/opencode/review-implementation"
+  xmlns:tns="http://medoma.com/opencode/review-implementation"
+  elementFormDefault="qualified">
+
+  <xs:element name="implementation_review"
+    type="tns:ImplementationReviewType"/>
+
+  <xs:complexType name="ImplementationReviewType">
+    <xs:sequence>
+      <xs:element name="review_id" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="session_id" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="implementation_analysis"
+        type="tns:ImplementationAnalysisType" minOccurs="1"/>
+      <xs:element name="definition_of_done_verification"
+        type="tns:DefinitionOfDoneVerificationType" minOccurs="1"/>
+      <xs:element name="risks_and_issues"
+        type="tns:RisksAndIssuesType" minOccurs="1"/>
+      <xs:element name="required_fixes"
+        type="tns:RequiredFixesType" minOccurs="0"/>
+      <xs:element name="final_assessment"
+        type="tns:FinalAssessmentType" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ImplementationAnalysisType">
+    <xs:sequence>
+      <xs:element name="plan_adherence" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="file_changes_verification"
+        type="xs:string" minOccurs="1"/>
+      <xs:element name="deviations" type="xs:string"
+        minOccurs="0"/>
+      <xs:element name="code_quality_assessment"
+        type="xs:string" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DefinitionOfDoneVerificationType">
+    <xs:sequence>
+      <xs:element name="subtask_verification"
+        type="tns:SubtaskVerificationType" minOccurs="1"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SubtaskVerificationType">
+    <xs:sequence>
+      <xs:element name="task_id" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="command_result"
+        type="tns:CommandResultType" minOccurs="1"
+        maxOccurs="unbounded"/>
+      <xs:element name="success_criteria_met"
+        type="xs:boolean" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CommandResultType">
+    <xs:sequence>
+      <xs:element name="command" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="exit_code" type="xs:int"
+        minOccurs="1"/>
+      <xs:element name="stdout" type="xs:string"
+        minOccurs="0"/>
+      <xs:element name="stderr" type="xs:string"
+        minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RisksAndIssuesType">
+    <xs:sequence>
+      <xs:element name="integration_risk" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="performance_risk" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="maintainability_concern"
+        type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="testing_gap" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RequiredFixesType">
+    <xs:sequence>
+      <xs:element name="fix" type="tns:FixType"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FixType">
+    <xs:sequence>
+      <xs:element name="action" type="tns:ActionType"
+        minOccurs="1"/>
+      <xs:element name="path" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="reason" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="ActionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ADD"/>
+      <xs:enumeration value="MODIFY"/>
+      <xs:enumeration value="DELETE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="FinalAssessmentType">
+    <xs:sequence>
+      <xs:element name="status" type="tns:StatusType"
+        minOccurs="1"/>
+      <xs:element name="summary" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="StatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="APPROVED"/>
+      <xs:enumeration value="NEEDS REVISION"/>
+      <xs:enumeration value="REJECTED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

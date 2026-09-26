@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://medoma.com/opencode/task-delegation"
+  xmlns:tns="http://medoma.com/opencode/task-delegation"
+  elementFormDefault="qualified">
+
+  <xs:element name="task_delegation"
+    type="tns:TaskDelegationType"/>
+
+  <xs:complexType name="TaskDelegationType">
+    <xs:sequence>
+      <xs:element name="title" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="task_id" type="tns:TaskIdType"
+        minOccurs="1"/>
+      <xs:element name="session_id" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="task" type="tns:TaskType"
+        minOccurs="1"/>
+      <xs:element name="context" type="tns:ContextType"
+        minOccurs="1"/>
+      <xs:element name="interfaces"
+        type="tns:InterfacesType" minOccurs="0"/>
+      <xs:element name="expected_outcome"
+        type="tns:ExpectedOutcomeType" minOccurs="1"/>
+      <xs:element name="definition_of_done"
+        type="tns:DefinitionOfDoneType" minOccurs="1"/>
+      <xs:element name="timebox" type="tns:TimeboxType"
+        minOccurs="1"/>
+      <xs:element name="rules_and_output"
+        type="tns:RulesAndOutputType" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="TaskIdType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-z][a-z0-9_]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="TaskType">
+    <xs:sequence>
+      <xs:element name="goal" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ContextType">
+    <xs:sequence>
+      <xs:element name="repo_paths" type="tns:RepoPathsType"
+        minOccurs="1"/>
+      <xs:element name="background" type="xs:string"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RepoPathsType">
+    <xs:sequence>
+      <xs:element name="path" type="xs:string" minOccurs="1"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="InterfacesType">
+    <xs:sequence>
+      <xs:element name="interface" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpectedOutcomeType">
+    <xs:sequence>
+      <xs:element name="behavior" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="artifacts" type="tns:ArtifactsType"
+        minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ArtifactsType">
+    <xs:sequence>
+      <xs:element name="artifact" type="xs:string"
+        minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DefinitionOfDoneType">
+    <xs:sequence>
+      <xs:element name="build" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="tests" type="xs:string"
+        minOccurs="1"/>
+      <xs:element name="additional_command" type="xs:string"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="TimeboxType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="5m"/>
+      <xs:enumeration value="10m"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="RulesAndOutputType">
+    <xs:sequence>
+      <xs:element name="rule" type="xs:string" minOccurs="1"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

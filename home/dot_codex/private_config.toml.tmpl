@@ -1,0 +1,8 @@
+[projects.{{ .chezmoi.homeDir | quote }}]
+trust_level = "trusted"
+
+[projects.{{ printf "%s/developer/api/main" .chezmoi.homeDir | quote }}]
+trust_level = "trusted"
+
+[features]
+hooks = true
