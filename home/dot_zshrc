@@ -146,9 +146,11 @@ j() {
         just "$@"
     fi
 }
-if (( ${+functions[compdef]} )); then
-  compdef j=just
+if ! (( ${+functions[compdef]} )); then
+  autoload -Uz compinit
+  compinit
 fi
+compdef _just j
 
 if (( ${+commands[pbcopy]} )); then
   alias uuid="uuidgen | tr -d '\n' | pbcopy"
