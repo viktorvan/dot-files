@@ -29,19 +29,19 @@ class SourceTests(unittest.TestCase):
             self.assertNotIn(path.suffix, {".db", ".sqlite", ".pfx", ".pem", ".zwc", ".pdf"})
 
     def test_orbit_definitions_have_one_owner(self):
-        config = ROOT / "home/dot_config/opencode"
+        config = ROOT / "home/private_dot_config/opencode"
         for name in ("captain", "pilot", "pilot-gemini", "xo"):
             self.assertFalse((config / "agents" / f"{name}.md").exists())
         for name in ("schedule-burn", "plot-trajectory", "test-audit"):
             self.assertFalse((config / "skill" / name).exists())
-        self.assertFalse((ROOT / "home/dot_config/orbit").exists())
+        self.assertFalse((ROOT / "home/private_dot_config/orbit").exists())
 
     def test_personal_config_is_parseable(self):
-        config = json.loads((ROOT / "home/dot_config/opencode/opencode.json").read_text())
+        config = json.loads((ROOT / "home/private_dot_config/opencode/opencode.json").read_text())
         self.assertEqual(config["$schema"], "https://opencode.ai/config.json")
         self.assertEqual(config["mcp"]["context7"]["headers"]["CONTEXT7_API_KEY"], "{env:CONTEXT7_API_KEY}")
         self.assertIn("ES_API_KEY", config["mcp"]["elastic"]["command"])
-        json.loads((ROOT / "home/dot_config/opencode/tui.json").read_text())
+        json.loads((ROOT / "home/private_dot_config/opencode/tui.json").read_text())
         json.loads((ROOT / "home/dot_codex/hooks.json").read_text())
 
     def test_zsh_syntax(self):
@@ -50,6 +50,63 @@ class SourceTests(unittest.TestCase):
         for name in ("dot_zshrc", "dot_zshenv", "dot_zimrc"):
             result = subprocess.run(["zsh", "-n", str(ROOT / "home" / name)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
+
+    @unittest.skipUnless(CHEZMOI, "Set CHEZMOI to a chezmoi executable for isolated apply tests")
+    def test_platform_templates_and_retired_plugins(self):
+        for platform, arch in (("darwin", "arm64"), ("linux", "amd64")):
+            with self.subTest(platform=platform), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                home = root / "home"
+                retired = home / ".config/nvim/lua/plugins/scratch.lua"
+                retired.parent.mkdir(parents=True)
+                retired.write_text("return {}\n")
+                command = [str(CHEZMOI), "--source", str(ROOT), "--destination", str(home),
+                           "--persistent-state", str(root / "state.boltdb"),
+                           "--cache", str(root / "cache"), "--config", str(root / "config.toml"),
+                           "--override-data", json.dumps({"chezmoi": {"os": platform, "arch": arch,
+                                                                     "homeDir": str(home)}}),
+                           "--no-tty", "apply"]
+                result = subprocess.run(command, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertFalse(retired.exists())
+                self.assertEqual((home / ".config").stat().st_mode & 0o777, 0o700)
+                self.assertEqual((home / ".config/gh").stat().st_mode & 0o777, 0o700)
+                options = (home / ".config/nvim/lua/config/options.lua").read_text()
+                herdr = tomllib.loads((home / ".config/herdr/config.toml").read_text())
+                tmux = (home / ".tmux.conf").read_text()
+                btop = (home / ".config/btop/btop.conf").read_text()
+                self.assertIn('shown_boxes = "cpu mem proc"', btop)
+                if platform == "darwin":
+                    self.assertNotIn("osc52", options)
+                    self.assertIn('vim.opt.clipboard = "unnamedplus"', options)
+                    self.assertEqual(herdr["theme"]["name"], "catppuccin-latte")
+                    self.assertEqual(len(herdr["keys"]["command"]), 1)
+                    self.assertIn("/opt/homebrew/bin", tmux)
+                    for key in ("M-m", "M-n", "M-e", "M-i"):
+                        self.assertIn(f"bind-key -n {key} run", tmux)
+                        self.assertIn(f"bind-key -T copy-mode-vi {key} select-pane", tmux)
+                    self.assertIn("terminal_sync = True", btop)
+                    lazygit = home / "Library/Application Support/lazygit/config.yml"
+                    self.assertEqual((home / "Library").stat().st_mode & 0o777, 0o700)
+                    self.assertEqual((home / "Library/Application Support").stat().st_mode & 0o777, 0o700)
+                    self.assertFalse((home / ".config/lazygit/config.yml").exists())
+                    self.assertIn("pbcopy", lazygit.read_text())
+                else:
+                    self.assertIn('require("vim.ui.clipboard.osc52")', options)
+                    self.assertNotIn("theme", herdr)
+                    self.assertEqual(len(herdr["keys"]["command"]), 2)
+                    self.assertNotIn("/opt/homebrew", tmux)
+                    self.assertNotIn("bind-key -n M-m run", tmux)
+                    self.assertIn(str(home / ".local/bin"), tmux)
+                    self.assertNotIn("terminal_sync", btop)
+                    lazygit = home / ".config/lazygit/config.yml"
+                    self.assertFalse((home / "Library").exists())
+                    self.assertNotIn("pbcopy", lazygit.read_text())
+                self.assertIn("{{text}}", lazygit.read_text())
+                self.assertNotIn("base64 -w", lazygit.read_text())
+                lock = json.loads((home / ".config/nvim/lazy-lock.json").read_text())
+                for plugin in ("codecompanion.nvim", "scratch.nvim", "zen-mode.nvim", "op.nvim", "supermaven-nvim"):
+                    self.assertNotIn(plugin, lock)
 
     @unittest.skipUnless(CHEZMOI, "Set CHEZMOI to a chezmoi executable for isolated apply tests")
     def test_isolated_apply_is_idempotent_and_preserves_unmanaged_files(self):

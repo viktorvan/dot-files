@@ -6,7 +6,11 @@ set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'                           # u
 set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # undercurl colour
 
 # ── Core options ──────────────────────────────────────────────────────────────
-set-environment -g PATH "/home/viktor/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+{{ if eq .chezmoi.os "darwin" -}}
+set-environment -g PATH "{{ .chezmoi.homeDir }}/.local/bin:{{ .chezmoi.homeDir }}/.opencode/bin:{{ .chezmoi.homeDir }}/.dotnet/tools:{{ .chezmoi.homeDir }}/.docker/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/share/dotnet:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+{{ else -}}
+set-environment -g PATH "{{ .chezmoi.homeDir }}/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+{{ end -}}
 set -g mouse on
 set -g focus-events on    # lets neovim's autoread/FocusGained work across pane switches
 set -g escape-time 0      # no esc delay (important for neovim)
@@ -37,6 +41,15 @@ set-option -g status-position top
 # Guard: clear any stale bindings from vim-tmux-navigator plugin if ever re-added
 unbind -n "'"
 unbind -n ˛
+# Clear stale Alt-key bindings before installing the platform's mappings.
+unbind -n M-m
+unbind -n M-n
+unbind -n M-e
+unbind -n M-i
+unbind -T copy-mode-vi M-m
+unbind -T copy-mode-vi M-n
+unbind -T copy-mode-vi M-e
+unbind -T copy-mode-vi M-i
 bind-key -n ’ run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys ˛) || tmux select-pane -L"
 bind-key -n ‘ run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys ‘) || tmux select-pane -D"
 bind-key -n é run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys é) || tmux select-pane -U"
@@ -45,6 +58,18 @@ bind-key -T copy-mode-vi ’ select-pane -L
 bind-key -T copy-mode-vi ‘ select-pane -D
 bind-key -T copy-mode-vi é select-pane -U
 bind-key -T copy-mode-vi ı select-pane -R
+{{ if eq .chezmoi.os "darwin" }}
+# Ghostty on this Mac sends ESC+m/n/e/i for the Alt navigation chords.
+# Forward the existing Neovim navigation keys when the active pane runs Vim.
+bind-key -n M-m run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys ˛) || tmux select-pane -L"
+bind-key -n M-n run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys ‘) || tmux select-pane -D"
+bind-key -n M-e run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys é) || tmux select-pane -U"
+bind-key -n M-i run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys ı) || tmux select-pane -R"
+bind-key -T copy-mode-vi M-m select-pane -L
+bind-key -T copy-mode-vi M-n select-pane -D
+bind-key -T copy-mode-vi M-e select-pane -U
+bind-key -T copy-mode-vi M-i select-pane -R
+{{ end }}
 
 # ── Catppuccin ────────────────────────────────────────────────────────────────
 set -g @catppuccin_flavor 'latte'

@@ -4,3 +4,9 @@
 **/*.bak_*
 **/*.zwc
 **/node_modules/**
+{{ if eq .chezmoi.os "darwin" }}
+.config/lazygit
+{{ else }}
+Library
+.config/zsh/macos.zsh
+{{ end }}

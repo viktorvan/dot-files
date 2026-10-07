@@ -54,6 +54,6 @@ API and Frontend `.opencode` content stays in those project repositories. Nothin
 - The platform skill references an environment variable for Azure authentication. No actual knowledge-base content or credentials were retrieved.
 - The OpenCode config depends on the separately installed captain agent. Do not declare a fresh environment ready until Orbit definitions are installed.
 - Codex hooks invoke workmux. Workmux must be installed; no hooks are executed by chezmoi.
-- `mermaid_preview.sh` still expects `mmdr` and macOS `open`. Those are not newly declared server requirements. This existing helper needs a separate portability decision before using it on Linux.
+- `mermaid_preview.sh` requires `mmdr` and selects macOS `open` or Linux `xdg-open` when available. Those remain external tool dependencies.
 - Completion generation still requires the workmux and Orbit CLIs. Copying the script does not execute them.
 - OpenCode uses the captured configuration only after its next restart. No live files were changed during this capture, so no restart is needed now.

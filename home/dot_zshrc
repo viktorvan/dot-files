@@ -167,8 +167,14 @@ export ENHANCE_THEME=catppuccin_latte
 if (( ${+commands[zoxide]} )); then
   eval "$(zoxide init zsh)"
 fi
-export DOTNET_ROOT=$HOME/.dotnet
+if [[ "$OSTYPE" == darwin* && -x /usr/local/share/dotnet/dotnet ]]; then
+  export DOTNET_ROOT=/usr/local/share/dotnet
+else
+  export DOTNET_ROOT=$HOME/.dotnet
+fi
 export PATH=$DOTNET_ROOT:$DOTNET_ROOT/tools:$PATH
+path=($HOME/.dotnet/tools $path)
+typeset -U path
 if [[ "$OSTYPE" == linux* ]]; then
   export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:/etc/ssl/certs"
 fi
@@ -180,3 +186,7 @@ fi
 
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
+
+if [[ "$OSTYPE" == darwin* && -r ~/.config/zsh/macos.zsh ]]; then
+  source ~/.config/zsh/macos.zsh
+fi

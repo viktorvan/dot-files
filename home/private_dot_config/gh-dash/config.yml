@@ -85,11 +85,11 @@ keybindings:
     - key: y
       name: Copy PR number
       command: >-
-        printf "\033]52;c;$(printf %s '{{.PrNumber}}' | base64 -w 0)\a" > /dev/tty
+        printf "\033]52;c;$(printf %s '{{.PrNumber}}' | base64 | tr -d '\n')\a" > /dev/tty
     - key: Y
       name: Copy URL
       command: >-
-        printf "\033]52;c;$(printf %s 'https://github.com/{{.RepoName}}/pull/{{.PrNumber}}' | base64 -w 0)\a" > /dev/tty
+        printf "\033]52;c;$(printf %s 'https://github.com/{{.RepoName}}/pull/{{.PrNumber}}' | base64 | tr -d '\n')\a" > /dev/tty
     - key: M
       name: Auto-merge (squash)
       command: gh pr merge --auto --squash --repo {{.RepoName}} {{.PrNumber}}
@@ -102,11 +102,11 @@ keybindings:
     - key: y
       name: Copy issue number
       command: >-
-        printf "\033]52;c;$(printf %s '{{.IssueNumber}}' | base64 -w 0)\a" > /dev/tty
+        printf "\033]52;c;$(printf %s '{{.IssueNumber}}' | base64 | tr -d '\n')\a" > /dev/tty
     - key: Y
       name: Copy URL
       command: >-
-        printf "\033]52;c;$(printf %s 'https://github.com/{{.RepoName}}/issues/{{.IssueNumber}}' | base64 -w 0)\a" > /dev/tty
+        printf "\033]52;c;$(printf %s 'https://github.com/{{.RepoName}}/issues/{{.IssueNumber}}' | base64 | tr -d '\n')\a" > /dev/tty
 
 repoPaths: {}
 theme:

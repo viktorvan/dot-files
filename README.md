@@ -2,7 +2,7 @@
 
 The previous repository is preserved on branch `legacy` at commit `70bad94f56e378db68381774a4f9795cb6866901`. The new source state is under `home/`, selected by `.chezmoiroot`.
 
-This is an initial migration of reviewed active server configuration. It has not been applied to the live home directory. macOS-specific desktop configuration remains on legacy until deliberately imported.
+This source supports Linux and macOS. macOS-specific desktop configuration remains on legacy until deliberately imported.
 
 ## Preview first
 
@@ -14,6 +14,7 @@ chezmoi --source "$PWD" --dry-run apply
 Apply only after reviewing the changes. Do not automatically apply on daily server startup: local configuration edits must survive VM recreation.
 
 The source follows chezmoi naming conventions (`dot_`, `private_`, and `executable_`). Do not hand-copy those encoded names into your home directory.
+The `private_dot_config`, `private_gh`, and macOS `private_Library` directory attributes preserve private permissions on existing configuration directories.
 
 ## Scope
 
@@ -36,8 +37,11 @@ T3 service definitions belong to server provisioning. Authentication and runtime
 - Neovim is EDITOR/VISUAL. System-level vi/vim compatibility will be provided by server provisioning.
 - Shell integrations are guarded when a tool is not installed.
 - Linux and macOS Brew locations are detected without requiring Brew as the future installer.
-- Remote clipboard configuration remains OSC52-based.
-- The macOS-only debugger/1Password integrations are enabled only on macOS.
+- Linux Neovim clipboard configuration remains OSC52-based. macOS uses the native clipboard provider.
+- The macOS ARM64 debugger integration is enabled only on that platform. Supermaven, CodeCompanion, scratch.nvim, Zen Mode, nvim-cmp, and the Neovim 1Password integration are retired; Blink remains the completion engine.
+- tmux PATH, Herdr, Lazygit, and newer btop options are platform-specific. Both platforms show CPU, memory, and processes in btop.
+- macOS Lazygit configuration is managed in `~/Library/Application Support/lazygit`. Linux uses `~/.config/lazygit`.
+- The shared shell uses Zim. `~/.config/zsh/macos.zsh` preserves Mac tooling paths and local shortcuts.
 - Existing tmux and Neovim helpers refer to `~/developer/utils`. Those scripts are now managed here, but their external tools remain provisioning dependencies.
 - Codex's existing trusted-home and API paths follow the target home directory through a template. Authentication is not managed.
 - The scratch-file helper uses the current user's data directory instead of a hardcoded macOS home.
@@ -52,4 +56,4 @@ Check that the public source contains no credential values, private documents, l
 CHEZMOI="$(command -v chezmoi)" python3 -m unittest discover -s tests -v
 ```
 
-The apply test creates an isolated temporary home and state database, applies twice, and verifies that unmanaged authentication and Orbit-owned files are left alone. It does not load OpenCode, Neovim, Codex hooks, or shell/tmux plugins. Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.
+The apply tests create isolated temporary homes and state databases, check both Linux and macOS templates, and verify that repeated apply preserves unmanaged authentication and Orbit-owned files. They do not load OpenCode, Neovim, Codex hooks, or shell/tmux plugins. Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.

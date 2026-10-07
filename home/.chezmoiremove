@@ -1,0 +1,14 @@
+# Retired Neovim integrations. Removing source files alone leaves old targets.
+.config/nvim/lua/plugins/code-companion.lua
+.config/nvim/lua/plugins/lualine/codecompanion_spinner.lua
+.config/nvim/lua/plugins/scratch.lua
+.config/nvim/lua/plugins/zen-mode.lua
+.config/nvim/lua/plugins/nvim-cmp.lua
+.config/nvim/lua/plugins/op.lua
+{{ if eq .chezmoi.os "darwin" }}
+# The checked-in opencode.json replaces the old Mac config.
+.config/opencode/config.json
+# Retire Prezto login/logout hooks when switching to Zim.
+.zlogin
+.zlogout
+{{ end }}
