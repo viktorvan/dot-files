@@ -1,15 +1,24 @@
+local function navigate(direction, command)
+  return function()
+    if vim.env.HERDR_ENV == "1" and (not vim.env.TMUX or vim.env.TMUX == "") then
+      require("config.herdr_navigation").navigate(direction)
+    else
+      vim.cmd(command)
+    end
+  end
+end
+
 return {
   "christoomey/vim-tmux-navigator",
   keys = {
-    -- Meta chords also reach Neovim directly in sessions without tmux.
-    { "<M-m>", "<cmd>TmuxNavigateLeft<cr>" },
-    { "<M-n>", "<cmd>TmuxNavigateDown<cr>" },
-    { "<M-e>", "<cmd>TmuxNavigateUp<cr>" },
-    { "<M-i>", "<cmd>TmuxNavigateRight<cr>" },
-    { "˛", "<cmd>TmuxNavigateLeft<cr>" },
-    { "‘", "<cmd>TmuxNavigateDown<cr>" },
-    { "é", "<cmd>TmuxNavigateUp<cr>" },
-    { "ı", "<cmd>TmuxNavigateRight<cr>" },
+    { "<M-m>", navigate("left", "TmuxNavigateLeft") },
+    { "<M-n>", navigate("down", "TmuxNavigateDown") },
+    { "<M-e>", navigate("up", "TmuxNavigateUp") },
+    { "<M-i>", navigate("right", "TmuxNavigateRight") },
+    { "˛", navigate("left", "TmuxNavigateLeft") },
+    { "‘", navigate("down", "TmuxNavigateDown") },
+    { "é", navigate("up", "TmuxNavigateUp") },
+    { "ı", navigate("right", "TmuxNavigateRight") },
   },
   init = function()
     vim.g.tmux_navigator_no_mappings = 1

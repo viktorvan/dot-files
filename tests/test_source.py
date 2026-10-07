@@ -73,6 +73,7 @@ class SourceTests(unittest.TestCase):
                 self.assertEqual((home / ".config/gh").stat().st_mode & 0o777, 0o700)
                 options = (home / ".config/nvim/lua/config/options.lua").read_text()
                 herdr = tomllib.loads((home / ".config/herdr/config.toml").read_text())
+                self.assertTrue(os.access(home / ".config/herdr/navigate.sh", os.X_OK))
                 tmux = (home / ".tmux.conf").read_text()
                 navigator = (home / ".config/nvim/lua/plugins/vim-tmux-navigator.lua").read_text()
                 for key in ("M-m", "M-n", "M-e", "M-i"):
@@ -85,7 +86,7 @@ class SourceTests(unittest.TestCase):
                     self.assertNotIn("osc52", options)
                     self.assertIn('vim.opt.clipboard = "unnamedplus"', options)
                     self.assertEqual(herdr["theme"]["name"], "catppuccin-latte")
-                    self.assertEqual(len(herdr["keys"]["command"]), 1)
+                    self.assertEqual(len(herdr["keys"]["command"]), 5)
                     self.assertIn("/opt/homebrew/bin", tmux)
                     self.assertIn("terminal_sync = True", btop)
                     lazygit = home / "Library/Application Support/lazygit/config.yml"
@@ -96,7 +97,7 @@ class SourceTests(unittest.TestCase):
                 else:
                     self.assertIn('require("vim.ui.clipboard.osc52")', options)
                     self.assertNotIn("theme", herdr)
-                    self.assertEqual(len(herdr["keys"]["command"]), 2)
+                    self.assertEqual(len(herdr["keys"]["command"]), 6)
                     self.assertNotIn("/opt/homebrew", tmux)
                     self.assertIn(str(home / ".local/bin"), tmux)
                     self.assertNotIn("terminal_sync", btop)

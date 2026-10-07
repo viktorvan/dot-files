@@ -19,10 +19,10 @@ split_vertical = "prefix+%"
 split_horizontal = 'prefix+"'
 detach = "prefix+d"
 rename_tab = "prefix+comma"
-focus_pane_left = ["alt+m", "prefix+h"]
-focus_pane_down = ["alt+n", "prefix+j"]
-focus_pane_up = ["alt+e", "prefix+k"]
-focus_pane_right = ["alt+i", "prefix+l"]
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
 navigate_pane_left = "alt+m"
 navigate_pane_down = "alt+n"
 navigate_pane_up = "alt+e"
@@ -50,4 +50,13 @@ command = "/usr/bin/btop"
 description = "run btop"
 width = "95%"
 height = "95%"
+{{ end -}}
+
+{{ range $binding := list (dict "key" "m" "direction" "left") (dict "key" "n" "direction" "down") (dict "key" "e" "direction" "up") (dict "key" "i" "direction" "right") -}}
+[[keys.command]]
+key = "alt+{{ $binding.key }}"
+type = "shell"
+command = '"$HOME/.config/herdr/navigate.sh" {{ $binding.direction }}'
+description = "navigate {{ $binding.direction }} through editor splits and Herdr panes"
+
 {{ end -}}
