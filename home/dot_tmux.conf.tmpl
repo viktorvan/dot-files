@@ -41,7 +41,7 @@ set-option -g status-position top
 # Guard: clear any stale bindings from vim-tmux-navigator plugin if ever re-added
 unbind -n "'"
 unbind -n ˛
-# Clear stale Alt-key bindings before installing the platform's mappings.
+# Clear stale Alt-key bindings before installing the shared mappings.
 unbind -n M-m
 unbind -n M-n
 unbind -n M-e
@@ -58,8 +58,7 @@ bind-key -T copy-mode-vi ’ select-pane -L
 bind-key -T copy-mode-vi ‘ select-pane -D
 bind-key -T copy-mode-vi é select-pane -U
 bind-key -T copy-mode-vi ı select-pane -R
-{{ if eq .chezmoi.os "darwin" }}
-# Ghostty on this Mac sends ESC+m/n/e/i for the Alt navigation chords.
+# Ghostty sends ESC+m/n/e/i locally and over SSH, regardless of the host OS.
 # Forward the existing Neovim navigation keys when the active pane runs Vim.
 bind-key -n M-m run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys ˛) || tmux select-pane -L"
 bind-key -n M-n run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys ‘) || tmux select-pane -D"
@@ -69,7 +68,6 @@ bind-key -T copy-mode-vi M-m select-pane -L
 bind-key -T copy-mode-vi M-n select-pane -D
 bind-key -T copy-mode-vi M-e select-pane -U
 bind-key -T copy-mode-vi M-i select-pane -R
-{{ end }}
 
 # ── Catppuccin ────────────────────────────────────────────────────────────────
 set -g @catppuccin_flavor 'latte'

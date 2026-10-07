@@ -74,6 +74,11 @@ class SourceTests(unittest.TestCase):
                 options = (home / ".config/nvim/lua/config/options.lua").read_text()
                 herdr = tomllib.loads((home / ".config/herdr/config.toml").read_text())
                 tmux = (home / ".tmux.conf").read_text()
+                navigator = (home / ".config/nvim/lua/plugins/vim-tmux-navigator.lua").read_text()
+                for key in ("M-m", "M-n", "M-e", "M-i"):
+                    self.assertIn(f"bind-key -n {key} run", tmux)
+                    self.assertIn(f"bind-key -T copy-mode-vi {key} select-pane", tmux)
+                    self.assertIn(f'"<{key}>"', navigator)
                 btop = (home / ".config/btop/btop.conf").read_text()
                 self.assertIn('shown_boxes = "cpu mem proc"', btop)
                 if platform == "darwin":
@@ -82,9 +87,6 @@ class SourceTests(unittest.TestCase):
                     self.assertEqual(herdr["theme"]["name"], "catppuccin-latte")
                     self.assertEqual(len(herdr["keys"]["command"]), 1)
                     self.assertIn("/opt/homebrew/bin", tmux)
-                    for key in ("M-m", "M-n", "M-e", "M-i"):
-                        self.assertIn(f"bind-key -n {key} run", tmux)
-                        self.assertIn(f"bind-key -T copy-mode-vi {key} select-pane", tmux)
                     self.assertIn("terminal_sync = True", btop)
                     lazygit = home / "Library/Application Support/lazygit/config.yml"
                     self.assertEqual((home / "Library").stat().st_mode & 0o777, 0o700)
@@ -96,7 +98,6 @@ class SourceTests(unittest.TestCase):
                     self.assertNotIn("theme", herdr)
                     self.assertEqual(len(herdr["keys"]["command"]), 2)
                     self.assertNotIn("/opt/homebrew", tmux)
-                    self.assertNotIn("bind-key -n M-m run", tmux)
                     self.assertIn(str(home / ".local/bin"), tmux)
                     self.assertNotIn("terminal_sync", btop)
                     lazygit = home / ".config/lazygit/config.yml"
