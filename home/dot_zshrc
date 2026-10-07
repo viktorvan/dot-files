@@ -136,7 +136,7 @@ alias v=nvim
 alias lg=lazygit
 alias wm=workmux
 alias wmcon="nvim ~/.config/workmux/config.yaml"
-alias oc="opencode --port"
+alias oc="opencode --port --auto"
 alias ncon="cd ~/.config/nvim;nvim init.lua; cd -"
 alias zcon="nvim ~/.zshrc; exec zsh"
 j() {
@@ -177,3 +177,6 @@ fi
 if [[ -r ~/secrets/set_secret_env_vars.sh ]]; then
   source ~/secrets/set_secret_env_vars.sh
 fi
+
+# Added by get-aspire-cli.sh
+export PATH="$HOME/.aspire/bin:$PATH"

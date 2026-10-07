@@ -48,6 +48,12 @@ local function tmux_paste()
 end
 
 local function paste(reg)
+  if vim.env.HERDR_ENV == "1" then
+    return function()
+      return { vim.fn.getreg('"', 1, true), vim.fn.getregtype('"') }
+    end
+  end
+
   if vim.env.TMUX then
     return tmux_paste
   end
@@ -56,7 +62,8 @@ local function paste(reg)
 end
 
 -- Copy from remote/tmux sessions to the local terminal clipboard via OSC52.
--- Paste uses tmux's client clipboard request when running inside tmux.
+-- Herdr paste uses the unnamed register because remote OSC52 reads time out.
+-- tmux paste uses the client clipboard request.
 vim.g.clipboard = {
   name = "OSC 52",
   copy = {
