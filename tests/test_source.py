@@ -97,7 +97,7 @@ class SourceTests(unittest.TestCase):
                 else:
                     self.assertIn('require("vim.ui.clipboard.osc52")', options)
                     self.assertNotIn("theme", herdr)
-                    self.assertEqual(len(herdr["keys"]["command"]), 9)
+                    self.assertEqual(len(herdr["keys"]["command"]), 8)
                     self.assertNotIn("/opt/homebrew", tmux)
                     self.assertIn(str(home / ".local/bin"), tmux)
                     self.assertNotIn("terminal_sync", btop)
