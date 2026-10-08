@@ -35,7 +35,6 @@ command = "{{ if eq .chezmoi.arch "arm64" }}/opt/homebrew/bin/lazygit{{ else }}/
 description = "run lazygit"
 width = "95%"
 height = "95%"
-
 {{ range $binding := list (dict "key" "m" "direction" "left") (dict "key" "n" "direction" "down") (dict "key" "e" "direction" "up") (dict "key" "i" "direction" "right") -}}
 [[keys.command]]
 key = "alt+{{ $binding.key }}"
@@ -57,9 +56,3 @@ command = "wt switch --prs --no-cd -x herdr -- worktree open --path . --focus"
 description = "Open GitHub PR as Herdr worktree"
 width = "90%"
 height = "90%"
-
-[[keys.command]]
-key = "prefix+t"
-type = "plugin_action"
-command = "herdr-navigator.open"
-description = "jump to anything"
