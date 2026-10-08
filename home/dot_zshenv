@@ -2,3 +2,9 @@
 skip_global_compinit=1
 export EDITOR=nvim
 export VISUAL=nvim
+
+if [[ "$OSTYPE" == linux* ]]; then
+  # Executables needed by non-interactive SSH sessions and Herdr
+  export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+  . "$HOME/.cargo/env"
+fi

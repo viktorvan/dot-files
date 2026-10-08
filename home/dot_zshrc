@@ -191,4 +191,8 @@ if [[ "$OSTYPE" == darwin* && -r ~/.config/zsh/macos.zsh ]]; then
   source ~/.config/zsh/macos.zsh
 fi
 
+if [[ "$OSTYPE" == linux* ]]; then
+  . "$HOME/.cargo/env"
+fi
+
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
