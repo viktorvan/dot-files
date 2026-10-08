@@ -12,6 +12,7 @@ mouse_capture = true
 pane_gaps = false
 pane_outer_borders = false
 tab_bar_right = [{ type = "hostname" }]
+confirm_close = true
 
 [keys]
 prefix = "ctrl+a"
@@ -59,4 +60,25 @@ type = "shell"
 command = '"$HOME/.config/herdr/navigate.sh" {{ $binding.direction }}'
 description = "navigate {{ $binding.direction }} through editor splits and Herdr panes"
 
+{{ end -}}
+{{ if eq .chezmoi.os "darwin" -}}
+[[keys.command]]
+key = "prefix+alt+d"
+type = "plugin_action"
+command = "worktrunk.remove"
+description = "Worktree: remove"
+
+[[keys.command]]
+key = "prefix+alt+p"
+type = "popup"
+command = "wt switch --prs --no-cd -x herdr -- worktree open --path . --focus"
+description = "Open GitHub PR as Herdr worktree"
+width = "90%"
+height = "90%"
+
+[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+command = "herdr-navigator.open"
+description = "jump to anything"
 {{ end -}}

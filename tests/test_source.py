@@ -86,7 +86,7 @@ class SourceTests(unittest.TestCase):
                     self.assertNotIn("osc52", options)
                     self.assertIn('vim.opt.clipboard = "unnamedplus"', options)
                     self.assertEqual(herdr["theme"]["name"], "catppuccin-latte")
-                    self.assertEqual(len(herdr["keys"]["command"]), 5)
+                    self.assertEqual(len(herdr["keys"]["command"]), 8)
                     self.assertIn("/opt/homebrew/bin", tmux)
                     self.assertIn("terminal_sync = True", btop)
                     lazygit = home / "Library/Application Support/lazygit/config.yml"
