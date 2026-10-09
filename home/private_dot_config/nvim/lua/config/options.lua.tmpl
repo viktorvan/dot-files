@@ -24,6 +24,8 @@ vim.g.lazyvim_picker = "telescope"
 -- enabled with `:LazyExtras`
 vim.g.lazyvim_cmp = "blink.cmp"
 
+vim.opt.title = true
+
 {{ if eq .chezmoi.os "linux" -}}
 local osc52 = require("vim.ui.clipboard.osc52")
 
@@ -88,6 +90,4 @@ vim.api.nvim_create_autocmd("User", {
 {{ else if eq .chezmoi.os "darwin" -}}
 -- Use Neovim's native macOS clipboard provider (pbcopy/pbpaste).
 vim.opt.clipboard = "unnamedplus"
-
-vim.opt.title = true
 {{ end -}}
