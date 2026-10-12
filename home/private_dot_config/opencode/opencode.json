@@ -87,9 +87,10 @@
          "3334",
          "--host",
          "127.0.0.1",
-         "--auth-timeout",
-         "300",
-         "--debug"
+          "--auth-timeout",
+          "300",
+          "--header",
+          "Authorization: Bearer ${LINEAR_API_KEY}"
        ],
        "enabled": true,
        "timeout": 300000
