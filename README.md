@@ -20,7 +20,7 @@ The `private_dot_config`, `private_gh`, and macOS `private_Library` directory at
 
 The import includes Zsh/Zim configuration, tmux, Git, Neovim, workmux, Yazi, bat, Lazygit, and GitHub CLI/dashboard preferences. Existing Neovim plugin versions remain in `lazy-lock.json`.
 
-The second capture adds personal OpenCode configuration, non-Orbit agents and skills, commands, prompts, the workmux plugin, Codex settings/hooks, and the nine active `~/developer/utils` scripts. These were read from the active server, not restored from legacy.
+The second capture adds personal OpenCode configuration, non-Orbit agents and skills, commands, prompts, the workmux plugin, and the nine active `~/developer/utils` scripts. These were read from the active server, not restored from legacy.
 
 Tool installation belongs to the private `viktorvan/dev-server-provisioning` repository. This repo does not run installers or start services during apply.
 
@@ -43,7 +43,7 @@ T3 service definitions belong to server provisioning. Authentication and runtime
 - macOS Lazygit configuration is managed in `~/Library/Application Support/lazygit`. Linux uses `~/.config/lazygit`.
 - The shared shell uses Zim. `~/.config/zsh/macos.zsh` preserves Mac tooling paths and local shortcuts.
 - Existing tmux and Neovim helpers refer to `~/developer/utils`. Those scripts are now managed here, but their external tools remain provisioning dependencies.
-- Codex's existing trusted-home and API paths follow the target home directory through a template. Authentication is not managed.
+- Codex configuration and hooks are not managed on either platform. Existing local files are preserved. They can be re-added from Git history when needed.
 - The scratch-file helper uses the current user's data directory instead of a hardcoded macOS home.
 
 ## Review before publishing
@@ -56,4 +56,4 @@ Check that the public source contains no credential values, private documents, l
 CHEZMOI="$(command -v chezmoi)" python3 -m unittest discover -s tests -v
 ```
 
-The apply tests create isolated temporary homes and state databases, check both Linux and macOS templates, and verify that repeated apply preserves unmanaged authentication and Orbit-owned files. They do not load OpenCode, Neovim, Codex hooks, or shell/tmux plugins. Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.
+The apply tests create isolated temporary homes and state databases, check both Linux and macOS templates, and verify that repeated apply preserves unmanaged authentication, Codex configuration/hooks, and Orbit-owned files. They do not load OpenCode, Neovim, or shell/tmux plugins. Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.

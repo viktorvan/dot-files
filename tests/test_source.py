@@ -42,7 +42,6 @@ class SourceTests(unittest.TestCase):
         self.assertEqual(config["mcp"]["context7"]["headers"]["CONTEXT7_API_KEY"], "{env:CONTEXT7_API_KEY}")
         self.assertIn("ES_API_KEY", config["mcp"]["elastic"]["command"])
         json.loads((ROOT / "home/private_dot_config/opencode/tui.json").read_text())
-        json.loads((ROOT / "home/dot_codex/hooks.json").read_text())
 
     def test_zsh_syntax(self):
         if not shutil.which("zsh"):
@@ -97,7 +96,7 @@ class SourceTests(unittest.TestCase):
                 else:
                     self.assertIn('require("vim.ui.clipboard.osc52")', options)
                     self.assertNotIn("theme", herdr)
-                    self.assertEqual(len(herdr["keys"]["command"]), 8)
+                    self.assertEqual(len(herdr["keys"]["command"]), 9)
                     self.assertNotIn("/opt/homebrew", tmux)
                     self.assertIn(str(home / ".local/bin"), tmux)
                     self.assertNotIn("terminal_sync", btop)
@@ -125,6 +124,10 @@ class SourceTests(unittest.TestCase):
             (home / ".codex").mkdir()
             codex_auth = home / ".codex/auth.json"
             codex_auth.write_text('{"fixture": true}\n')
+            codex_config = home / ".codex/config.toml"
+            codex_config.write_text('model = "local-fixture"\n')
+            codex_hooks = home / ".codex/hooks.json"
+            codex_hooks.write_text('{"hooks": {}}\n')
             environment = dict(os.environ, HOME=str(home), XDG_CONFIG_HOME=str(root / "config"),
                                XDG_CACHE_HOME=str(root / "cache"), XDG_DATA_HOME=str(root / "data"))
             command = [str(CHEZMOI), "--source", str(ROOT), "--destination", str(home),
@@ -142,10 +145,8 @@ class SourceTests(unittest.TestCase):
             self.assertEqual(unmanaged.read_text(), "test fixture, not a credential\n")
             self.assertEqual(orbit_agent.read_text(), "Orbit installer owns this fixture\n")
             self.assertEqual(codex_auth.read_text(), '{"fixture": true}\n')
-            codex_config = tomllib.loads((home / ".codex/config.toml").read_text())
-            self.assertIn(str(home), codex_config["projects"])
-            self.assertIn(str(home / "developer/api/main"), codex_config["projects"])
-            self.assertEqual((home / ".codex/config.toml").stat().st_mode & 0o777, 0o600)
+            self.assertEqual(codex_config.read_text(), 'model = "local-fixture"\n')
+            self.assertEqual(codex_hooks.read_text(), '{"hooks": {}}\n')
             self.assertTrue(os.access(home / "developer/utils/start_backend.sh", os.X_OK))
             self.assertTrue((home / "developer/utils/remove_scratch_file.sh").is_file())
             self.assertTrue((home / ".config/opencode/skill/medoma-platform/SKILL.md").is_file())
