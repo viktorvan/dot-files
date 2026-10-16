@@ -9,4 +9,5 @@
 {{ else }}
 Library
 .config/zsh/macos.zsh
+.config/herdr/plugins/config/hotchpotch.herdr-tiny-fingers
 {{ end }}

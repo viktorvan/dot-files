@@ -1,0 +1,18 @@
+[style]
+hint_fg = "#eff1f5"  # Base
+hint_bg = "#e64553"  # Maroon
+
+# Matched text: Maroon
+match_fg = "#e64553"
+
+# Selected hints: Maroon background, light Base text
+selected_hint_fg = "#eff1f5"
+selected_hint_bg = "#e64553"
+
+# Selected matches
+selected_match_fg = "#eff1f5"
+selected_match_bg = "#e64553"
+
+# Status bar: unobtrusive, matching Latte
+status_fg = "#4c4f69"
+status_bg = "#e6e9ef"
