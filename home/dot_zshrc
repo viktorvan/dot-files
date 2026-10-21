@@ -37,7 +37,7 @@ setopt APPEND_HISTORY
 #
 
 # Set editor default keymap to emacs (`-e`) or vi (`-v`)
-bindkey -e
+bindkey -v
 
 # Prompt for spelling correction of commands.
 #setopt CORRECT
@@ -192,3 +192,17 @@ fi
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 export PATH="/workspace/usr/local/bin:$PATH"
+
+if (( ${+commands[pbcopy]} )); then
+  # Copy Vi yanks to the macOS clipboard as well as Zsh's cut buffer.
+  _vi_yank_to_clipboard() {
+    zle .vi-yank "$@" || return
+    print -rn -- "$CUTBUFFER" | command pbcopy
+  }
+  _vi_yank_whole_line_to_clipboard() {
+    zle .vi-yank-whole-line "$@" || return
+    print -rn -- "$CUTBUFFER" | command pbcopy
+  }
+  zle -N vi-yank _vi_yank_to_clipboard
+  zle -N vi-yank-whole-line _vi_yank_whole_line_to_clipboard
+fi
