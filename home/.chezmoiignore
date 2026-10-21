@@ -10,3 +10,6 @@
 Library
 .config/zsh/macos.zsh
 {{ end }}
+{{ if ne .chezmoi.os "linux" }}
+.config/orbit
+{{ end }}

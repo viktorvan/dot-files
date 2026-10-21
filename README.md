@@ -20,15 +20,20 @@ The `private_dot_config`, `private_gh`, and macOS `private_Library` directory at
 
 The import includes Zsh/Zim configuration, tmux, Git, Neovim, workmux, Yazi, bat, Lazygit, and GitHub CLI/dashboard preferences. Existing Neovim plugin versions remain in `lazy-lock.json`.
 
-The second capture adds personal OpenCode configuration, non-Orbit agents and skills, commands, prompts, the workmux plugin, and the nine active `~/developer/utils` scripts. These were read from the active server, not restored from legacy.
+The current capture includes OpenCode V2 configuration, installed agents and skills, commands, prompts, and nine active `~/developer/utils` scripts.
+These files come from the active server, not legacy.
+The old personal agents, workmux plugin, and `tui.json` are no longer included.
 
 Tool installation belongs to the private `viktorvan/dev-server-provisioning` repository. This repo does not run installers or start services during apply.
 
 SSH keys, GitHub OAuth state, provider credentials, application databases, histories, caches, plugin checkouts, and node_modules are not imported. Shell references to manually restored credentials are conditional.
 
-Orbit owns its agents, workflow skills, and workflow configuration. They are intentionally absent here. Install its definitions from `viktorvan/orbit`, using that repository's explicit-destination installer. Do not duplicate them in chezmoi. API and Frontend own their project-local skills.
+Chezmoi now manages the installed Orbit agents and workflow skills as personal configuration.
+It also manages `~/.config/orbit/config.toml` on Linux only, with a database path based on the destination home directory.
+Orbit installation remains a provisioning task. API and Frontend own their project-local skills.
 
-The current OpenCode default agent is `captain`. Install the Orbit definitions before using that default on a fresh machine. The source intentionally preserves the active models, permissions, and MCP configuration rather than replacing them with generic defaults.
+The current OpenCode default agent is `build`. The source preserves the active models, permissions, and MCP configuration.
+OpenCode service credentials and the stale package lock remain excluded.
 
 T3 service definitions belong to server provisioning. Authentication and runtime databases remain on the persistent disk. See [source ownership and capture notes](docs/source-ownership.md).
 
@@ -56,4 +61,7 @@ Check that the public source contains no credential values, private documents, l
 CHEZMOI="$(command -v chezmoi)" python3 -m unittest discover -s tests -v
 ```
 
-The apply tests create isolated temporary homes and state databases, check both Linux and macOS templates, and verify that repeated apply preserves unmanaged authentication, Codex configuration/hooks, and Orbit-owned files. They do not load OpenCode, Neovim, or shell/tmux plugins. Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.
+The apply tests use isolated temporary homes and state databases. They check Linux and macOS templates, including Linux-only Orbit configuration.
+Repeated apply preserves unmanaged authentication, local agents, and Codex configuration/hooks.
+The tests do not load OpenCode, Neovim, or shell/tmux plugins.
+Missing chezmoi or Zsh causes the corresponding tests to be skipped, not treated as validated.

@@ -8,3 +8,10 @@ if [[ "$OSTYPE" == linux* ]]; then
   export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
   . "$HOME/.cargo/env"
 fi
+
+export OPENCODE_DISABLE_FREE_MODELS=1
+
+# Source secret environment variables if the file exists
+if [[ -r ~/secrets/set_secret_env_vars.sh ]]; then
+  source ~/secrets/set_secret_env_vars.sh
+fi

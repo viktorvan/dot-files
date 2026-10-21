@@ -5,6 +5,9 @@ return {
     { "<leader>oa", "<cmd>Octo actions<CR>", desc = "Octo actions", mode = { "n", "x" } },
   },
   opts = {
+    gh_env = function()
+      return { GH_TOKEN = vim.env.GH_TOKEN }
+    end,
     mappings = {
       submit_win = {
         approve_review = { lhs = "<C-s>", desc = "approve review" },

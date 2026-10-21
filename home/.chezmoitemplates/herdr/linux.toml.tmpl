@@ -1,7 +1,13 @@
 onboarding = false
 
 [ui]
+tab_bar_position = "top"
+prompt_new_tab_name = false
+mouse_capture = true
+pane_gaps = false
+pane_outer_borders = false
 tab_bar_right = [{ type = "hostname" }]
+confirm_close = true
 
 [keys]
 new_worktree = ""
@@ -43,7 +49,7 @@ description = "Worktree: remove"
 [[keys.command]]
 key = "prefix+alt+p"
 type = "popup"
-command = "wt switch --prs --no-cd -x herdr -- worktree open --path . --focus"
+command = "gh pr list --limit 100 --json number,title,headRefName --jq '.[] | \"\\(.number)\\t\\(.title)\\t\\(.headRefName)\"' | fzf --delimiter='\\t' --with-nth=1,2,3 | cut -f1 | xargs -r -I{} wt switch 'pr:{}' --no-cd -x herdr -- worktree open --path . --focus"
 description = "Open GitHub PR as Herdr worktree"
 width = "90%"
 height = "90%"

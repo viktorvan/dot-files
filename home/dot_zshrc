@@ -136,7 +136,7 @@ alias v=nvim
 alias lg=lazygit
 alias wm=workmux
 alias wmcon="nvim ~/.config/workmux/config.yaml"
-alias oc="opencode --port --auto"
+alias oc="opencode --auto"
 alias ncon="cd ~/.config/nvim;nvim init.lua; cd -"
 alias zcon="nvim ~/.zshrc; exec zsh"
 j() {
@@ -179,11 +179,6 @@ if [[ "$OSTYPE" == linux* ]]; then
   export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:/etc/ssl/certs"
 fi
 
-# Source secret environment variables if the file exists
-if [[ -r ~/secrets/set_secret_env_vars.sh ]]; then
-  source ~/secrets/set_secret_env_vars.sh
-fi
-
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
 
@@ -196,3 +191,4 @@ if [[ "$OSTYPE" == linux* ]]; then
 fi
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+export PATH="/workspace/usr/local/bin:$PATH"

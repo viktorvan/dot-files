@@ -1,0 +1,128 @@
+[database]
+path = "{{ .chezmoi.homeDir }}/.local/share/orbit/orbit-v2.db"
+
+[waypoints]
+sequence = ["refinement", "spike", "implementation", "review"]
+general_rules = """
+Workflow:
+- Follow the configured waypoint order. Skip spike unless its investigation is approved.
+- Return to an earlier waypoint when required by its rules.
+- XO reviews are review-only checks, not burns.
+
+Waypoint exit approval:
+- These rules apply only when leaving a guarded waypoint.
+- State the proposed transition and next action. Ask the waypoint's configured exit question.
+- Cross that gate only after the user replies with the single word: approved
+- Other replies do not authorize that transition.
+- Approval applies only to the presented transition and scope.
+- Use --force only after approval for that transition.
+
+Work within a waypoint:
+- A direct user request authorizes work permitted by the current waypoint.
+- Do not require the word approved for ordinary tasks or routine steps.
+- Do not add approval gates for steps within the authorized scope.
+- Ask for clarification when scope is unclear. Stop for unresolved safety concerns.
+- A task request does not bypass a guarded waypoint exit.
+
+Burns:
+- Use schedule-burn to schedule only work whose prerequisites are complete.
+- Run burns in parallel only when they are independent and cannot interfere through shared files or resources.
+- When independence is uncertain, run sequentially.
+- Wait for active burns to finish before committing changes or advancing the waypoint.
+- Inspect the result and relevant changes before accepting a successful burn.
+- On success, run orbit burn complete <id> <burn-number>.
+- After a successful burn with file changes, stage only relevant files.
+- Commit each successful burn separately.
+- On abort, run orbit burn abort <id> <burn-number> --force.
+- Do not commit an aborted burn's changes. Resolve its partial changes before starting dependent or conflicting work.
+- Correct routine failures autonomously within the approved plan. Request a user decision if that plan is no longer valid.
+- Revisit the trajectory when findings change the plan.
+"""
+
+[waypoints.rules]
+refinement = """
+Clarify the requirements and relevant project constraints.
+Ask about unresolved decisions. Present alternatives when there is a meaningful choice.
+Summarize requirements, decisions, constraints, and open questions.
+If the user requested XO review, provide that context to xo.
+If a decision requires investigation, propose a scoped spike.
+Otherwise, use plot-trajectory to save a Mermaid plan with the remaining waypoints and proposed burns.
+Present the proposed investigation or the solution and trajectory together.
+Ask exactly: "Am I approved to leave waypoint refinement?"
+Stop for approval before entering spike or implementation.
+"""
+
+spike = """
+This optional waypoint ends with a human decision, not autonomous implementation.
+Delegate a burn to investigate one named uncertainty within the approved scope.
+Limit the investigation to one focused session. If unresolved, report the blocker to the user.
+Record the question, approach, evidence, findings, and recommendation in docs/spikes/<orbit-id>-<short-topic>.md.
+Do not produce production code.
+Present the findings, recommended decision, and any proposed trajectory changes.
+Ask exactly: "Am I approved to leave waypoint spike?"
+Stop for the user's decision and approval before leaving spike.
+After approval, return to refinement if the plan needs revision. Otherwise, continue to implementation.
+"""
+
+implementation = """
+Write necessary tests with the implementation, following project testing guidance.
+Use test-audit when planning or changing tests.
+Include self-review and relevant verification in each implementation burn. Use the project's self-review skill when available.
+If findings invalidate the approved direction, stop and request a decision from the user.
+Request approval before entering spike.
+Continue until the approved implementation is complete.
+After the last implementation change, delegate final verification of the combined result using the required project checks.
+Report failures with evidence. Establish the cause before calling a failure unrelated or pre-existing.
+If corrections are needed, delegate a scoped corrective burn within the approved plan.
+After corrections, repeat the required checks.
+Do not pass this waypoint while required checks fail or remain incomplete.
+"""
+
+review = """
+Ask xo to review the complete changes against the requirements and project rules.
+Provide the approved trajectory, relevant diff, and verification results.
+Use test-audit to assess tests changed by the feature.
+Present the changes, verification results, XO findings, and your assessment.
+Separate required fixes from optional suggestions.
+Offer final-pass-review once as an optional review.
+Run it through XO only if the user explicitly requests that skill.
+Stop and wait for user review within this waypoint.
+Answer questions and clarify requested changes without implementing them.
+When review findings or user feedback require changes:
+- State the proposed next action and destination waypoint.
+- Ask exactly: "Am I approved to leave waypoint review?"
+- Stop and wait for the single-word reply: approved
+- After approval, return to refinement for revised requirements or direction, or implementation for fixes.
+After implementation changes, repeat required verification and return to review for XO and user review.
+This is the final waypoint. The agent can create a pull request only when the user explicitly requests it.
+"""
+
+[waypoints.color]
+spike = "sky"
+
+[waypoints.exit_guards.refinement]
+require_force = true
+message = """
+Present the proposed investigation or the solution and trajectory.
+Ask exactly: "Am I approved to leave waypoint refinement?"
+Only after the user replies with the single word approved, rerun the transition with --force.
+Other responses are not approval.
+"""
+
+[waypoints.exit_guards.review]
+require_force = true
+message = """
+State the proposed next action and destination waypoint.
+Ask exactly: "Am I approved to leave waypoint review?"
+Only after the user replies with the single word approved, rerun the transition with --force.
+Do not treat implementation requests, feedback, "yes", "continue", "looks good", or any other wording as approval.
+"""
+
+[waypoints.exit_guards.spike]
+require_force = true
+message = """
+Present the spike report, recommended decision, and any proposed trajectory changes.
+Ask exactly: "Am I approved to leave waypoint spike?"
+Only after the user replies with the single word approved, rerun the transition with --force.
+Other responses are not approval.
+"""
