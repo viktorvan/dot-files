@@ -9,3 +9,5 @@ secrets/
 **/account.json
 **/*.sqlite*
 **/*.db*
+# Licensed OpenCode skill PDFs are copied manually, never checked in.
+home/private_dot_config/opencode/skills/**/*.[pP][dD][fF]
