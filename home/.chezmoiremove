@@ -12,3 +12,5 @@
 .zlogin
 .zlogout
 {{ end }}
+.config/opencode/command
+.config/opencode/skill

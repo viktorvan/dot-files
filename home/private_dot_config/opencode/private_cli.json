@@ -95,5 +95,8 @@
     "scrollbar": false,
     "thinking": "show"
   },
-  "animations": true
+  "animations": true,
+  "prompt": {
+    "paste": "full"
+  }
 }

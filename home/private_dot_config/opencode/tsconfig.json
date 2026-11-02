@@ -16,9 +16,9 @@
   },
   "include": [
     "plugin/**/*",
-    "skill/**/*",
+    "skills/**/*",
     "tool/**/*",
-    "command/**/*"
+    "commands/**/*"
   ],
   "exclude": [
     "node_modules",
