@@ -4,6 +4,8 @@
 **/*.bak_*
 **/*.zwc
 **/node_modules/**
+# Licensed skill PDFs stay local and must be copied manually to other machines.
+.config/opencode/skills/**/*.[pP][dD][fF]
 {{ if eq .chezmoi.os "darwin" }}
 .config/lazygit
 {{ else }}
