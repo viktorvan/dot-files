@@ -20,11 +20,22 @@ Use Worktrunk (`wt`) for worktree operations and path selection. If it fails, st
    ```sh
    herdr worktree open --path '<checkout-path>' --focus
    ```
-   Verify that the response identifies the requested checkout and a workspace ID. If this fails, stop and report the problem.
-5. If continuing there, move the OpenCode session with `session_move`. A shell directory change does not move the session.
-6. Report the branch and checkout path.
+    If Herdr returns `linked_worktree_source`, run `herdr workspace list`. Find the unique parent workspace with the same `worktree.repo_key` and `worktree.is_linked_worktree: false`, then retry:
+    ```sh
+    herdr worktree open --workspace '<parent-workspace-id>' --path '<checkout-path>' --focus
+    ```
+    This retry does not require user approval. Do not recreate the worktree or change the branch.
+    If the parent workspace is missing or ambiguous, or the retry fails, stop and report the problem.
+    Verify that the response identifies the requested checkout and a workspace ID. For other failures, stop and report the problem.
+5. If work continues in the new checkout, start a new OpenCode session in the checkout's root pane, so that the workspace in Herdr matches the checkout the session works in. Use `root_pane.pane_id` from the `herdr worktree open` result:
+   ```sh
+   herdr pane run '<root-pane-id>' 'oc'
+   ```
+   If the new session starts a task, give it a handoff prompt with the task.
+   Do not move the current session with `session_move` unless the user asks for it. A shell directory change does not move the session.
+6. Report the branch, checkout path, and Herdr workspace ID.
 
-Do not report completion until the checkout is open in Herdr and, if continuing there, the OpenCode session uses that checkout.
+Do not report completion until the checkout is open in Herdr and, if work continues there, an OpenCode session runs in the checkout's root pane.
 
 ## Move or remove
 
