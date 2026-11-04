@@ -17,3 +17,6 @@
 # Retired local-only OpenCode command and backup, including plural locations.
 .config/opencode/commands/supermemory-init.md
 .config/opencode/skills/schedule-burn/SKILL.mdbackup
+# Retired workmux configuration and the completion module created by provisioning.
+.config/workmux
+.zim/modules/workmux-completions

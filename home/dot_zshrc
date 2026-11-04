@@ -134,8 +134,6 @@ fi
 alias vim=nvim
 alias v=nvim
 alias lg=lazygit
-alias wm=workmux
-alias wmcon="nvim ~/.config/workmux/config.yaml"
 alias oc="opencode --auto"
 alias ncon="cd ~/.config/nvim;nvim init.lua; cd -"
 alias zcon="nvim ~/.zshrc; exec zsh"

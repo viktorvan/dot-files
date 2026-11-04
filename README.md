@@ -18,7 +18,7 @@ The `private_dot_config`, `private_gh`, and macOS `private_Library` directory at
 
 ## Scope
 
-The import includes Zsh/Zim configuration, tmux, Git, Neovim, workmux, Yazi, bat, Lazygit, and GitHub CLI/dashboard preferences. Existing Neovim plugin versions remain in `lazy-lock.json`.
+The import includes Zsh/Zim configuration, tmux, Git, Neovim, Yazi, bat, Lazygit, and GitHub CLI/dashboard preferences. Existing Neovim plugin versions remain in `lazy-lock.json`.
 
 The current capture includes OpenCode V2 configuration, installed agents and skills, commands, prompts, and nine active `~/developer/utils` scripts.
 These files come from the active server, not legacy.
