@@ -20,3 +20,5 @@
 # Retired workmux configuration and the completion module created by provisioning.
 .config/workmux
 .zim/modules/workmux-completions
+# Retired writing skill, replaced by simplified-technical-english.
+.config/opencode/skills/elements-of-style-writing-clearly-and-concisely
