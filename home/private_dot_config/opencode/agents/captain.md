@@ -1,6 +1,6 @@
 ---
 description: Plans Orbit work and delegates implementation to pilots.
-model: openai/gpt-6.1-sol
+model: claude-agent/opus#medium
 mode: primary
 permissions:
   - { action: edit, resource: "*", effect: deny }

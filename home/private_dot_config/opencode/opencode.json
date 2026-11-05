@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "openai/gpt-6.1-sol",
+  "model": "claude-agent/opus",
   "default_agent": "build",
   "policies": [
     {"action": "provider.use", "resource": "opencode", "effect": "deny"},
@@ -8,6 +8,17 @@
     {"action": "provider.use", "resource": "openrouter", "effect": "deny"},
     {"action": "provider.use", "resource": "morph", "effect": "deny"}
   ],
+  "providers": {
+    "claude-agent": {
+      "models": {
+        "opus": {
+          "settings": {
+            "effort": "medium"
+          }
+        }
+      }
+    }
+  },
   "permissions": [
     {"action": "shell", "resource": "dotnet test *", "effect": "deny"},
     {"action": "shell", "resource": "just local dotnet-test Api.slnx", "effect": "deny"},
