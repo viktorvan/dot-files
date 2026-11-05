@@ -45,7 +45,20 @@ return {
   end,
   config = function()
     -- Keep the default ]f / [f (internal file order, sorted by path).
-    require("diffbandit").setup()
+    require("diffbandit").setup({
+      ui = {
+        -- Herdr draws Kitty images, but does not answer DiffBandit's
+        -- capability probe, so "auto" falls back to text connectors.
+        -- Force the image (bezier) connectors.
+        connector_renderer = "kitty",
+        kitty = {
+          -- Under Herdr/SSH the real cell size is unknown, so DiffBandit
+          -- draws at a 20x40 px estimate. A smaller size makes images
+          -- faster to draw and send, but less sharp. Example: { 12, 24 }
+          cell_px = { 12, 24 },
+        },
+      },
+    })
 
     -- <Tab> / <S-Tab>: next / previous file in the panel order, like j / k in
     -- the panel. Outside a DiffBandit tab, the keys keep their normal behavior.

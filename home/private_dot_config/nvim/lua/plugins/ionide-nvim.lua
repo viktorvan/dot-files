@@ -71,5 +71,40 @@ return {
 
     -- Setup Ionide
     require("ionide").setup(opts)
+
+    -- Ionide's BufReadPost autocmd for *.fsproj starts the LSP with a trick:
+    -- 100 ms later it runs :tcd, :e <nearest .fs>, :b <fsproj> in the CURRENT
+    -- window. In DiffBandit, the current window is the file panel,
+    -- so the .fsproj replaces the panel and breaks the view. Only allow the
+    -- trick when the .fsproj is opened normally, outside a diff tab.
+    local function in_diff_tab()
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.wo[win].diff then
+          return true
+        end
+      end
+      local db = package.loaded["diffbandit.state"]
+      return db ~= nil and db.sessions[vim.api.nvim_get_current_tabpage()] ~= nil
+    end
+
+    for _, au in ipairs(vim.api.nvim_get_autocmds({ group = "FSProjStartIonide" })) do
+      local original = au.callback
+      if type(original) == "function" then
+        vim.api.nvim_del_autocmd(au.id)
+        vim.api.nvim_create_autocmd(au.event, {
+          group = "FSProjStartIonide",
+          pattern = au.pattern,
+          desc = au.desc,
+          callback = function(args)
+            local loaded_in_background = vim.fn.win_gettype() == "autocmd"
+            local shown_here = vim.api.nvim_win_get_buf(0) == args.buf
+            if loaded_in_background or not shown_here or in_diff_tab() then
+              return
+            end
+            return original(args)
+          end,
+        })
+      end
+    end
   end,
 }
