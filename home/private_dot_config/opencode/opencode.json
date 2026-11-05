@@ -2,6 +2,12 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "claude-agent/opus",
   "default_agent": "build",
+  "policies": [
+    {"action": "provider.use", "resource": "opencode", "effect": "deny"},
+    {"action": "provider.use", "resource": "opencode-go", "effect": "deny"},
+    {"action": "provider.use", "resource": "openrouter", "effect": "deny"},
+    {"action": "provider.use", "resource": "morph", "effect": "deny"}
+  ],
   "providers": {
     "claude-agent": {
       "models": {
