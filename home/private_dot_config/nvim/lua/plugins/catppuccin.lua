@@ -9,7 +9,6 @@ return {
         octo = true,
         blink_cmp = true,
         harpoon = true,
-        diffview = true,
         grug_far = true,
         leap = true,
         nvim_surround = true,
