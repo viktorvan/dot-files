@@ -22,3 +22,5 @@
 .zim/modules/workmux-completions
 # Retired writing skill, replaced by simplified-technical-english.
 .config/opencode/skills/elements-of-style-writing-clearly-and-concisely
+# Retired brainstorming skill.
+.config/opencode/skills/brainstorming
