@@ -1,0 +1,14 @@
+{{- /* macOS only. Server provisioning installs the same pinned versions on Linux. */ -}}
+{{- if eq .chezmoi.os "darwin" }}
+# The first new shell runs `zimfw init`, which installs the modules in ~/.zimrc.
+[".zim/zimfw.zsh"]
+  type = "file"
+  url = "https://github.com/zimfw/zimfw/releases/download/v1.20.0/zimfw.zsh"
+  checksum.sha256 = "f9362a5c5a1cfd9b54e45b9dbb651986908f838bc68cb487dec33a0c79069f84"
+
+["tools/fzf-tab"]
+  type = "archive"
+  url = "https://github.com/Aloxaf/fzf-tab/archive/0983009f8666f11e91a2ee1f88cfdb748d14f656.tar.gz"
+  checksum.sha256 = "8d8e0f7781100fc4fb5e983f71415e2cd806bd8a1d56487a7ee7045b4f2e1c55"
+  stripComponents = 1
+{{- end }}

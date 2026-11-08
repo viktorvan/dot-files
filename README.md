@@ -9,7 +9,7 @@ This source supports Linux and macOS.
 1. Install Homebrew.
 2. Install chezmoi in `~/.local/bin` with `sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin`.
 3. Run `~/.local/bin/chezmoi init viktorvan/dot-files`. Select `work` or `personal` when chezmoi asks for the machine profile.
-4. Run `~/.local/bin/chezmoi diff`, then `~/.local/bin/chezmoi apply`. Open a new terminal.
+4. Run `~/.local/bin/chezmoi diff`, then `~/.local/bin/chezmoi apply`. Open a new terminal. The first shell installs the Zim modules.
 5. Trust the third-party taps: `brew trust --taps anomalyco/tap felixkratz/formulae jackielii/tap nikitabobko/tap`.
 6. Install the tools with `brew bundle --global`.
 7. Install Herdr, Karabiner-Elements, the Berkeley Mono font, and the SketchyBar app font manually. Do not use Homebrew for these.
@@ -38,6 +38,7 @@ The `private_dot_config`, `private_gh`, and macOS `private_Library` directory at
 The import includes Zsh/Zim configuration, Git, Neovim, Yazi, bat, Lazygit, and GitHub CLI/dashboard preferences. Existing Neovim plugin versions remain in `lazy-lock.json`.
 
 On macOS, the source also includes AeroSpace, Ghostty, SketchyBar, Karabiner-Elements, skhd, Kanata, the Hex helper scripts, and `~/.Brewfile`.
+On macOS, `chezmoi apply` also downloads pinned versions of zimfw and fzf-tab, and verifies their checksums. Server provisioning installs them on Linux.
 
 The current capture includes OpenCode V2 configuration, installed agents and skills, commands, prompts, and the active `~/developer/utils` scripts.
 These files come from the active server, not legacy.

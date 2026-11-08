@@ -51,6 +51,16 @@ if chezmoi verify > /dev/null 2>&1; then
 else
   fail 'managed files differ from the source. Run chezmoi diff.'
 fi
+if [[ -r $HOME/.zim/zimfw.zsh && -r $HOME/.zim/init.zsh ]]; then
+  ok 'Zim and its modules'
+else
+  fail 'Zim modules are not installed. Run chezmoi apply, then open a new terminal.'
+fi
+if [[ -r $HOME/tools/fzf-tab/fzf-tab.plugin.zsh ]]; then
+  ok 'fzf-tab'
+else
+  fail 'fzf-tab is missing. Run chezmoi apply.'
+fi
 
 section 'Homebrew packages (~/.Brewfile)'
 if [[ ! -f $HOME/.Brewfile ]]; then

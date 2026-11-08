@@ -63,7 +63,7 @@ class SourceTests(unittest.TestCase):
                            "--override-data", json.dumps({"chezmoi": {"os": platform, "arch": arch,
                                                                      "homeDir": str(home)},
                                                           **({"profile": profile} if profile else {})}),
-                           "--no-tty", "apply"]
+                           "--no-tty", "--exclude=externals", "apply"]
                 result = subprocess.run(command, capture_output=True, text=True)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertFalse(retired.exists())
@@ -144,6 +144,23 @@ class SourceTests(unittest.TestCase):
                     self.assertNotIn(plugin, lock)
 
     @unittest.skipUnless(CHEZMOI, "Set CHEZMOI to a chezmoi executable for isolated apply tests")
+    def test_externals_are_pinned_and_macos_only(self):
+        template = (ROOT / "home/.chezmoiexternal.toml.tmpl").read_text()
+        for platform in ("darwin", "linux"):
+            with self.subTest(platform=platform), tempfile.TemporaryDirectory(dir="/tmp/opencode") as temporary:
+                command = [str(CHEZMOI), "--source", str(ROOT), "--config", str(Path(temporary) / "config.toml"),
+                           "--override-data", json.dumps({"chezmoi": {"os": platform}}), "execute-template"]
+                result = subprocess.run(command, input=template, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                externals = tomllib.loads(result.stdout)
+                if platform == "darwin":
+                    self.assertEqual(set(externals), {".zim/zimfw.zsh", "tools/fzf-tab"})
+                    for external in externals.values():
+                        self.assertRegex(external["checksum"]["sha256"], "^[0-9a-f]{64}$")
+                else:
+                    self.assertEqual(externals, {})
+
+    @unittest.skipUnless(CHEZMOI, "Set CHEZMOI to a chezmoi executable for isolated apply tests")
     def test_isolated_apply_is_idempotent_and_preserves_unmanaged_files(self):
         with tempfile.TemporaryDirectory(dir="/tmp/opencode") as temporary:
             root = Path(temporary)
@@ -169,7 +186,7 @@ class SourceTests(unittest.TestCase):
             command = [str(CHEZMOI), "--source", str(ROOT), "--destination", str(home),
                        "--persistent-state", str(root / "chezmoi-state.boltdb"),
                        "--cache", str(root / "chezmoi-cache"), "--config", str(root / "chezmoi.toml"),
-                       "--no-tty"]
+                       "--no-tty", "--exclude=externals"]
             result = subprocess.run(command + ["--dry-run", "apply"], capture_output=True, text=True, env=environment)
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertFalse((home / ".zshrc").exists())
