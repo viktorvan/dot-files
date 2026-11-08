@@ -42,6 +42,14 @@ command = "{{ if eq .chezmoi.arch "arm64" }}/opt/homebrew/bin/lazygit{{ else }}/
 description = "run lazygit"
 width = "95%"
 height = "95%"
+
+[[keys.command]]
+key = "prefix+alt+b"
+type = "popup"
+command = "{{ if eq .chezmoi.arch "arm64" }}/opt/homebrew/bin/btop{{ else }}/usr/local/bin/btop{{ end }}"
+description = "run btop"
+width = "95%"
+height = "95%"
 {{ range $binding := list (dict "key" "m" "direction" "left") (dict "key" "n" "direction" "down") (dict "key" "e" "direction" "up") (dict "key" "i" "direction" "right") -}}
 [[keys.command]]
 key = "alt+{{ $binding.key }}"

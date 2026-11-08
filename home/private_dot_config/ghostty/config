@@ -33,10 +33,11 @@ cursor-text = "#eff1f5"
 mouse-hide-while-typing = true
 
 
-# Send Alt-style input only for the Colemak navigation chords.
+# Send Alt-style input for Colemak navigation and the Herdr btop shortcut.
 macos-option-as-alt = false
 
 keybind = alt+m=esc:m
 keybind = alt+n=esc:n
 keybind = alt+e=esc:e
 keybind = alt+i=esc:i
+keybind = alt+b=esc:b
