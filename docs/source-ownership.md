@@ -9,7 +9,7 @@ Source: the active `/home/viktor` environment. Not the previous GitHub dotfiles 
 - Personal commands, including `commands/quick-fix.md`, and thirteen prompt files. The old `supermemory-init` command is removed.
 - The old `plugins/workmux-status.ts` plugin is removed.
 - Personal skills: brainstorming, final-pass-review, medoma-frontend-refinement, medoma-platform, prompt-optimizer, receiving-feedback, simplified-technical-english, visual-planning, visual-task.
-- The nine active scripts in `~/developer/utils`.
+- The active scripts in `~/developer/utils`.
 
 References to company repository names, API service names, or endpoint hostnames do not make these personally maintained files company-owned. They are retained. Credentials are not.
 
@@ -49,6 +49,5 @@ API and Frontend `.opencode` content stays in those project repositories. Nothin
 - CLI preferences come from `cli.json`, which replaces the old `tui.json`.
 - The platform skill references an environment variable for Azure authentication. No actual knowledge-base content or credentials were retrieved.
 - OpenCode defaults to `build`. The captured captain, pilot, and xo agents require the Orbit CLI when used.
-- `mermaid_preview.sh` requires `mmdr` and selects macOS `open` or Linux `xdg-open` when available. Those remain external tool dependencies.
 - Completion generation still requires the Orbit CLI. Copying the script does not execute them.
 - OpenCode uses the captured configuration only after its next restart. No live files were changed during this capture, so no restart is needed now.

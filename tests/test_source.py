@@ -47,18 +47,22 @@ class SourceTests(unittest.TestCase):
 
     @unittest.skipUnless(CHEZMOI, "Set CHEZMOI to a chezmoi executable for isolated apply tests")
     def test_platform_templates_and_retired_plugins(self):
-        for platform, arch in (("darwin", "arm64"), ("linux", "amd64")):
-            with self.subTest(platform=platform), tempfile.TemporaryDirectory(dir="/tmp/opencode") as temporary:
+        for platform, arch, profile in (("darwin", "arm64", "work"), ("darwin", "arm64", "personal"),
+                                        ("linux", "amd64", None)):
+            with self.subTest(platform=platform, profile=profile), \
+                    tempfile.TemporaryDirectory(dir="/tmp/opencode") as temporary:
                 root = Path(temporary)
                 home = root / "home"
                 retired = home / ".config/nvim/lua/plugins/scratch.lua"
                 retired.parent.mkdir(parents=True)
                 retired.write_text("return {}\n")
+                (home / ".tmux.conf").write_text("# retired fixture\n")
                 command = [str(CHEZMOI), "--source", str(ROOT), "--destination", str(home),
                            "--persistent-state", str(root / "state.boltdb"),
                            "--cache", str(root / "cache"), "--config", str(root / "config.toml"),
                            "--override-data", json.dumps({"chezmoi": {"os": platform, "arch": arch,
-                                                                     "homeDir": str(home)}}),
+                                                                     "homeDir": str(home)},
+                                                          **({"profile": profile} if profile else {})}),
                            "--no-tty", "apply"]
                 result = subprocess.run(command, capture_output=True, text=True)
                 self.assertEqual(result.returncode, 0, result.stderr)
@@ -72,14 +76,18 @@ class SourceTests(unittest.TestCase):
                 self.assertFalse((home / ".config/opencode/tui.json").exists())
                 self.assertTrue((home / ".config/opencode/commands/quick-fix.md").is_file())
                 for skill in ("plot-trajectory", "schedule-burn", "test-audit"):
-                    self.assertTrue((home / ".config/opencode/skill" / skill / "SKILL.md").is_file())
+                    self.assertTrue((home / ".config/opencode/skills" / skill / "SKILL.md").is_file())
                 self.assertTrue(os.access(home / ".config/herdr/navigate.sh", os.X_OK))
-                tmux = (home / ".tmux.conf").read_text()
-                navigator = (home / ".config/nvim/lua/plugins/vim-tmux-navigator.lua").read_text()
+                self.assertFalse((home / ".tmux.conf").exists())
+                self.assertFalse((home / ".config/nvim/lua/plugins/vim-tmux-navigator.lua").exists())
+                navigation = (home / ".config/nvim/lua/config/herdr_navigation.lua").read_text()
                 for key in ("M-m", "M-n", "M-e", "M-i"):
-                    self.assertIn(f"bind-key -n {key} run", tmux)
-                    self.assertIn(f"bind-key -T copy-mode-vi {key} select-pane", tmux)
-                    self.assertIn(f'"<{key}>"', navigator)
+                    self.assertIn(f'"<{key}>"', navigation)
+                self.assertIn('require("config.herdr_navigation").setup()',
+                              (home / ".config/nvim/lua/config/keymaps.lua").read_text())
+                desktop = (".aerospace.toml", ".Brewfile", ".skhdrc", ".config/ghostty/config",
+                           ".config/karabiner/karabiner.json", ".config/sketchybar/sketchybarrc",
+                           "developer/utils/hex-toggle-model.sh", "developer/utils/check-mac-setup.sh")
                 btop = (home / ".config/btop/btop.conf").read_text()
                 self.assertIn('shown_boxes = "cpu mem proc"', btop)
                 if platform == "darwin":
@@ -88,7 +96,22 @@ class SourceTests(unittest.TestCase):
                     self.assertIn('vim.opt.clipboard = "unnamedplus"', options)
                     self.assertEqual(herdr["theme"]["name"], "catppuccin-latte")
                     self.assertEqual(len(herdr["keys"]["command"]), 9)
-                    self.assertIn("/opt/homebrew/bin", tmux)
+                    for path in desktop:
+                        self.assertTrue((home / path).is_file(), path)
+                    self.assertTrue(os.access(home / ".config/sketchybar/sketchybarrc", os.X_OK))
+                    self.assertTrue(os.access(home / "developer/utils/hex-toggle-model.sh", os.X_OK))
+                    skhd = (home / ".skhdrc").read_text()
+                    self.assertIn(f'"{home}/developer/utils/hex-toggle-model.sh"', skhd)
+                    self.assertNotIn("T3 Code", skhd)
+                    macos = (home / ".config/zsh/macos.zsh").read_text()
+                    kanata = home / ".config/kanata/config.kbd"
+                    if profile == "work":
+                        self.assertTrue(kanata.is_file())
+                        self.assertIn("alias kan=", macos)
+                    else:
+                        self.assertFalse(kanata.exists())
+                        self.assertNotIn("alias kan=", macos)
+                    self.assertNotIn("tmux", macos)
                     self.assertIn("terminal_sync = True", btop)
                     lazygit = home / "Library/Application Support/lazygit/config.yml"
                     self.assertEqual((home / "Library").stat().st_mode & 0o777, 0o700)
@@ -107,8 +130,8 @@ class SourceTests(unittest.TestCase):
                     self.assertIn('require("vim.ui.clipboard.osc52")', options)
                     self.assertNotIn("theme", herdr)
                     self.assertEqual(len(herdr["keys"]["command"]), 10)
-                    self.assertNotIn("/opt/homebrew", tmux)
-                    self.assertIn(str(home / ".local/bin"), tmux)
+                    for path in desktop + (".config/kanata/config.kbd",):
+                        self.assertFalse((home / path).exists(), path)
                     self.assertNotIn("terminal_sync", btop)
                     lazygit = home / ".config/lazygit/config.yml"
                     self.assertFalse((home / "Library").exists())
@@ -116,7 +139,8 @@ class SourceTests(unittest.TestCase):
                 self.assertIn("{{text}}", lazygit.read_text())
                 self.assertNotIn("base64 -w", lazygit.read_text())
                 lock = json.loads((home / ".config/nvim/lazy-lock.json").read_text())
-                for plugin in ("codecompanion.nvim", "scratch.nvim", "zen-mode.nvim", "op.nvim", "supermaven-nvim"):
+                for plugin in ("codecompanion.nvim", "scratch.nvim", "zen-mode.nvim", "op.nvim", "supermaven-nvim",
+                               "vim-tmux-navigator"):
                     self.assertNotIn(plugin, lock)
 
     @unittest.skipUnless(CHEZMOI, "Set CHEZMOI to a chezmoi executable for isolated apply tests")
@@ -160,13 +184,14 @@ class SourceTests(unittest.TestCase):
             self.assertEqual(codex_auth.read_text(), '{"fixture": true}\n')
             self.assertEqual(codex_config.read_text(), 'model = "local-fixture"\n')
             self.assertEqual(codex_hooks.read_text(), '{"hooks": {}}\n')
-            self.assertTrue(os.access(home / "developer/utils/start_backend.sh", os.X_OK))
+            self.assertTrue(os.access(home / "developer/utils/list-opencode-processes.sh", os.X_OK))
+            self.assertFalse((home / "developer/utils/start_backend.sh").exists())
             self.assertTrue((home / "developer/utils/remove_scratch_file.sh").is_file())
-            self.assertTrue((home / ".config/opencode/skill/medoma-platform/SKILL.md").is_file())
-            self.assertTrue((home / ".config/opencode/skill/schedule-burn/SKILL.md").is_file())
+            self.assertTrue((home / ".config/opencode/skills/medoma-platform/SKILL.md").is_file())
+            self.assertTrue((home / ".config/opencode/skills/schedule-burn/SKILL.md").is_file())
             self.assertFalse((home / ".config/opencode/package-lock.json").exists())
             self.assertTrue((home / ".config/nvim/lazy-lock.json").is_file())
-            self.assertTrue((home / ".tmux.conf").is_file())
+            self.assertFalse((home / ".tmux.conf").exists())
             self.assertFalse((home / "README.md").exists())
             self.assertFalse((home / "tests").exists())
 

@@ -20,22 +20,10 @@ alias dn=dotnet
 alias gcoi='git checkout $(git branch | fzf)'
 alias gbi="git branch --format='%(refname:short)' | fzf | xargs echo -n | pbcopy"
 alias gbI="git branch --format='%(refname:short)' | fzf"
-alias ycon='nvim ~/.yabairc'
 alias scon='nvim ~/.skhdrc'
 alias sbcon='cd ~/.config/sketchybar;nvim sketchybarrc; cd -'
-alias tcon='nvim ~/.tmux.conf'
 alias acon='nvim ~/.aerospace.toml'
-alias tms=~/developer/utils/tmux-sessionizer.sh
-alias opi=~/developer/utils/op-list-item.sh
-alias opo=~/developer/utils/op-list-otp.sh
-alias gwn=~/developer/utils/git_add_worktree.sh
-alias gwe=~/developer/utils/git_add_worktree_existing.sh
-alias api_run='. ~/developer/utils/start_backend.sh --delay'
+{{- if eq (includeTemplate "profile" .) "work" }}
 alias kan='. ~/developer/utils/kanata.sh'
 alias rd=~/.local/bin/remote-dev
-tmw() {
-  "$HOME/developer/utils/tmux-set-window-name.sh" "$(git branch --show-current)"
-}
-tmwn() {
-  "$HOME/developer/utils/tmux-create-git-branch-window.sh $(gbI)"
-}
+{{- end }}

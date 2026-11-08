@@ -1,0 +1,31 @@
+{
+    "title": "Remap Left control to meh (control + shift + option)",
+    "rules": [
+        {
+            "description": "Change left_control to meh",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "left_control",
+                        "modifiers": {
+                            "optional": [
+                                "any"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+							"key_code": "left_control",
+							"modifiers": [
+                                "left_shift",
+                                "left_option"
+                            ],
+                            "lazy": true
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

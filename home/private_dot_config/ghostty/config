@@ -1,0 +1,42 @@
+# monospace
+# https://usgraphics.com/products/berkeley-mono
+font-family = "Berkeley Mono Variable"
+font-variation = wght=600
+font-variation = wdth=100
+font-family-bold = "Berkeley Mono Variable"
+font-variation-bold = wght=800
+font-size = 13
+font-thicken = true
+font-thicken-strength = 0
+
+window-title-font-family = "Berkeley Mono Variable"
+
+
+font-feature = -liga
+font-feature = -clig
+font-feature = -calt
+
+shell-integration-features = ssh-terminfo,ssh-env
+
+clipboard-read = allow
+clipboard-write = allow
+# Optional: copy on selection
+copy-on-select = clipboard
+
+theme = Catppuccin Latte
+macos-titlebar-style = hidden
+
+cursor-style = block
+cursor-style-blink = false
+cursor-text = "#eff1f5"
+
+mouse-hide-while-typing = true
+
+
+# Send Alt-style input only for the Colemak navigation chords.
+macos-option-as-alt = false
+
+keybind = alt+m=esc:m
+keybind = alt+n=esc:n
+keybind = alt+e=esc:e
+keybind = alt+i=esc:i

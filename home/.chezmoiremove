@@ -24,3 +24,12 @@
 .config/opencode/skills/elements-of-style-writing-clearly-and-concisely
 # Retired brainstorming skill.
 .config/opencode/skills/brainstorming
+# Retired tmux configuration, tmux helpers, and the tmux-based Mermaid preview.
+.tmux.conf
+.config/nvim/lua/plugins/vim-tmux-navigator.lua
+developer/utils/tmux-run-api.sh
+developer/utils/tmux-sessionizer.sh
+developer/utils/tmux-set-window-name.sh
+developer/utils/tmux-windowizer.sh
+developer/utils/start_backend.sh
+developer/utils/mermaid_preview.sh

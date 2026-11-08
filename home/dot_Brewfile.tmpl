@@ -1,0 +1,36 @@
+{{- $profile := includeTemplate "profile" . -}}
+# Install with: brew bundle --global
+# Check with:   brew bundle check --global --verbose
+
+tap "anomalyco/tap"
+tap "felixkratz/formulae"
+tap "jackielii/tap"
+tap "nikitabobko/tap"
+
+# Shell and editor tools used by the managed configuration
+brew "bat"
+brew "btop"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "gh"
+brew "jq"
+brew "lazygit"
+brew "neovim"
+brew "anomalyco/tap/opencode-v2"
+brew "worktrunk"
+brew "yazi"
+brew "zk"
+brew "zoxide"
+cask "font-hack-nerd-font"
+
+# Desktop
+brew "felixkratz/formulae/sketchybar"
+cask "ghostty"
+cask "anomalyco/tap/hex"
+cask "jackielii/tap/skhd-zig"
+cask "nikitabobko/tap/aerospace"
+{{- if eq $profile "work" }}
+
+# Work computer only
+{{- end }}

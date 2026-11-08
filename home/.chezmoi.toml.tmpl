@@ -1,0 +1,7 @@
+{{- /* Linux is the work development VM. Macs ask once and store the answer. */ -}}
+{{- $profile := "work" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   $profile = promptChoiceOnce . "profile" "Machine profile" (list "work" "personal") -}}
+{{- end -}}
+[data]
+  profile = {{ $profile | quote }}

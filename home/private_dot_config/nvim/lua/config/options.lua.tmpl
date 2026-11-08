@@ -29,27 +29,6 @@ vim.opt.title = true
 {{ if eq .chezmoi.os "linux" -}}
 local osc52 = require("vim.ui.clipboard.osc52")
 
-local function tmux_paste()
-  local before = vim.fn.systemlist({ "tmux", "list-buffers", "-F", "#{buffer_name}" })[1]
-
-  vim.fn.system({ "tmux", "refresh-client", "-l" })
-
-  local buffer
-  vim.wait(1000, function()
-    buffer = vim.fn.systemlist({ "tmux", "list-buffers", "-F", "#{buffer_name}" })[1]
-    return buffer ~= nil and buffer ~= "" and buffer ~= before
-  end, 50)
-
-  if not buffer or buffer == "" or buffer == before then
-    return {}
-  end
-
-  local lines = vim.fn.systemlist({ "tmux", "save-buffer", "-b", buffer, "-" })
-  vim.fn.system({ "tmux", "delete-buffer", "-b", buffer })
-
-  return lines
-end
-
 local function paste(reg)
   if vim.env.HERDR_ENV == "1" then
     return function()
@@ -57,16 +36,11 @@ local function paste(reg)
     end
   end
 
-  if vim.env.TMUX then
-    return tmux_paste
-  end
-
   return osc52.paste(reg)
 end
 
--- Copy from remote/tmux sessions to the local terminal clipboard via OSC52.
+-- Copy from remote sessions to the local terminal clipboard via OSC52.
 -- Herdr paste uses the unnamed register because remote OSC52 reads time out.
--- tmux paste uses the client clipboard request.
 vim.g.clipboard = {
   name = "OSC 52",
   copy = {

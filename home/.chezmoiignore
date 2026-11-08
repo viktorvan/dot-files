@@ -11,6 +11,20 @@
 {{ else }}
 Library
 .config/zsh/macos.zsh
+# macOS desktop configuration
+.aerospace.toml
+.Brewfile
+.skhdrc
+.config/ghostty
+.config/karabiner
+.config/kanata
+.config/sketchybar
+developer/utils/hex-*.sh
+developer/utils/check-mac-setup.sh
+{{ end }}
+{{ if ne (includeTemplate "profile" .) "work" }}
+# Kanata runs only on the work laptop.
+.config/kanata
 {{ end }}
 {{ if ne .chezmoi.os "linux" }}
 .config/orbit

@@ -15,7 +15,7 @@ processes=$("$herdr" pane process-info --pane "$pane")
 
 forward=$(printf '%s\n' "$processes" | jq -r '
   any(.result.process_info.foreground_processes[];
-    .name | test("^(nvim|tmux)( |:|$)"))
+    .name | test("^nvim( |:|$)"))
 ')
 if [ "$forward" = true ]; then
   exec "$herdr" pane send-keys "$pane" "alt+$key"

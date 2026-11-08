@@ -72,7 +72,6 @@
   "vim-illuminate": { "branch": "master", "commit": "1cc33d347c574c3bd21a4852fc9ffed677c1c58c" },
   "vim-just": { "branch": "main", "commit": "81bf1e4d6b5286c3c7b640363b7053e15a62af5f" },
   "vim-tidal": { "branch": "master", "commit": "e440fe5bdfe07f805e21e6872099685d38e8b761" },
-  "vim-tmux-navigator": { "branch": "master", "commit": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432" },
   "vlime": { "branch": "master", "commit": "e276e9a6f37d2699a3caa63be19314f5a19a1481" },
   "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" },
   "yazi.nvim": { "branch": "main", "commit": "d8bd4cc258fdbe2bad71a383d390a96c80ecb628" },

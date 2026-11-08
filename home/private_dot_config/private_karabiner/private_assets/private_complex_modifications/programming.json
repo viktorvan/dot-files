@@ -1,0 +1,161 @@
+{
+  "title": "Programming brackets etc.",
+  "rules": [
+    {
+      "description": "Easier access to programming symbols and brackets",
+      "manipulators": [
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "h",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "7" ,
+                    "modifiers": [ "option" ]
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "j",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "0" ,
+                    "modifiers": [ "shift" ]
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "n",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "8",
+                    "modifiers": [ "shift", "option" ]
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "e",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "9" ,
+                    "modifiers": [ "shift", "option" ]
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "i",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "grave_accent_and_tilde"
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "o",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "grave_accent_and_tilde",
+                    "modifiers": [ "shift" ]
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "l",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "8",
+                    "modifiers": [ "option" ]
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "u",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "9",
+                    "modifiers": [ "option" ]
+                }
+            ]
+        },
+        {
+            "type": "basic",
+            "from": {
+                "key_code": "k",
+                "modifiers": {
+                    "mandatory": [
+                        "left_option"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "slash"
+                }
+            ]
+        }
+      ]
+    }
+  ]
+}

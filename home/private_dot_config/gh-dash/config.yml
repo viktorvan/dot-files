@@ -93,11 +93,6 @@ keybindings:
     - key: M
       name: Auto-merge (squash)
       command: gh pr merge --auto --squash --repo {{.RepoName}} {{.PrNumber}}
-    - key: T
-      command: >-
-        tmux new-window '
-          gh enhance -R {{.RepoName}} {{.PrNumber}}
-        '
   issues:
     - key: y
       name: Copy issue number

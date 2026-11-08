@@ -69,10 +69,6 @@ require("config.tailwind")
 
 require("telescope").load_extension("git_worktree")
 
-vim.api.nvim_create_user_command('Tmw', function()
-  vim.fn.system('zsh -c "$HOME/developer/utils/tmux-set-window-name.sh $(git branch --show-current)"')
-end, {})
-
 local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
 local conf = require('telescope.config').values

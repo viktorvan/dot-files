@@ -1,0 +1,6 @@
+{{- /* Prints the machine profile. A Mac without `chezmoi init` gets no profile, so work-only files stay absent. */ -}}
+{{- if hasKey . "profile" -}}
+{{-   .profile -}}
+{{- else if eq .chezmoi.os "linux" -}}
+work
+{{- end -}}
