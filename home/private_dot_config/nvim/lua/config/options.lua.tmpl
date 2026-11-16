@@ -26,6 +26,11 @@ vim.g.lazyvim_cmp = "blink.cmp"
 
 vim.opt.title = true
 
+-- Disable the built-in SQL ftplugin insert-mode maps (<Left>/<Right> drill
+-- into/out of columns, <C-C>* omni maps). They break arrow keys in dbui
+-- query buffers. Completion comes from blink.cmp + vim-dadbod-completion.
+vim.g.omni_sql_no_default_maps = 1
+
 {{ if eq .chezmoi.os "linux" -}}
 local osc52 = require("vim.ui.clipboard.osc52")
 
