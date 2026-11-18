@@ -11,6 +11,9 @@ fi
 
 export OPENCODE_DISABLE_FREE_MODELS=1
 
+# Stop MSBuild worker nodes when a build ends. Idle nodes keep 200-250 MB each.
+export MSBUILDDISABLENODEREUSE=1
+
 # Source secret environment variables if the file exists
 if [[ -r ~/secrets/set_secret_env_vars.sh ]]; then
   source ~/secrets/set_secret_env_vars.sh
