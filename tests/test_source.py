@@ -28,8 +28,19 @@ class SourceTests(unittest.TestCase):
             self.assertFalse(any(part.startswith("dot_ssh") for part in relative.parts))
             self.assertNotIn(path.suffix, {".db", ".sqlite", ".pfx", ".pem", ".zwc", ".pdf"})
 
+    @unittest.skipUnless(CHEZMOI, "Set CHEZMOI to a chezmoi executable to render templates")
     def test_personal_config_is_parseable(self):
-        config = json.loads((ROOT / "home/private_dot_config/opencode/opencode.json").read_text())
+        template = (ROOT / "home/private_dot_config/opencode/opencode.json.tmpl").read_text()
+        with tempfile.TemporaryDirectory() as home:
+            bin_dir = Path(home) / ".local/bin"
+            bin_dir.mkdir(parents=True)
+            (bin_dir / "browse").write_text("")
+            result = subprocess.run([str(CHEZMOI), "--source", str(ROOT), "execute-template",
+                                     "--override-data", json.dumps({"chezmoi": {"homeDir": home}})],
+                                    input=template, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        config = json.loads(result.stdout)
+        self.assertEqual(config["mcp"]["servers"]["browse"]["command"][0], str(bin_dir / "browse"))
         self.assertEqual(config["$schema"], "https://opencode.ai/config.json")
         self.assertEqual(config["default_agent"], "build")
         servers = config["mcp"]["servers"]

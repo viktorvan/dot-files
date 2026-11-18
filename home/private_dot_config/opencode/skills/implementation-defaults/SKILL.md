@@ -7,11 +7,26 @@ description: USER-INVOKED ONLY. Use only when the user explicitly asks for the i
 
 Use these defaults to implement the task that the user gave with this skill.
 
+## Keep the main context small
+
+- Use sub-agents for builds, tests, and investigations that produce large tool outputs.
+- Give each sub-agent a bounded task and a clear reporting format.
+- Require evidence from each sub-agent, not only a task summary.
+- For code changes, request changed file paths and a description of the resulting behavior.
+- For checks, request the exact command, working directory, exit status, and a short output excerpt.
+- For failures, request the smallest useful error excerpt.
+- For investigations, request file references or other sources that support each finding.
+- Require sub-agents to identify failed checks, skipped checks, and unresolved assumptions.
+- Keep full logs in files and include their paths in the handoff.
+- Read only the log sections needed for a decision.
+- Verify that the evidence supports the sub-agent's claims before you rely on them.
+
 ## Before you change code
 
 - Read the relevant code and project guidance first.
 - If the scope or a requirement is unclear, ask before you start.
-- Present a short plan. Wait for the user to approve the plan before you change code.
+- If the task includes a plan that the user approved, follow it. Do not ask for approval again.
+- Otherwise, present a short plan. Wait for the user to approve the plan before you change code.
 
 ## While you implement
 

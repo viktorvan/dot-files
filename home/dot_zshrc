@@ -135,6 +135,7 @@ alias vim=nvim
 alias v=nvim
 alias lg=lazygit
 alias oc="opencode --auto"
+alias ocp='CLAUDE_CONFIG_DIR="$HOME/.claude-personal" oc --standalone'
 alias ncon="cd ~/.config/nvim;nvim init.lua; cd -"
 alias zcon="nvim ~/.zshrc; exec zsh"
 j() {

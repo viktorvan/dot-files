@@ -122,6 +122,20 @@
           "ES_URL": "https://app-logs-elk-dev.es.westus2.azure.elastic-cloud.com:9243"
         }
       }
+{{- /* browse is installed per machine. Add it only where the binary exists. */}}
+{{- $browse := joinPath .chezmoi.homeDir ".local/bin/browse" }}
+{{- if stat $browse }},
+      "browse": {
+        "type": "local",
+        "command": [
+          {{ $browse | quote }},
+          "mcp"
+        ],
+        "environment": {
+          "OPENCODE_BROWSER_RUNTIME": "auto-update"
+        }
+      }
+{{- end }}
     }
   }
 }
