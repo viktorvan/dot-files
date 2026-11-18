@@ -9,9 +9,10 @@ return {
     IonideNvimSettings = {
       ShowSignatureOnCursorMove = false,
       FsiStdOutFileName = "./FsiOutput.txt",
-      FsautocompleteCommand = { "fsautocomplete", "--project-graph-enabled", "--adaptive-lsp-server-enabled", "--use-fcs-transparent-compiler" },
+      FsautocompleteCommand = { "fsautocomplete", "--project-graph-enabled", "--adaptive-lsp-server-enabled" },
       UseRecommendedServerConfig = false,
-      AutomaticWorkspaceInit = false,
+      -- FSAC 0.83+ in adaptive mode loads the projects during initialize only when this is true.
+      AutomaticWorkspaceInit = true,
       AutomaticReloadWorkspace = false,
       AutomaticCodeLensRefresh = false,
       FsiCommand = "dotnet fsi",
@@ -26,12 +27,8 @@ return {
       FsiKeymapSend = "<M-cr>",
       FsiKeymapToggle = "<M-@>",
     },
-    init_options = {
-      AutomaticWorkspaceInit = false,
-    },
-    cmd = {
-      vim.fs.normalize(vim.fn.stdpath("data") .. "/mason/bin/fsautocomplete"),
-    },
+    -- DOTNET_GCConserveMemory=9: let the GC compact the large object heap and keep the heap smaller.
+    cmd_env = { DOTNET_GCConserveMemory = "9" },
     settings = {
       FSharp = {
         enableMSBuildProjectGraph = true,
@@ -54,23 +51,10 @@ return {
     },
   },
   config = function(_, opts)
-    -- Configure Mason to ensure fsautocomplete is installed
-    require("mason").setup({
-      ensure_installed = { "fsautocomplete" },
-    })
-
-    -- Configure lspconfig
-    local lspconfig = require("lspconfig")
-
-    -- Prevent fsautocomplete from being set up directly by lspconfig
-    lspconfig.fsautocomplete = {
-      setup = function()
-        return true -- Prevents setup
-      end
-    }
-
-    -- Setup Ionide
-    require("ionide").setup(opts)
+    -- LazyVim enables the Mason-installed fsautocomplete server.
+    -- Ionide-nvim only returns the LSP config, so give it to that server.
+    -- This plugin loads on the fsharp FileType before vim.lsp.enable starts the client.
+    vim.lsp.config("fsautocomplete", require("ionide").setup(opts))
 
     -- Ionide's BufReadPost autocmd for *.fsproj starts the LSP with a trick:
     -- 100 ms later it runs :tcd, :e <nearest .fs>, :b <fsproj> in the CURRENT
