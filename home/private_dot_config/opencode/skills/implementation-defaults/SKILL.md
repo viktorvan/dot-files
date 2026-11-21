@@ -6,6 +6,7 @@ description: USER-INVOKED ONLY. Use only when the user explicitly asks for the i
 # Implementation defaults
 
 Use these defaults to implement the task that the user gave with this skill.
+These defaults win over the ways-of-working rules in AGENTS.md where they differ.
 
 ## Keep the main context small
 
@@ -24,9 +25,8 @@ Use these defaults to implement the task that the user gave with this skill.
 ## Before you change code
 
 - Read the relevant code and project guidance first.
-- If the scope or a requirement is unclear, ask before you start.
 - If the task includes a plan that the user approved, follow it. Do not ask for approval again.
-- Otherwise, present a short plan. Wait for the user to approve the plan before you change code.
+- Otherwise, present a short plan with open questions at the end. Wait for the user to approve the plan before you change code.
 
 ## While you implement
 

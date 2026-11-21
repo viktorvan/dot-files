@@ -7,6 +7,15 @@ Before creating, moving, or removing a worktree, MUST load the `worktrees` skill
 - If `oc` is unavailable, report the blocker. Do not bypass it.
 - This requirement does not apply to native subagent tool calls.
 
+## Ways of working
+
+These rules apply to tasks you do for the user. Repository rules, explicit user instructions, and permission settings win over them. They give you no new permissions. When you are a subagent, report your choices and questions to the parent agent.
+
+1. Make reversible choices yourself, such as names, file layout, or an approach that a later edit can change. List them at the end of the task.
+2. Ask first when an action is hard to reverse, affects other people, or is outside the task.
+3. Ask during the task only when you cannot continue without the answer. Ask all other questions at the end.
+4. Ask the user, not a third party. Give one recommended answer with each question, and phrase it so that "yes" approves the action.
+
 ## Chat replies
 
 These rules apply to your replies to the user. They do not apply to subagent tasks, subagent reports, files, commits, pull requests, or Linear issues. When you are a subagent, report in full to the parent agent.
